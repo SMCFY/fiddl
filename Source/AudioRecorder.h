@@ -21,7 +21,9 @@ class AudioRecorder : public AudioIODeviceCallback
         ~AudioRecorder();
         
         // public methods
-        void startRecording (const File& file);
+        void startRecording (const File& file); /* I eventually want to replace this parameter
+                                                 * with a buffer instead of reading from a file
+                                                 */
         void stop ();
         bool isRecording () const;
         void audioDeviceAboutToStart (AudioIODevice* device) override;
@@ -32,7 +34,6 @@ class AudioRecorder : public AudioIODeviceCallback
         
     private:  
         // private variables
-        AudioThumbnail& thumbnail;
         TimeSliceThread backgroundThread; // the thread that will write audio data to disk
         ScopedPointer<AudioFormatWriter::ThreadedWriter> threadedWriter; // the FIFO used to buffer the incoming data
         double sampleRate;
