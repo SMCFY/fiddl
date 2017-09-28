@@ -172,7 +172,7 @@ private:
         playButton.setButtonText ("Play");
     }
 
-    void buttonClicked() //void for what happens when clicking a button
+    void buttonClicked (Button* button) override //void for what happens when clicking a button
     {
         if (button == &recordButton)
         {
