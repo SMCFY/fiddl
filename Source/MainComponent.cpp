@@ -1,5 +1,6 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "AudioRecorder.h"
 
 class MainContentComponent   : public AudioAppComponent
 {
@@ -30,6 +31,9 @@ public:
 
         // You can use this function to initialise any resources you might need,
         // but be careful - it will be called on the audio thread, not the GUI thread.
+        
+        // initialising sample rate in the recorder
+        recorder.setSampleRate(sampleRate);
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -106,6 +110,18 @@ private:
     AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
     int readIndex; // read index of the sample buffer
     
+    /* TODO
+     * These variables are needed to set up the device manager for recording
+     * audio from the microphone to an audio file
+     * 
+     * AudioDeviceManager& deviceManager
+     * AudioFormatManager formatManager;
+     * ScopedPointer<AudioFormatReaderSource> readerSource;
+     * AudioTransportSource transportSource;
+     * TransportState state;
+     */
+
+    AudioRecorder recorder;
     
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
