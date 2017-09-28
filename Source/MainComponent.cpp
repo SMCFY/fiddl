@@ -12,11 +12,11 @@ public:
     // : deviceManager (MainAppWindow::getSharedAudioDeviceManager())  // deviceManager needs to be initialised somehow
     {
         addAndMakeVisible(recordButton);
-        recordButton.setButtonText("Hold to record");
+        recordButton.setButtonText("Record");
         recordButton.addListener (this);
 
         addAndMakeVisible(playButton);
-        playButton.setButtonText("Hold to play");
+        playButton.setButtonText("Play");
         playButton.addListener(this);
 
         setSize (getWidth(), getHeight());
