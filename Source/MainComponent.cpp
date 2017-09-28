@@ -1,8 +1,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioRecorder.h"
 
-static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager;
-
+static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager; /* used for initialising
+                                                                      the deviceManager */
 class MainContentComponent   : public AudioAppComponent,
                                public Button::Listener
 {
@@ -166,19 +166,16 @@ private:
         if (sharedAudioDeviceManager == nullptr)
         {
             sharedAudioDeviceManager = new AudioDeviceManager();
-        RuntimePermissions::request (RuntimePermissions::recordAudio, runtimePermissionsCallback);
-        sharedAudioDeviceManager->initialise (2, 2, nullptr, true, String(), nullptr);
-            
+            RuntimePermissions::request (RuntimePermissions::recordAudio, runtimePermissionsCallback);
         }
         return *sharedAudioDeviceManager;
     }
     
     static void runtimePermissionsCallback (bool wasGranted)
-{
-    int numInputChannels = wasGranted ? 2 : 0;
-    sharedAudioDeviceManager->initialise (numInputChannels, 2, nullptr, true, String(), nullptr);
-
-}
+    {
+        int numInputChannels = wasGranted ? 2 : 0;
+        sharedAudioDeviceManager->initialise (numInputChannels, 2, nullptr, true, String(), nullptr);
+    }
 
     void startPlaying ()
     {
@@ -222,21 +219,8 @@ private:
 
     AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
     int readIndex; // read index of the sample buffer
-    
-    AudioDeviceManager& deviceManager;
-    
-    /* TODO
-     * These variables are needed to set up the device manager for recording
-     * audio from the microphone to an audio file
-     * 
-     * AudioDeviceManager& deviceManager
-     * AudioFormatManager formatManager;
-     * ScopedPointer<AudioFormatReaderSource> readerSource;
-     * AudioTransportSource transportSource;
-     * TransportState state;
-     */
-
-    AudioRecorder recorder;
+    AudioDeviceManager& deviceManager; // manages audio I/O devices 
+    AudioRecorder recorder; // recording from a device to a file
     
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
