@@ -102,7 +102,38 @@ public:
         // If you add any child components, this is where you should
         // update their positions.
     }
-
+    
+    void startRecording ()
+    {
+        const File file (File::getSpecialLocation (File::userDocumentsDirectory)
+                         .getNonexistentChildFile ("Juce Demo Audio Recording", ".wav"));
+        recorder.startRecording (file);
+        
+        // recordButton has not been initialised: the GUI needs to be implemented
+        //recordButton.setButtonText ("Stop");
+    }
+    
+    void stopRecording()
+    {
+        recorder.stop();
+        // recordButton has not been initialised: the GUI needs to be implemented
+        //recordButton.setButtonText ("Record");
+    }
+    
+    /* A buttonClicked() method needs to be implemented.
+     * Something along the lines of the following method would be nice:
+     * 
+    void buttonClicked (Button* button) override
+    {
+        if (button == &recordButton)
+        {
+            if (recorder.isRecording())
+                stopRecording();
+            else
+                startRecording();
+        }
+    }
+    */
 
 private:
     //==============================================================================
