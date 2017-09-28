@@ -114,28 +114,11 @@ public:
         // update their positions.
     }
 
-    void buttonClicked (Button* button) override // point to the button class and call the button voids
-    {
-        if (button == &recordButton)      recordButtonClicked();
-        if (button == &playButton)     playButtonClicked();
-    }
-
-    void startRecording ()
-    {
-        const File file (File::getSpecialLocation (File::userDocumentsDirectory)
-                         .getNonexistentChildFile ("Juce Demo Audio Recording", ".wav"));
-        recorder.startRecording (file);
-        
-        // recordButton has not been initialised: the GUI needs to be implemented
-        //recordButton.setButtonText ("Stop");
-    }
-    
-    void stopRecording()
-    {
-        recorder.stop();
-        // recordButton has not been initialised: the GUI needs to be implemented
-        //recordButton.setButtonText ("Record");
-    }
+//    void buttonClicked (Button* button) override // point to the button class and call the button voids
+//    {
+//        if (button == &recordButton) recordButtonClicked();
+//        if (button == &playButton) playButtonClicked();
+//    }
     
     /* A buttonClicked() method needs to be implemented.
      * Something along the lines of the following method would be nice:
@@ -153,16 +136,57 @@ public:
     */
 
 private:
-
-    void recordButtonClicked() //void for what happens when clicking record
+    void startRecording ()
     {
+        const File file (File::getSpecialLocation (File::userDocumentsDirectory)
+                                 .getNonexistentChildFile ("Juce Demo Audio Recording", ".wav"));
+        recorder.startRecording (file);
 
+        // recordButton has not been initialised: the GUI needs to be implemented
+        recordButton.setButtonText ("Stop");
     }
 
-    void playButtonClicked() //void for what happens when clicking play
+    void stopRecording()
     {
-
+        recorder.stop();
+        // recordButton has not been initialised: the GUI needs to be implemented
+        recordButton.setButtonText ("Record");
     }
+
+    void startPlaying ()
+    {
+        playButton.setButtonText ("Stop");
+    }
+
+    void stopPlaying()
+    {
+        playButton.setButtonText ("Play");
+    }
+
+    void buttonClicked() //void for what happens when clicking a button
+    {
+        if (button == &recordButton)
+        {
+            if (recorder.isRecording())
+                stopRecording();
+            else
+                startRecording();
+        }
+        /*
+        if(button == &playButton)
+        {
+            if(isPlaying())
+                stopPlaying();
+            else
+                startPlaying();
+        }*/
+    }
+
+
+  //  void playButtonClicked() //void for what happens when clicking play
+   // {
+        //if playing, stop else play
+   // }
     //==============================================================================
     TextButton recordButton; //declaring buttons
     TextButton playButton;
