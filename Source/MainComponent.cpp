@@ -8,6 +8,8 @@ class MainContentComponent   : public AudioAppComponent,
 public:
     //==============================================================================
     MainContentComponent()
+    // TODO
+    // : deviceManager (MainAppWindow::getSharedAudioDeviceManager())  // deviceManager needs to be initialised somehow
     {
         addAndMakeVisible(recordButton);
         recordButton.setButtonText("Hold to record");
@@ -25,10 +27,17 @@ public:
 
         // specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
+        
+          
+        // TODO: deviceManager needs to be setup for the recorder
+        //deviceManager.addAudioCallback (&recorder);
     }
 
     ~MainContentComponent()
     {
+          
+        // TODO
+        //deviceManager.removeAudioCallback (&recorder);
         shutdownAudio();
     }
 
