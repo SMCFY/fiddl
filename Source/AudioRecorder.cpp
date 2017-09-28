@@ -37,6 +37,7 @@ void AudioRecorder::startRecording (const File& file)
         
         if (fileStream != nullptr)
         {
+            
             // Now create a WAV writer object that writes to our output stream...
             WavAudioFormat wavFormat;
             AudioFormatWriter* writer = wavFormat.createWriterFor (fileStream, sampleRate, 1, 16, StringPairArray(), 0);
@@ -86,4 +87,22 @@ void AudioRecorder::audioDeviceAboutToStart (AudioIODevice* device)
 void AudioRecorder::audioDeviceStopped() 
 {
     sampleRate = 0;
+}
+
+void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
+                                           float** outputChannelData, int numOutputChannels,
+                                           int numSamples) 
+{
+    const ScopedLock sl (writerLock);
+    
+    if (activeWriter != nullptr)
+    {
+        activeWriter->write (inputChannelData, numSamples);
+        
+        nextSampleNum += numSamples;
+    }
+}
+
+void AudioRecorder::setSampleRate (double sampleRate) {
+    this->sampleRate = sampleRate;
 }
