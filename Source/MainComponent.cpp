@@ -35,20 +35,35 @@ public:
         const int numInputChannels = sampBuff.getNumChannels();
         const int numOutputChannels = bufferToFill.buffer->getNumChannels();
 
-        for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
-        {
-            // reading from the sample buffer to the framebuffer
-            bufferToFill.buffer->copyFrom(
-                ch, // destination channel
-                writeIndex, // destination sample
-                sampBuff, // source buffer
-                ch % numInputChannels, // source channel
-                readIndex // source sample
-                samplesToProcess); // number of samples to process
+        int outputSamples = bufferToFill.buffer->getNumSamples(); // init the number of samples need to be output
+
+        int writeIndex = bufferToFill.startSample; // init write index for target buffer
+
+        while(outputSamples > 0){ // run this until the frame buffer is filled
+
+            int samplesToProcess = jmin(outputSamples, sampBuff.getNumSamples()-readIndex); // returns the appropriate number of samples that need to be processed from the sample buffer
+
+
+            for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
+                {
+                    // reading from the sample buffer to the framebuffer
+                    bufferToFill.buffer->copyFrom(
+                        ch, // destination channel
+                        writeIndex, // destination sample
+                        sampBuff, // source buffer
+                        ch % numInputChannels, // source channel
+                        readIndex, // source sample
+                        samplesToProcess); // number of samples to copy
+                }
+
+            outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
+
+            // increment read and write index
+            readIndex += samplesToProcess;
+            writeIndex += samplesToProcess;
         }
 
-
-
+        readIndex = 0;
 
 
         // Right now we are not producing any data, in which case we need to clear the buffer
@@ -84,8 +99,8 @@ public:
 private:
     //==============================================================================
 
-    // Your private member variables go here...
-    AudioSampleBuffer sampBuff;
+    AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
+    int readIndex; // read index of the sample buffer
     
     
 
