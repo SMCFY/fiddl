@@ -70,7 +70,7 @@ public:
             setContentOwned (createMainContentComponent(), true);
             setResizable (true, true);
 
-            centreWithSize (getWidth(), getHeight());
+            setFullScreen (true); // set to fullscreen rather than call centreWithSize()
             setVisible (true);
         }
 

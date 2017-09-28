@@ -1,20 +1,29 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class MainContentComponent   : public AudioAppComponent
+class MainContentComponent   : public AudioAppComponent,
+                               public Button::Listener
 {
 public:
     //==============================================================================
     MainContentComponent()
     {
-        setSize (800, 600);
+        addAndMakeVisible(recordButton);
+        recordButton.setButtonText("Hold to record");
+        recordButton.addListener (this);
+
+        addAndMakeVisible(playButton);
+        playButton.setButtonText("Hold to play");
+        playButton.addListener(this);
+
+        setSize (getWidth(), getHeight());
 
         //testing
 
-        sampBuff.setSize(2,120000000);
+        //sampBuff.setSize(2,120000000);
 
         // specify the number of input and output channels that we want to open
-        //setAudioChannels (2, 2);
+        setAudioChannels (2, 2);
     }
 
     ~MainContentComponent()
@@ -72,7 +81,7 @@ public:
 
         // Right now we are not producing any data, in which case we need to clear the buffer
         // (to prevent the output of random noise)
-        //bufferToFill.clearActiveBufferRegion();
+        bufferToFill.clearActiveBufferRegion();
     }
 
     void releaseResources() override
@@ -94,14 +103,34 @@ public:
 
     void resized() override
     {
+        recordButton.setBounds (0, 0, getWidth()/2, getHeight());
+        playButton.setBounds (getWidth()/2, 0, getWidth()/2, getHeight());
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
     }
 
+    void buttonClicked (Button* button) override // point to the button class and call the button voids
+    {
+        if (button == &recordButton)      recordButtonClicked();
+        if (button == &playButton)     playButtonClicked();
+    }
+
 
 private:
+
+    void recordButtonClicked() //void for what happens when clicking record
+    {
+
+    }
+
+    void playButtonClicked() //void for what happens when clicking play
+    {
+
+    }
     //==============================================================================
+    TextButton recordButton; //declaring buttons
+    TextButton playButton;
 
     AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
     int readIndex; // read index of the sample buffer
