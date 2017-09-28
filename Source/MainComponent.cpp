@@ -1,6 +1,7 @@
-
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioRecorder.h"
+
+static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager;
 
 class MainContentComponent   : public AudioAppComponent,
                                public Button::Listener
@@ -8,8 +9,7 @@ class MainContentComponent   : public AudioAppComponent,
 public:
     //==============================================================================
     MainContentComponent()
-    // TODO
-    // : deviceManager (MainAppWindow::getSharedAudioDeviceManager())  // deviceManager needs to be initialised somehow
+       : deviceManager (getSharedAudioDeviceManager())  
     {
         addAndMakeVisible(recordButton);
         recordButton.setButtonText("Record");
@@ -23,21 +23,20 @@ public:
 
         //testing
 
-        //sampBuff.setSize(2,120000000);
+        sampBuff.setSize(0,0);
 
         // specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
         
           
-        // TODO: deviceManager needs to be setup for the recorder
-        //deviceManager.addAudioCallback (&recorder);
+        //deviceManager needs to be setup for the recorder
+        deviceManager.addAudioCallback (&recorder);
     }
 
     ~MainContentComponent()
     {
           
-        // TODO
-        //deviceManager.removeAudioCallback (&recorder);
+        deviceManager.removeAudioCallback (&recorder);
         shutdownAudio();
     }
 
@@ -161,6 +160,25 @@ private:
         // recordButton has not been initialised: the GUI needs to be implemented
         recordButton.setButtonText ("Record");
     }
+    
+    AudioDeviceManager& getSharedAudioDeviceManager()  
+    {  
+        if (sharedAudioDeviceManager == nullptr)
+        {
+            sharedAudioDeviceManager = new AudioDeviceManager();
+        RuntimePermissions::request (RuntimePermissions::recordAudio, runtimePermissionsCallback);
+        sharedAudioDeviceManager->initialise (2, 2, nullptr, true, String(), nullptr);
+            
+        }
+        return *sharedAudioDeviceManager;
+    }
+    
+    static void runtimePermissionsCallback (bool wasGranted)
+{
+    int numInputChannels = wasGranted ? 2 : 0;
+    sharedAudioDeviceManager->initialise (numInputChannels, 2, nullptr, true, String(), nullptr);
+
+}
 
     void startPlaying ()
     {
@@ -190,6 +208,8 @@ private:
                 startPlaying();
         }*/
     }
+    
+    
 
 
   //  void playButtonClicked() //void for what happens when clicking play
@@ -202,6 +222,8 @@ private:
 
     AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
     int readIndex; // read index of the sample buffer
+    
+    AudioDeviceManager& deviceManager;
     
     /* TODO
      * These variables are needed to set up the device manager for recording
@@ -219,7 +241,6 @@ private:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
 };
-
 
 // (This function is called by the app startup code to create our main component)
 Component* createMainContentComponent()     { return new MainContentComponent(); }
