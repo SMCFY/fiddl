@@ -21,9 +21,7 @@ class AudioRecorder : public AudioIODeviceCallback
         ~AudioRecorder();
         
         // public methods
-        void startRecording (const File& file); /* I eventually want to replace this parameter
-                                                 * with a buffer instead of reading from a file
-                                                 */
+        void startRecording (); 
         void stop ();
         bool isRecording () const;
         void audioDeviceAboutToStart (AudioIODevice* device) override;
@@ -32,6 +30,9 @@ class AudioRecorder : public AudioIODeviceCallback
                                     float** outputChannelData, int numOutputChannels,
                                     int numSamples) override;
         void setSampleRate(double sampleRate);
+        AudioSampleBuffer *sampBuff; // sample buffer, where the recordings are stored
+        float **tempBuff;
+        int writeIndex;
         
     private:  
         // private variables
@@ -40,8 +41,11 @@ class AudioRecorder : public AudioIODeviceCallback
         double sampleRate;
         int64 nextSampleNum;
         
+        
+        
         CriticalSection writerLock;
-        AudioFormatWriter::ThreadedWriter* volatile activeWriter;
+        //AudioFormatWriter::ThreadedWriter* volatile activeWriter;
+        Boolean *activeWriter;
     
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioRecorder);
 };

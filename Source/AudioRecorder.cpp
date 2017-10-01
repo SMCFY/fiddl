@@ -12,51 +12,42 @@
 
 AudioRecorder::AudioRecorder ()
     : backgroundThread ("Audio Recorder Thread"),
-      sampleRate (0), nextSampleNum (0), activeWriter (nullptr)
+      sampleRate (0), nextSampleNum (0), activeWriter (nullptr), writeIndex (0)
 {
-    backgroundThread.startThread();
+    //backgroundThread.startThread();
+    
+    // sampBuff is an AudioSampleBuffer that stores the recorded audio
+    sampBuff = new AudioSampleBuffer(2,441000);
+    
+    // tempBuff is the same as sampBuff, but stores audio as an array of floats for each channel
+    tempBuff = new float*[2];
+    for (int i = 0; i < 2; i++)
+    {
+        tempBuff[i] = new float[441000];
+    }
 }
 
 AudioRecorder::~AudioRecorder()
 {
     stop();
+    for (int i = 0; i < 2; i++)
+    {
+        delete tempBuff[i];
+    }
+    delete tempBuff;
+    delete sampBuff;
 }
 
-void AudioRecorder::startRecording (const File& file)
+void AudioRecorder::startRecording ()
 {
     stop();
+    AudioSampleBuffer sampBuff; // sample buffer, where the recordings are stored
+    writeIndex = 0;
     
     if (sampleRate > 0)
     {
-        /* Create an OutputStream to write to our destination file...
-         * This should eventually be replaced with a buffer, instead
-         * of reading from a file
-         */
-        file.deleteFile();
-        ScopedPointer<FileOutputStream> fileStream (file.createOutputStream());
-        
-        if (fileStream != nullptr)
-        {
-            
-            // Now create a WAV writer object that writes to our output stream...
-            WavAudioFormat wavFormat;
-            AudioFormatWriter* writer = wavFormat.createWriterFor (fileStream, sampleRate, 1, 16, StringPairArray(), 0);
-            
-            if (writer != nullptr)
-            {
-                fileStream.release(); // (passes responsibility for deleting the stream to the writer object that is now using it)
-                
-                // Now we'll create one of these helper objects which will act as a FIFO buffer, and will
-                // write the data to disk on our background thread.
-                threadedWriter = new AudioFormatWriter::ThreadedWriter (writer, backgroundThread, 32768);
-                
-                nextSampleNum = 0;
-                
-                // And now, swap over our active writer pointer so that the audio callback will start using it..
-                const ScopedLock sl (writerLock);
-                activeWriter = threadedWriter;
-            }
-        }
+        const ScopedLock sl (writerLock);
+        activeWriter = new Boolean;     
     }
 }
 
@@ -66,6 +57,7 @@ void AudioRecorder::stop()
     {
         const ScopedLock sl (writerLock);
         activeWriter = nullptr;
+        writeIndex = 0;
     }
     
     // Now we can delete the writer object. It's done in this order because the deletion could
@@ -93,13 +85,34 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
                                            float** outputChannelData, int numOutputChannels,
                                            int numSamples) 
 {
-    const ScopedLock sl (writerLock);
-    
-    if (activeWriter != nullptr)
-    {
-        activeWriter->write (inputChannelData, numSamples);
+    /* This is the callback function to record audio from the microphone to a buffer
+     * When the play button is triggered, the buffer fills up with a maximum of 10 seconds
+     * of recorded audio. 
+     * tempBuff is a float array that stores the audio in each channel
+     */
+    if (activeWriter != nullptr && writeIndex < sampBuff->getNumSamples()-numSamples)
+    {   
+        int destStartSample = writeIndex; 
+        const ScopedLock sl (writerLock);
         
-        nextSampleNum += numSamples;
+        // store the recorded audio into tempBuff
+        for (int ch = 0; ch < 2; ch++)
+        {
+            for (int sample= 0; sample < numSamples; sample++)
+            {
+                tempBuff[ch][sample+destStartSample] = inputChannelData[ch][sample];
+            }
+        }
+    
+        // copy the recorded audio into sampBuff
+        // TODO: currently does not copy! Values end up being all zeros.
+        for (int destChannel = 0; destChannel < sampBuff->getNumChannels(); destChannel++) 
+        {
+            sampBuff->copyFrom (destChannel, destStartSample, inputChannelData[destChannel], numSamples);
+        }
+        
+        writeIndex+=numSamples;
+        
     }
 }
 
