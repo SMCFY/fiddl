@@ -19,7 +19,7 @@ public:
         playButton.setButtonText("Play");
         playButton.addListener(this);
 
-        setSize (getWidth(), getHeight());
+        setSize (400,400);
         
         recorder = new AudioRecorder();
 
