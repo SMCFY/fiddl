@@ -47,7 +47,7 @@ void AudioRecorder::startRecording ()
     if (sampleRate > 0)
     {
         const ScopedLock sl (writerLock);
-        activeWriter = new Boolean;     
+        activeWriter = new Boolean;
     }
 }
 
@@ -57,6 +57,14 @@ void AudioRecorder::stop()
     {
         const ScopedLock sl (writerLock);
         activeWriter = nullptr;
+        // clear the part of the buffer that is unused
+        for (int ch = 0; ch < 2; ch++)
+        {
+            for (int sample = writeIndex; sample < 441000; sample++)
+            {
+                tempBuff[ch][sample] = 0.0f;
+            }
+        }
         writeIndex = 0;
     }
     
