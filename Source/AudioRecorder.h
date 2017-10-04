@@ -16,11 +16,11 @@ class AudioRecorder : public AudioIODeviceCallback
 {
     public:
         // constructer
-        AudioRecorder();
+        AudioRecorder(double sampleRate, int numChannels, double bufferLengthInSeconds);
         // destructor
         ~AudioRecorder();
         
-        // public methods
+        /** public methods **/
         void startRecording (); 
         void stop ();
         bool isRecording () const;
@@ -29,23 +29,24 @@ class AudioRecorder : public AudioIODeviceCallback
         void audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
                                     float** outputChannelData, int numOutputChannels,
                                     int numSamples) override;
-        void setSampleRate(double sampleRate);
-        AudioSampleBuffer *sampBuff; // sample buffer, where the recordings are stored
-        float **tempBuff;
-        int writeIndex;
-        
+        // setter methods
+        void setSampleRate (double sampleRate);
+        // getter methods
+        double getSampleRate ();
+        int getNumChannels ();
+        float** getSampBuff ();
+        int getBufferLengthInSamples ();
+        int getWriteIndex ();
+
     private:  
-        // private variables
-        TimeSliceThread backgroundThread; // the thread that will write audio data to disk
-        ScopedPointer<AudioFormatWriter::ThreadedWriter> threadedWriter; // the FIFO used to buffer the incoming data
+        /** private variables **/
+        int numChannels;
+        float **sampBuff; // sample buffer, where the recordings are stored
+        int bufferLengthInSamples; // sample buffer length in integer seconds
         double sampleRate;
-        int64 nextSampleNum;
-        
-        
-        
+        int writeIndex; // index where the recording buffer is being written to
         CriticalSection writerLock;
-        //AudioFormatWriter::ThreadedWriter* volatile activeWriter;
-        Boolean *activeWriter;
+        Boolean activeWriter;
     
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioRecorder);
 };
