@@ -111,6 +111,10 @@ public:
             // writeIndex += samplesToProcess; // TODO: temp
         }
         }
+        else if (isPlaying)
+        {
+            stopPlaying(); // stop playing if the audio exceeds the maximum recording buffer length
+        }
         //readIndex = 0;  // commented out for the temp Solution
 
 
