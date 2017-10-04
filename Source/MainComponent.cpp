@@ -60,7 +60,9 @@ public:
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
-
+        bufferToFill.clearActiveBufferRegion();
+        if (readIndex < 441000 && isPlaying)
+        {
         // I/O channels acquired from sample buffer and the framebuffer
         const int numInputChannels = recorder->sampBuff->getNumChannels();
         const int numOutputChannels = bufferToFill.buffer->getNumChannels();
@@ -69,13 +71,23 @@ public:
 
         int writeIndex = bufferToFill.startSample; // init write index for target buffer
 
-        while(outputSamples > 0){ // run this until the frame buffer is filled
+        while(outputSamples > 0){ // run this until the frame buffer is filled  // TODO: temp
 
-            int samplesToProcess = jmin(outputSamples, recorder->sampBuff->getNumSamples()-readIndex); // returns the appropriate number of samples that need to be processed from the sample buffer
-
-
+            //int samplesToProcess = jmin(outputSamples, recorder->sampBuff->getNumSamples()-readIndex); // returns the appropriate number of samples that need to be processed from the sample buffer //TODO: temp
+        
+            // TODO: the next three lines are part of the temporary solution (see below in the TODO section)
+            float** const buffer = bufferToFill.buffer->getArrayOfWritePointers ();
+            int sample = 0; // part of the temp solution
+            int samplesToProcess = jmin(outputSamples, 441000-readIndex); // 441000 is the size of tempBuff, hardcoded
+            
             for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
-                {
+            {
+                    /* TODO: I'm replacing this section of code which is commented out,
+                     *       with a temporary solution below. The temporary solution writes
+                     *       a float array, tempBuff, into a float pointer, buffer, which points
+                     *       to the float values that are being copied to bufferToFill.buffer,
+                     *       which is an AudioSampleBuffer that outputs the samples being copied
+
                     // reading from the sample buffer to the framebuffer
                     // The sample buffer is coming from the AudioRecorder buffer
                     bufferToFill.buffer->copyFrom(
@@ -85,21 +97,26 @@ public:
                         ch % numInputChannels, // source channel
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
-                }
+                    */
+                    for (sample = 0; sample < samplesToProcess; ++sample)
+                    {
+                        buffer[ch][sample] = recorder->tempBuff[ch][readIndex+sample];
+                    }
+            }
                 
             outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
 
             // increment read and write index
             readIndex += samplesToProcess;
-            writeIndex += samplesToProcess;
+            // writeIndex += samplesToProcess; // TODO: temp
         }
-
-        readIndex = 0;
+        }
+        //readIndex = 0;  // commented out for the temp Solution
 
 
         // Right now we are not producing any data, in which case we need to clear the buffer
         // (to prevent the output of random noise)
-        bufferToFill.clearActiveBufferRegion();
+        //bufferToFill.clearActiveBufferRegion();
     }
 
     void releaseResources() override
@@ -195,6 +212,7 @@ private:
         
         playButton.setButtonText ("Play");       
         isPlaying = false;
+        readIndex = 0;
     }
 
     void buttonClicked (Button* button) override //void for what happens when clicking a button
