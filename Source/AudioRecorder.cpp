@@ -4,6 +4,8 @@
     AudioRecorder.cpp
     Created: 27 Sep 2017 1:30:17pm
     Author:  Michael Castanieto
+             Jonas Holfelt
+             Gergely Csapo
 
   ==============================================================================
 */
