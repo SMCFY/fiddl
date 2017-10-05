@@ -37,7 +37,7 @@ public:
         
         // create a new recorder for the microphone which stores samples
         // in a 2-channel buffer with a size of 10*sampleRate samples
-        recorder = new AudioRecorder (sampleRate, 2, 10.f);
+        recorder = new AudioRecorder (sampleRate, 2, 3.f);
         
         // initialising sample rate in the recorder
         recorder->setSampleRate (sampleRate);
@@ -71,26 +71,39 @@ public:
             // I/O channels acquired from sample buffer and the framebuffer
             const int numInputChannels = recorder->getNumChannels ();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
-            int outputSamples = bufferToFill.buffer->getNumSamples (); // init the number of samples need to be output
+            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output
+            writeIndex = bufferToFill.startSample;
 
-            while(outputSamples > 0) // run this until the frame buffer is filled
+            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled
             {
-                float** const buffer = bufferToFill.buffer->getArrayOfWritePointers ();
-                int samplesToProcess = jmin(bufferToFill.buffer->getNumSamples (), recorder->getBufferLengthInSamples () - readIndex);
+                //float** const buffer = bufferToFill.buffer->getArrayOfWritePointers ();
+                int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
-                    for (int sample = 0; sample < samplesToProcess; ++sample)
-                    {
-                        buffer[ch][sample] = recorder->getSampBuff().getArrayOfReadPointers()[ch][readIndex+sample];
-                    }
+
+                    bufferToFill.buffer->copyFrom(
+                        ch, // destination channel
+                        writeIndex, // destination sample
+                        recorder->getSampBuff(), // source buffer
+                        ch % numInputChannels, // source channel
+                        readIndex, // source sample
+                        samplesToProcess); // number of samples to copy
+
+                    //for (int sample = 0; sample < samplesToProcess; ++sample)
+                    //{
+                    //    buffer[ch][sample] = recorder->getSampBuff().getArrayOfReadPointers()[ch][readIndex+sample];
+                    //}
                 }
                 
                 outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
+                readIndex += samplesToProcess; // increment read index
+                writeIndex += samplesToProcess; //
 
-                // increment read and write index
-                readIndex += samplesToProcess;
-
+                //if (readIndex == recorder->getSampBuff().getNumSamples())
+                //{
+                //    readIndex = 0;
+                //}
                 // TODO: temporary fix for now, for exiting from reading 
                 //       the recorder buffer when it reaches the end
                 //if (samplesToProcess <= 0)
@@ -199,6 +212,7 @@ private:
     Boolean isPlaying;
 
     int readIndex; // read index of the sample buffer
+    int writeIndex;
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     AudioRecorder *recorder; // recording from a device to a file
     int totalSamples; // total number of recorded samples in the buffer

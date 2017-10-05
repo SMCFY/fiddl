@@ -14,5 +14,5 @@
 5. Select desired target and click `Save and Open in IDE` (currently only working for iOS and OSX)
 6. Build the application
 
-#### Release notes v0.1:
->First prototype, presenting the core functionality of the application. This prototype demonstrates recording audio from a device's microphone to a buffer, where the audio can be played back. Record audio by pressing `Record` and stop recording by pressing `Stop  ` on the left side of the screen. Play the audio back by pressing `Play` and stop playback by pressing `Stop` on the right side of the screen. Audio can be recorded for no more than 10 seconds. Devices have been tested successfully on iOS for both iPhone and iPad.
+#### Release notes v0.1(Smoke n Mirrors):
+>First prototype, presenting the core functionality of the application. This prototype demonstrates recording audio from a device's microphone to a buffer, where the audio can be played back. Record audio by pressing `Record` and stop recording by pressing `Stop` on the left side of the screen. Play the audio back by pressing `Play` and stop playback by pressing `Stop` on the right side of the screen. Audio can be recorded for no more than 3 seconds. Devices have been tested successfully on iOS for both iPhone and iPad.
