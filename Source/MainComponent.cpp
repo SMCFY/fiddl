@@ -36,7 +36,7 @@ public:
         int sampleRate = 44100;
         
         // create a new recorder for the microphone which stores samples
-        // in a 2-channel buffer with a size of sampleRate * 10 samples
+        // in a 2-channel buffer with a size of 10*sampleRate samples
         recorder = new AudioRecorder (sampleRate, 2, 10.f);
         
         // initialising sample rate in the recorder
@@ -71,20 +71,16 @@ public:
             // I/O channels acquired from sample buffer and the framebuffer
             const int numInputChannels = recorder->getNumChannels ();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
-
             int outputSamples = bufferToFill.buffer->getNumSamples (); // init the number of samples need to be output
-
-            int writeIndex = bufferToFill.startSample; // init write index for target buffer
 
             while(outputSamples > 0) // run this until the frame buffer is filled
             {
                 float** const buffer = bufferToFill.buffer->getArrayOfWritePointers ();
-                int sample = 0;
-                int samplesToProcess = jmin(outputSamples, recorder->getBufferLengthInSamples () - readIndex);
+                int samplesToProcess = jmin(bufferToFill.buffer->getNumSamples (), recorder->getBufferLengthInSamples () - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
-                    for (sample = 0; sample < samplesToProcess; ++sample)
+                    for (int sample = 0; sample < samplesToProcess; ++sample)
                     {
                         buffer[ch][sample] = recorder->getSampBuff()[ch][readIndex+sample];
                     }
@@ -94,11 +90,14 @@ public:
 
                 // increment read and write index
                 readIndex += samplesToProcess;
+
+                // TODO: temporary fix for now, for exiting from reading 
+                //       the recorder buffer when it reaches the end
+                if (samplesToProcess <= 0)
+                {
+                    break;
+                }
             }
-        }
-        else if (isPlaying)
-        {
-            stopPlaying(); // stop playing if the audio exceeds the maximum recording buffer length
         }
     }
 
