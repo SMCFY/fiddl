@@ -23,10 +23,6 @@ public:
         // screen size in pixels
         setSize (400, 400);
         
-        isPlaying = false;
-
-        totalSamples = 0;
-
         // specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
         
@@ -38,11 +34,9 @@ public:
         // create a new recorder for the microphone which stores samples
         // in a 2-channel buffer with a size of 10*sampleRate samples
         recorder = new AudioRecorder (sampleRate, 2, 3.f);
-        
         // initialising sample rate in the recorder
         recorder->setSampleRate (sampleRate);
-
-        //deviceManager needs to be setup for the recorder
+         //deviceManager needs to be setup for the recorder
         deviceManager.addAudioCallback (recorder);
     }
 
@@ -56,11 +50,9 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
-        // This function will be called when the audio device is started, or when
-        // its settings (i.e. sample rate, block size, etc) are changed.
+        
+        isPlaying = false;
 
-        // You can use this function to initialise any resources you might need,
-        // but be careful - it will be called on the audio thread, not the GUI thread.
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -68,15 +60,15 @@ public:
         bufferToFill.clearActiveBufferRegion (); // clearing the buffer frame BEFORE writing to it
         if (readIndex < recorder->getBufferLengthInSamples () && isPlaying)
         {
-            // I/O channels acquired from sample buffer and the framebuffer
+
             const int numInputChannels = recorder->getNumChannels ();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
-            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output
-            writeIndex = bufferToFill.startSample;
 
-            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled
+            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output next frame
+            writeIndex = bufferToFill.startSample; // write index, which is passed to the copyFrom() function
+
+            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
             {
-                //float** const buffer = bufferToFill.buffer->getArrayOfWritePointers ();
                 int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
@@ -89,27 +81,11 @@ public:
                         ch % numInputChannels, // source channel
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
-
-                    //for (int sample = 0; sample < samplesToProcess; ++sample)
-                    //{
-                    //    buffer[ch][sample] = recorder->getSampBuff().getArrayOfReadPointers()[ch][readIndex+sample];
-                    //}
                 }
                 
                 outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
-                readIndex += samplesToProcess; // increment read index
-                writeIndex += samplesToProcess; //
-
-                //if (readIndex == recorder->getSampBuff().getNumSamples())
-                //{
-                //    readIndex = 0;
-                //}
-                // TODO: temporary fix for now, for exiting from reading 
-                //       the recorder buffer when it reaches the end
-                //if (samplesToProcess <= 0)
-                //{
-                //    break;
-                //}
+                readIndex += samplesToProcess;
+                writeIndex += samplesToProcess;
             }
         }
     }
@@ -148,7 +124,6 @@ private:
 
     void stopRecording()
     {
-        totalSamples = recorder->getWriteIndex ();
         recorder->stop();
         recordButton.setButtonText ("Record");
     }
@@ -205,19 +180,28 @@ private:
                 startPlaying();
         }
     }
-    
+
+    //void isDown (Button* button)
+    //{
+    //    if (button == &recordButton)
+    //    {
+    //        if (!recorder->isRecording())
+    //            startRecording();
+    //    }
+    //}
+     
     //==============================================================================
     TextButton recordButton;
     TextButton playButton;
     Boolean isPlaying;
-
-    int readIndex; // read index of the sample buffer
+    int readIndex;
     int writeIndex;
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     AudioRecorder *recorder; // recording from a device to a file
-    int totalSamples; // total number of recorded samples in the buffer
+    int sampleRate;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
+    
 };
 
 // (This function is called by the app startup code to create our main component)
