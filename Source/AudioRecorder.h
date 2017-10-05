@@ -35,14 +35,17 @@ class AudioRecorder : public AudioIODeviceCallback
         // getter methods
         double getSampleRate ();
         int getNumChannels ();
-        float** getSampBuff ();
+        float** getRecBuff ();
+        AudioBuffer<float> getSampBuff ();
         int getBufferLengthInSamples ();
         int getWriteIndex ();
 
+
     private:  
         /** private variables **/
+        AudioBuffer<float> sampBuff;
         int numChannels;
-        float **sampBuff; // sample buffer, where the recordings are stored
+        float **recBuff; // sample buffer, where the recordings are stored
         int bufferLengthInSamples; // sample buffer length in integer seconds
         double sampleRate;
         int writeIndex; // index where the recording buffer is being written to

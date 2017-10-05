@@ -20,12 +20,14 @@ AudioRecorder::AudioRecorder (double sampleRate, int numChannels, double bufferL
 
     bufferLengthInSamples = ceil(sampleRate * bufferLengthInSeconds); 
     
-    // sampBuff stores the recorded audio
-    sampBuff = new float*[numChannels];
+    // recBuff stores the recorded audio
+    recBuff = new float*[numChannels];
     for (int ch = 0; ch < numChannels; ch++)
     {
-        sampBuff[ch] = new float[bufferLengthInSamples];
+        recBuff[ch] = new float[bufferLengthInSamples];
     }
+
+    sampBuff.setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
 }
 
 AudioRecorder::~AudioRecorder()
@@ -33,9 +35,9 @@ AudioRecorder::~AudioRecorder()
     stop();
     for (int i = 0; i < numChannels; i++)
     {
-        delete sampBuff[i];
+        delete recBuff[i];
     }
-    delete sampBuff;
+    delete recBuff;
 }
 
 void AudioRecorder::startRecording ()
@@ -61,7 +63,7 @@ void AudioRecorder::stop()
         {
             for (int sample = writeIndex; sample < getBufferLengthInSamples (); sample++)
             {
-                sampBuff[ch][sample] = 0.0f;
+                recBuff[ch][sample] = 0.0f;
             }
         }
         writeIndex = 0;
@@ -90,19 +92,19 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
     /* This is the callback function to record audio from the microphone to a buffer
      * When the play button is triggered, the buffer fills up with a maximum of 10 seconds
      * of recorded audio. 
-     * sampBuff is a float array that stores the audio in each channel
+     * recBuff is a float array that stores the audio in each channel
      */
     if (activeWriter != false && writeIndex < bufferLengthInSamples-numSamples)
     {   
         int destStartSample = writeIndex; 
         const ScopedLock sl (writerLock);
         
-        // store the recorded audio into sampBuff
+        // store the recorded audio into recBuff
         for (int ch = 0; ch < numChannels; ch++)
         {
             for (int sample= 0; sample < numSamples; sample++)
             {
-                sampBuff[ch][sample+destStartSample] = inputChannelData[ch][sample];
+                recBuff[ch][sample+destStartSample] = inputChannelData[ch][sample];
             }
         }
 
@@ -120,7 +122,12 @@ int AudioRecorder::getNumChannels ()
     return numChannels;
 }
 
-float** AudioRecorder::getSampBuff () 
+float** AudioRecorder::getRecBuff () 
+{
+    return recBuff;
+}
+
+AudioBuffer<float> AudioRecorder::getSampBuff () 
 {
     return sampBuff;
 }

@@ -82,7 +82,7 @@ public:
                 {
                     for (int sample = 0; sample < samplesToProcess; ++sample)
                     {
-                        buffer[ch][sample] = recorder->getSampBuff()[ch][readIndex+sample];
+                        buffer[ch][sample] = recorder->getSampBuff().getArrayOfReadPointers()[ch][readIndex+sample];
                     }
                 }
                 
@@ -93,10 +93,10 @@ public:
 
                 // TODO: temporary fix for now, for exiting from reading 
                 //       the recorder buffer when it reaches the end
-                if (samplesToProcess <= 0)
-                {
-                    break;
-                }
+                //if (samplesToProcess <= 0)
+                //{
+                //    break;
+                //}
             }
         }
     }
