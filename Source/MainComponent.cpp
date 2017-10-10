@@ -88,6 +88,14 @@ public:
                 writeIndex += samplesToProcess;
             }
         }
+        else if (isPlaying)
+        {
+            // Component call isn't being called in a message thread,
+            // make sure it is thread-safe by temporarily suspending the message thread
+            const MessageManagerLock mmLock;
+            // buffer playback has reached the end, switch the play button back to "Play"
+            stopPlaying();
+        }
     }
 
     void releaseResources() override
