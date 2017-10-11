@@ -16,6 +16,10 @@ RecComponent::RecComponent()
 {
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
+    addAndMakeVisible (recordButton);
+    recordButton.setButtonText ("Hold to record");
+    recordButton.addListener(this);
+    isRecording = false;
 
 }
 
@@ -34,18 +38,23 @@ void RecComponent::paint (Graphics& g)
 
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 
-    g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
-    g.setColour (Colours::white);
-    g.setFont (14.0f);
-    g.drawText ("RecComponent", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
 }
 
 void RecComponent::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
+    recordButton.setBounds(50,10,getWidth()/2,getHeight()-100);
 
 }
+
+void RecComponent::buttonClicked (Button* button)
+    {
+        if (button == &recordButton)
+        {
+            if (recorder->isRecording())
+                stopRecording();
+            else
+                startRecording();
+        }
+    }
