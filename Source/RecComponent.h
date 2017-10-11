@@ -25,6 +25,7 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     void buttonClicked(Button* button) override;
+    void buttonStateChanged(Button* button) override;
 
     void startRecording();
     void stopRecording();
