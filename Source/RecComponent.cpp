@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "../../../JUCE /FiguraTK/JuceLibraryCode/JuceHeader.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "RecComponent.h"
 
 //==============================================================================
