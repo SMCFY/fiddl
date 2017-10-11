@@ -19,15 +19,18 @@ public:
         recComp.setSize(100, 100);
 
         setSize(400, 400);
-        setAudioChannels(1, 2);
+        setAudioChannels(2, 2);
+        
+        readIndex = 0;
         
         // sampleRate is hard coded for now
         // this is because the recorder cannot be initialised in prepareToPlay()
         // where the real sampleRate can be used (assumed to be 44.1K)
         int sampleRate = 44100;
         
-        recorder = new AudioRecorder(sampleRate, 1, 3.f);
+        recorder = new AudioRecorder(sampleRate, 2, 3.f);
         recorder->setSampleRate(sampleRate);
+        recComp.setRecorder(recorder);
         deviceManager.addAudioCallback(recorder);
     }
 
@@ -44,8 +47,6 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
-        
-        playComp.isPlaying = false;
 
     }
 
@@ -76,7 +77,8 @@ public:
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
                 }
-                
+                std::cout << recorder->getRecBuff()[0][readIndex] << std::endl;
+
                 outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
                 readIndex += samplesToProcess;
                 writeIndex += samplesToProcess;
@@ -90,6 +92,8 @@ public:
             playComp.stopPlaying();
 
         }
+
+        // bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
     }
 
     void releaseResources() override
@@ -114,6 +118,29 @@ public:
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
+    }
+
+    void mouseDown (const MouseEvent &event) override
+    {
+         
+        if (recComp.isRecording)
+        {
+           
+            recorder->startRecording();
+        }
+    }
+
+    void mouseUp (const MouseEvent &event) override
+    {
+        std::cout << "record" << std::endl;
+        if (!recComp.isRecording)
+            {
+            recorder->stop();
+        }
+        if (!playComp.isPlaying)
+        {
+            readIndex = 0;
+        }
     }
 
 private:

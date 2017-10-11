@@ -60,15 +60,21 @@ void RecComponent::buttonStateChanged(Button* button)
         startRecording();
     else
         stopRecording();
-        
+}
+
+void RecComponent::setRecorder(AudioRecorder *recorder)
+{
+    this->recorder = recorder;
 }
 
 void RecComponent::startRecording()
 {
-    recordButton.setButtonText("recording");
+    recorder->startRecording();
+    recordButton.setButtonText("Recording");
 }
 
 void RecComponent::stopRecording()
 {
+    recorder->stop();
     recordButton.setButtonText("Hold to Record");
 }

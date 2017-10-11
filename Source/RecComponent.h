@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "AudioRecorder.h"
 
 //==============================================================================
 /*
@@ -26,12 +27,14 @@ public:
     void resized() override;
     void buttonClicked(Button* button) override;
     void buttonStateChanged(Button* button) override;
-
+    
+    void setRecorder(AudioRecorder *recorder);
     void startRecording();
     void stopRecording();
 
     bool isRecording;
 private:
     TextButton recordButton;
+    AudioRecorder *recorder;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecComponent)
 };
