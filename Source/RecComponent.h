@@ -24,8 +24,12 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buttonClicked() override;
+    void buttonClicked(Button* button) override;
 
+    void startRecording();
+    void stopRecording();
+
+    bool isRecording;
 private:
     TextButton recordButton;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecComponent)

@@ -49,12 +49,17 @@ void RecComponent::resized()
 }
 
 void RecComponent::buttonClicked (Button* button)
-    {
-        if (button == &recordButton)
-        {
-            if (recorder->isRecording())
-                stopRecording();
-            else
-                startRecording();
-        }
-    }
+{
+
+}
+
+void RecComponent::startRecording()
+{
+
+}
+
+void RecComponent::stopRecording()
+{
+
+
+}

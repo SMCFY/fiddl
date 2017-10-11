@@ -10,14 +10,13 @@ class MainContentComponent   : public AudioAppComponent
 {
 public:
     //==============================================================================
-    MainContentComponent ()
-       : deviceManager (getSharedAudioDeviceManager ())
+    MainContentComponent() : deviceManager(getSharedAudioDeviceManager())
     {
         
         addAndMakeVisible(playComp);
-        playComp.setSize();
+        playComp.setSize(100, 100);
         addAndMakeVisible(recComp);
-        recComp.setSize();
+        recComp.setSize(100, 100);
 
         setSize(400, 400);
         setAudioChannels(1, 2);
@@ -28,7 +27,7 @@ public:
         int sampleRate = 44100;
         
         recorder = new AudioRecorder(sampleRate, 1, 3.f);
-        recorder.setSampleRate(sampleRate);
+        recorder->setSampleRate(sampleRate);
         deviceManager.addAudioCallback(recorder);
     }
 
@@ -36,8 +35,9 @@ public:
     {
         deviceManager.removeAudioCallback(recorder);
         delete recorder;
-        delete playComp;
-        delete recComp;
+        
+        //delete playComp;
+        //delete recComp;
         shutdownAudio();
     }
 
@@ -55,23 +55,23 @@ public:
         if (readIndex < recorder->getBufferLengthInSamples () && playComp.isPlaying)
         {
 
-            const int numInputChannels = recorder.getNumChannels ();
-            const int numOutputChannels = bufferToFill.buffer.getNumChannels ();
+            const int numInputChannels = recorder->getNumChannels ();
+            const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
 
-            int outputSamples = bufferToFill.buffer.getNumSamples (); // number of samples need to be output next frame
+            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output next frame
             writeIndex = bufferToFill.startSample; // write index, which is passed to the copyFrom() function
 
-            while(outputSamples > 0 && readIndex != recorder.getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
+            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
             {
-                int samplesToProcess = jmin(outputSamples, recorder.getSampBuff().getNumSamples() - readIndex);
+                int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
 
-                    bufferToFill.buffer.copyFrom(
+                    bufferToFill.buffer->copyFrom(
                         ch, // destination channel
                         writeIndex, // destination sample
-                        recorder.getSampBuff(), // source buffer
+                        recorder->getSampBuff(), // source buffer
                         ch % numInputChannels, // source channel
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
@@ -109,8 +109,8 @@ public:
 
     void resized() override
     {
-        recordButton.setBounds (0, 0, getWidth()/2, getHeight());
-        playButton.setBounds (getWidth()/2, 0, getWidth()/2, getHeight());
+        playComp.setBounds (0, 0, getWidth(), getHeight()*3/4);
+        recComp.setBounds (0, getHeight()*3/4, getWidth(), getHeight()*1/4);
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
@@ -139,14 +139,14 @@ private:
 
     //void startRecording ()
     //{
-    //    recorder->startRecording ();
+    //    recorder->>startRecording ();
 //
     //    recordButton.setButtonText ("Stop");
     //}
 //
     //void stopRecording()
     //{
-    //    recorder->stop();
+    //    recorder->>stop();
     //    recordButton.setButtonText ("Record");
     //}
     
@@ -165,7 +165,7 @@ private:
     //{
     //    if (button == &recordButton)
     //    {
-    //        if (recorder->isRecording())
+    //        if (recorder->>isRecording())
     //            stopRecording();
     //        else
     //            startRecording();
@@ -184,7 +184,7 @@ private:
     //{
     //    if (button == &recordButton)
     //    {
-    //        if (!recorder->isRecording())
+    //        if (!recorder->>isRecording())
     //            startRecording();
     //    }
     //}
@@ -192,7 +192,7 @@ private:
     //==============================================================================
     PlayComponent playComp;
     RecComponent recComp;
-    AudioRecorder recorder; // recording from a device to a file
+    AudioRecorder *recorder; // recording from a device to a file
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
 
     int readIndex;
@@ -204,4 +204,4 @@ private:
 };
 
 // (This function is called by the app startup code to create our main component)
-Component* createMainContentComponent()     { return new MainContentComponent(); }
+Component* createMainContentComponent(){ return new MainContentComponent(); }
