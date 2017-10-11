@@ -52,3 +52,13 @@ void PlayComponent::resized()
     // components that your component contains..
 
 }
+
+void PlayComponent::stopPlaying()
+{
+    isPlaying = false;
+}
+
+void PlayComponent::startPlaying()
+{
+    isPlaying = true;
+}

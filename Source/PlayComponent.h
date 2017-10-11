@@ -25,6 +25,8 @@ public:
     // public methods inherited from Component
     void paint (Graphics&) override;
     void resized() override;
+    void stopPlaying(); // stop audio playback
+    void startPlaying(); // start audio playback
     
     // public variables
     bool isPlaying; // true if recorded audio is playing
