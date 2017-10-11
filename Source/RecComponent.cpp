@@ -44,22 +44,31 @@ void RecComponent::resized()
 {
     // This method is where you should set the bounds of any child
     // components that your component contains..
-    recordButton.setBounds(50,10,getWidth()/2,getHeight()-100);
+    recordButton.setBounds(getWidth()/2-(getWidth()/3/2),getHeight()/2-(getHeight()/3/2),getWidth()/3,getHeight()/3);
 
+    
 }
 
 void RecComponent::buttonClicked (Button* button)
 {
+    
+}
 
+void RecComponent::buttonStateChanged(Button* button)
+{
+    if(recordButton.isDown())
+        startRecording();
+    else
+        stopRecording();
+        
 }
 
 void RecComponent::startRecording()
 {
-
+    recordButton.setButtonText("recording");
 }
 
 void RecComponent::stopRecording()
 {
-
-
+    recordButton.setButtonText("Hold to Record");
 }
