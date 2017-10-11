@@ -1,83 +1,77 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioRecorder.h"
+#include "PlayComponent.h"
+#include "RecComponent.h"
 
 // used for initialising the deviceManager
 static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager; 
 
-class MainContentComponent   : public AudioAppComponent,
-                               public Button::Listener
+class MainContentComponent   : public AudioAppComponent
 {
 public:
     //==============================================================================
     MainContentComponent ()
        : deviceManager (getSharedAudioDeviceManager ())
     {
-        addAndMakeVisible (recordButton);
-        recordButton.setButtonText("Record");
-        recordButton.addListener (this);
-
-        addAndMakeVisible (playButton);
-        playButton.setButtonText ("Play");
-        playButton.addListener (this);
-
-        // screen size in pixels
-        setSize (400, 400);
         
-        // specify the number of input and output channels that we want to open
-        setAudioChannels (2, 2);
+        addAndMakeVisible(playComp);
+        playComp.setSize();
+        addAndMakeVisible(recComp);
+        recComp.setSize();
+
+        setSize(400, 400);
+        setAudioChannels(1, 2);
         
         // sampleRate is hard coded for now
         // this is because the recorder cannot be initialised in prepareToPlay()
         // where the real sampleRate can be used (assumed to be 44.1K)
         int sampleRate = 44100;
         
-        // create a new recorder for the microphone which stores samples
-        // in a 2-channel buffer with a size of 10*sampleRate samples
-        recorder = new AudioRecorder (sampleRate, 2, 3.f);
-        // initialising sample rate in the recorder
-        recorder->setSampleRate (sampleRate);
-         //deviceManager needs to be setup for the recorder
-        deviceManager.addAudioCallback (recorder);
+        recorder = new AudioRecorder(sampleRate, 1, 3.f);
+        recorder.setSampleRate(sampleRate);
+        deviceManager.addAudioCallback(recorder);
     }
 
     ~MainContentComponent ()
     {
-        deviceManager.removeAudioCallback (recorder);
+        deviceManager.removeAudioCallback(recorder);
         delete recorder;
-        shutdownAudio ();
+        delete playComp;
+        delete recComp;
+        shutdownAudio();
     }
 
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
         
-        isPlaying = false;
+        playComp.isPlaying = false;
 
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
         bufferToFill.clearActiveBufferRegion (); // clearing the buffer frame BEFORE writing to it
-        if (readIndex < recorder->getBufferLengthInSamples () && isPlaying)
+        if (readIndex < recorder->getBufferLengthInSamples () && playComp.isPlaying)
         {
 
-            const int numInputChannels = recorder->getNumChannels ();
-            const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
+            const int numInputChannels = recorder.getNumChannels ();
+            const int numOutputChannels = bufferToFill.buffer.getNumChannels ();
 
-            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output next frame
+            int outputSamples = bufferToFill.buffer.getNumSamples (); // number of samples need to be output next frame
             writeIndex = bufferToFill.startSample; // write index, which is passed to the copyFrom() function
 
-            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
+            while(outputSamples > 0 && readIndex != recorder.getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
             {
-                int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
+                int samplesToProcess = jmin(outputSamples, recorder.getSampBuff().getNumSamples() - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
 
-                    bufferToFill.buffer->copyFrom(
+                    bufferToFill.buffer.copyFrom(
                         ch, // destination channel
                         writeIndex, // destination sample
-                        recorder->getSampBuff(), // source buffer
+                        recorder.getSampBuff(), // source buffer
                         ch % numInputChannels, // source channel
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
@@ -88,13 +82,13 @@ public:
                 writeIndex += samplesToProcess;
             }
         }
-        else if (isPlaying)
+        else if (playComp.isPlaying)
         {
             // Component call isn't being called in a message thread,
             // make sure it is thread-safe by temporarily suspending the message thread
             const MessageManagerLock mmLock;
-            // buffer playback has reached the end, switch the play button back to "Play"
-            stopPlaying();
+            playComp.stopPlaying();
+
         }
     }
 
@@ -123,19 +117,6 @@ public:
     }
 
 private:
-    void startRecording ()
-    {
-        recorder->startRecording ();
-
-        recordButton.setButtonText ("Stop");
-    }
-
-    void stopRecording()
-    {
-        recorder->stop();
-        recordButton.setButtonText ("Record");
-    }
-    
     /* This function sets up the I/O to stream audio to/from a device
      * RuntimePermissions::recordAudio requests the microphone be used as audio input
      */
@@ -156,38 +137,48 @@ private:
         sharedAudioDeviceManager->initialise (numInputChannels, 2, nullptr, true, String(), nullptr);
     }
 
-    void startPlaying ()
-    {
-        playButton.setButtonText ("Stop");
-        isPlaying = true;
-    }
+    //void startRecording ()
+    //{
+    //    recorder->startRecording ();
+//
+    //    recordButton.setButtonText ("Stop");
+    //}
+//
+    //void stopRecording()
+    //{
+    //    recorder->stop();
+    //    recordButton.setButtonText ("Record");
+    //}
+    
+    //void startPlaying ()
+    //{
+    //    isPlaying = true;
+    //}
+//
+    //void stopPlaying()
+    //{
+    //    isPlaying = false;
+    //    readIndex = 0;
+    //}
 
-    void stopPlaying()
-    {
-        
-        playButton.setButtonText ("Play");       
-        isPlaying = false;
-        readIndex = 0;
-    }
-
-    void buttonClicked (Button* button) override
-    {
-        if (button == &recordButton)
-        {
-            if (recorder->isRecording())
-                stopRecording();
-            else
-                startRecording();
-        }
-        
-        if(button == &playButton)
-        {
-            if(isPlaying)
-                stopPlaying();
-            else
-                startPlaying();
-        }
-    }
+    //void buttonClicked (Button* button) override
+    //{
+    //    if (button == &recordButton)
+    //    {
+    //        if (recorder->isRecording())
+    //            stopRecording();
+    //        else
+    //            startRecording();
+    //    }
+    //    
+    //    if(button == &playButton)
+    //    {
+    //        if(isPlaying)
+    //            stopPlaying();
+    //        else
+    //            startPlaying();
+    //    }
+    //}
 
     //void isDown (Button* button)
     //{
@@ -199,13 +190,13 @@ private:
     //}
      
     //==============================================================================
-    TextButton recordButton;
-    TextButton playButton;
-    Boolean isPlaying;
+    PlayComponent playComp;
+    RecComponent recComp;
+    AudioRecorder recorder; // recording from a device to a file
+    AudioDeviceManager& deviceManager; // manages audio I/O devices 
+
     int readIndex;
     int writeIndex;
-    AudioDeviceManager& deviceManager; // manages audio I/O devices 
-    AudioRecorder *recorder; // recording from a device to a file
     int sampleRate;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
