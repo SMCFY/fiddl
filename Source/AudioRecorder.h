@@ -16,7 +16,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        // constructer
+        // constructor
         AudioRecorder(double sampleRate, int numChannels, double bufferLengthInSeconds);
         // destructor
         ~AudioRecorder();
@@ -41,8 +41,11 @@ class AudioRecorder : public AudioIODeviceCallback
         int getWriteIndex ();
 
 
-    private:  
-        /** private variables **/
+    private:
+        int sampStart; // start index of truncated sample
+        int sampLenght; // lenght of truncated sample
+        void truncate(float** recording, float threshold);
+
         AudioBuffer<float> sampBuff;
         int numChannels;
         float **recBuff; // sample buffer, where the recordings are stored

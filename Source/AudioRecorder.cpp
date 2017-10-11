@@ -27,7 +27,6 @@ AudioRecorder::AudioRecorder (double sampleRate, int numChannels, double bufferL
         recBuff[ch] = new float[bufferLengthInSamples];
     }
 
-    sampBuff.setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
 }
 
 AudioRecorder::~AudioRecorder()
@@ -110,6 +109,11 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
 
         writeIndex+=numSamples;
     }
+
+    truncate(recBuff, 0.1f);
+    // set pointer to truncated segment
+    sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLenght);
+
 }
 
 void AudioRecorder::setSampleRate (double sampleRate) 
@@ -140,4 +144,22 @@ int AudioRecorder::getBufferLengthInSamples ()
 int AudioRecorder::getWriteIndex ()
 {
     return writeIndex;
+}
+
+void AudioRecorder::truncate(float** recording, float threshold)
+{
+    int j = sizeof(recording); //reversed iterator
+
+    for (int i = 0; i < sizeof(recording); i++)
+    {
+        j--;
+
+        if(*recording[i] > threshold && this->sampStart != 0)
+            this->sampStart = 0;
+
+        if(*recording[j] > threshold && this->sampLenght != 0)
+            this->sampLenght = sizeof(recording) - (sampStart+sizeof(recording)-j);
+
+    }
+
 }

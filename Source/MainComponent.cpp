@@ -136,58 +136,6 @@ private:
         int numInputChannels = wasGranted ? 2 : 0;
         sharedAudioDeviceManager->initialise (numInputChannels, 2, nullptr, true, String(), nullptr);
     }
-
-    //void startRecording ()
-    //{
-    //    recorder->>startRecording ();
-//
-    //    recordButton.setButtonText ("Stop");
-    //}
-//
-    //void stopRecording()
-    //{
-    //    recorder->>stop();
-    //    recordButton.setButtonText ("Record");
-    //}
-    
-    //void startPlaying ()
-    //{
-    //    isPlaying = true;
-    //}
-//
-    //void stopPlaying()
-    //{
-    //    isPlaying = false;
-    //    readIndex = 0;
-    //}
-
-    //void buttonClicked (Button* button) override
-    //{
-    //    if (button == &recordButton)
-    //    {
-    //        if (recorder->>isRecording())
-    //            stopRecording();
-    //        else
-    //            startRecording();
-    //    }
-    //    
-    //    if(button == &playButton)
-    //    {
-    //        if(isPlaying)
-    //            stopPlaying();
-    //        else
-    //            startPlaying();
-    //    }
-    //}
-
-    //void isDown (Button* button)
-    //{
-    //    if (button == &recordButton)
-    //    {
-    //        if (!recorder->>isRecording())
-    //            startRecording();
-    //    }
-    //}
      
     //==============================================================================
     PlayComponent playComp;
