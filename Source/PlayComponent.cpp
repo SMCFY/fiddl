@@ -42,8 +42,16 @@ void PlayComponent::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (14.0f);
-    g.drawText ("PlayComponent", getLocalBounds(),
-                Justification::centred, true);   // draw some placeholder text
+    if (isPlaying)
+    {
+        g.drawText ("Playing", getLocalBounds(),
+                Justification::centred, true);
+    }
+    else
+    {
+        g.drawText ("Stopped", getLocalBounds(),
+                Justification::centred, true);
+    }
 }
 
 void PlayComponent::resized()
@@ -51,6 +59,30 @@ void PlayComponent::resized()
     // This method is where you should set the bounds of any child
     // components that your component contains..
 
+}
+
+void PlayComponent::mouseDown (const MouseEvent& e)
+{
+  startPlaying();
+  mouseDrag (e);
+  repaint();
+}
+
+void PlayComponent::mouseDrag (const MouseEvent& e)
+{
+  // retrieve the x position, from 0.0 to 1.0
+  x = e.position.x/getWidth();
+
+  // retrieve the y position, from 0.0 to 1.0
+  double height = getHeight();
+  double yPos = height - e.position.y;
+  y = (yPos > 0 ? yPos/height : 0);
+}
+
+void PlayComponent::mouseUp (const MouseEvent& e)
+{
+  stopPlaying();
+  repaint();
 }
 
 void PlayComponent::stopPlaying()
