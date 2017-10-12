@@ -76,14 +76,14 @@ void RecComponent::setRecorder(AudioRecorder *recorder)
 
 void RecComponent::startRecording()
 {
-    std::cout << "record";
+    //std::cout << "record";
     recorder->startRecording();
     recordButton.setButtonText("Recording");
 }
 
 void RecComponent::stopRecording()
 {
-    std::cout << "stop";
+    //std::cout << "stop";
     recorder->stop();
     recordButton.setButtonText("Hold to Record");
 }

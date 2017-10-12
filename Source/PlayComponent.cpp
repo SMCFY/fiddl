@@ -87,10 +87,12 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 
 void PlayComponent::stopPlaying()
 {
+        std:: cout << " stop playing ";
     isPlaying = false;
 }
 
 void PlayComponent::startPlaying()
 {
+     std:: cout << " start playing ";
     isPlaying = true;
 }
