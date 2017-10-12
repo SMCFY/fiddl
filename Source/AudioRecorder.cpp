@@ -42,6 +42,7 @@ AudioRecorder::~AudioRecorder()
 void AudioRecorder::startRecording ()
 {
     //stop();
+    
     writeIndex = 0;
     
     if (sampleRate > 0)
@@ -94,7 +95,8 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
      * recBuff is a float array that stores the audio in each channel
      */
     if (activeWriter != false && writeIndex < bufferLengthInSamples-numSamples)
-    {   
+    {
+       
         int destStartSample = writeIndex; 
         const ScopedLock sl (writerLock);
         
@@ -106,7 +108,6 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
                 recBuff[ch][sample+destStartSample] = inputChannelData[ch][sample];
             }
         }
-
         writeIndex+=numSamples;
     }
 

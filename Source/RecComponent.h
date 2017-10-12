@@ -33,6 +33,7 @@ public:
     void stopRecording();
 
     bool isRecording;
+    bool recDone; 
 private:
     TextButton recordButton;
     AudioRecorder *recorder;

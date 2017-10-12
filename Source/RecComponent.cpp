@@ -20,6 +20,7 @@ RecComponent::RecComponent()
     recordButton.setButtonText ("Hold to record");
     recordButton.addListener(this);
     isRecording = false;
+    recDone = false;
 
 }
 
@@ -56,10 +57,16 @@ void RecComponent::buttonClicked (Button* button)
 
 void RecComponent::buttonStateChanged(Button* button)
 {
-    if(recordButton.isDown())
+    if(recordButton.isDown()){
+       // std::cout << "record";
         startRecording();
-    else
+        recDone = true;
+    }
+    else if (recordButton.isOver() && recDone){
+      //  std::cout << "stop";
         stopRecording();
+        recDone = false;
+    }
 }
 
 void RecComponent::setRecorder(AudioRecorder *recorder)
@@ -69,12 +76,14 @@ void RecComponent::setRecorder(AudioRecorder *recorder)
 
 void RecComponent::startRecording()
 {
+    std::cout << "record";
     recorder->startRecording();
     recordButton.setButtonText("Recording");
 }
 
 void RecComponent::stopRecording()
 {
+    std::cout << "stop";
     recorder->stop();
     recordButton.setButtonText("Hold to Record");
 }
