@@ -55,7 +55,6 @@ public:
         bufferToFill.clearActiveBufferRegion (); // clearing the buffer frame BEFORE writing to it
         if (readIndex < recorder->getBufferLengthInSamples () && playComp.isPlaying)
         {
-
             const int numInputChannels = recorder->getNumChannels ();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
 
@@ -90,8 +89,10 @@ public:
             // make sure it is thread-safe by temporarily suspending the message thread
             const MessageManagerLock mmLock;
             playComp.stopPlaying();
-
+            readIndex = 0;
         }
+        else if (!playComp.isPlaying)
+             readIndex = 0;
 
         // bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
     }
@@ -119,7 +120,7 @@ public:
         // If you add any child components, this is where you should
         // update their positions.
     }
-
+/*
     void mouseDown (const MouseEvent &event) override
     {
          
@@ -141,7 +142,7 @@ public:
         {
             readIndex = 0;
         }
-    }
+    }*/
 
 private:
     /* This function sets up the I/O to stream audio to/from a device

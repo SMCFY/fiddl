@@ -65,7 +65,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
   startPlaying();
   mouseDrag (e);
-  repaint();
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -82,17 +81,16 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
   stopPlaying();
-  repaint();
 }
 
 void PlayComponent::stopPlaying()
 {
-        std:: cout << " stop playing ";
+    repaint();
     isPlaying = false;
 }
 
 void PlayComponent::startPlaying()
 {
-     std:: cout << " start playing ";
+    repaint();
     isPlaying = true;
 }
