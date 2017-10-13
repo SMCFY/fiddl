@@ -93,11 +93,7 @@ public:
         else if (!playComp.isPlaying)
              readIndex = 0;
 
-<<<<<<< HEAD
          bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
-=======
-        bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
->>>>>>> 81e2fb5d78047144b3d6931dab528c873315b1a4
     }
 
     void releaseResources() override
@@ -123,29 +119,6 @@ public:
         // If you add any child components, this is where you should
         // update their positions.
     }
-/*
-    void mouseDown (const MouseEvent &event) override
-    {
-         
-        if (recComp.isRecording)
-        {
-           
-            recorder->startRecording();
-        }
-    }
-
-    void mouseUp (const MouseEvent &event) override
-    {
-        std::cout << "record" << std::endl;
-        if (!recComp.isRecording)
-            {
-            recorder->stop();
-        }
-        if (!playComp.isPlaying)
-        {
-            readIndex = 0;
-        }
-    }*/
 
 private:
     /* This function sets up the I/O to stream audio to/from a device
