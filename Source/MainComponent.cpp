@@ -76,7 +76,6 @@ public:
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
                 }
-                std::cout << recorder->getRecBuff()[0][readIndex] << std::endl;
 
                 outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
                 readIndex += samplesToProcess;
@@ -94,7 +93,7 @@ public:
         else if (!playComp.isPlaying)
              readIndex = 0;
 
-        // bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
+        bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
     }
 
     void releaseResources() override
