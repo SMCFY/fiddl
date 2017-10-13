@@ -44,7 +44,7 @@ void AudioRecorder::startRecording ()
     //stop();
     
     writeIndex = 0;
-    
+
     if (sampleRate > 0)
     {
         const ScopedLock sl (writerLock);
@@ -67,6 +67,9 @@ void AudioRecorder::stop()
             }
         }
         writeIndex = 0;
+
+        truncate(recBuff, 0.1f);
+        sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLenght); //set the AudioBuffer pointer to the truncated segment
     }
 }
 
@@ -109,11 +112,8 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
             }
         }
         writeIndex+=numSamples;
-    }
 
-    //truncate(recBuff, 0.1f);
-    // set pointer to truncated segment
-    sampBuff.setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
+    }
 
 }
 
@@ -149,18 +149,23 @@ int AudioRecorder::getWriteIndex ()
 
 void AudioRecorder::truncate(float** recording, float threshold)
 {
-    int j = sizeof(recording); //reversed iterator
+    int j = this->bufferLengthInSamples; //reversed iterator
+    this->sampStart = 0;
+    this->sampLenght = 0;
 
-    for (int i = 0; i < sizeof(recording); i++)
+    for (int i = 0; i < this->bufferLengthInSamples; i++)
     {
+
+        if(abs(recording[0][i]) > threshold && this->sampStart == 0){
+            this->sampStart = i;
+            std::cout << "startIndex: " << this->sampStart << std::endl;
+        }
+
+        if(abs(recording[0][j]) > threshold && this->sampLenght == 0){
+            this->sampLenght = this->bufferLengthInSamples - (sampStart+this->bufferLengthInSamples-j);
+            std::cout << "new length: " << this->sampLenght << std::endl;
+        }
+
         j--;
-
-        if(recording[0][i] > threshold && this->sampStart != 0)
-            this->sampStart = 0;
-
-        if(recording[0][j] > threshold && this->sampLenght != 0)
-            this->sampLenght = sizeof(recording) - (sampStart+sizeof(recording)-j);
-
     }
-
 }
