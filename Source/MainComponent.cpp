@@ -94,7 +94,7 @@ public:
         else if (!playComp.isPlaying)
              readIndex = 0;
 
-        // bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
+         bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
     }
 
     void releaseResources() override

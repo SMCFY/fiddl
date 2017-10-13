@@ -34,12 +34,11 @@ void PlayComponent::paint (Graphics& g)
        You should replace everything in this method with your own
        drawing code..
     */
-
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
 
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
-
+    
     g.setColour (Colours::white);
     g.setFont (14.0f);
     if (isPlaying)
@@ -52,6 +51,10 @@ void PlayComponent::paint (Graphics& g)
         g.drawText ("Stopped", getLocalBounds(),
                 Justification::centred, true);
     }
+    
+    //Draw a shape on mouseDrag
+    if(isPlaying)
+        g.drawEllipse(int(x*getWidth()-25), int(getHeight()-(y*getHeight())-25), 50, 50,2);
 }
 
 void PlayComponent::resized()
@@ -76,6 +79,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   double height = getHeight();
   double yPos = height - e.position.y;
   y = (yPos > 0 ? yPos/height : 0);
+  repaint();
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)
