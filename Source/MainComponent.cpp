@@ -1,3 +1,18 @@
+/*
+  ==============================================================================
+
+    MainComponent.cpp
+    Authors: Jonas Holfelt
+             Gergely Csapo
+             Michael Castanieto
+
+    Description:  Main GUI and audio component that contains all child components,
+                  sets up the I/O for the audio device, and handles the real-time 
+                  audio playback functionality.
+
+  ==============================================================================
+*/
+
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
@@ -10,16 +25,15 @@ class MainContentComponent   : public AudioAppComponent
 {
 public:
     //==============================================================================
-    MainContentComponent() : deviceManager(getSharedAudioDeviceManager())
+    MainContentComponent() : deviceManager (getSharedAudioDeviceManager())
     {
-        
-        addAndMakeVisible(playComp);
-        playComp.setSize(100, 100);
-        addAndMakeVisible(recComp);
-        recComp.setSize(100, 100);
+        addAndMakeVisible (playComp);
+        playComp.setSize (100, 100);
+        addAndMakeVisible (recComp);
+        recComp.setSize (100, 100);
 
         setSize(400, 400);
-        setAudioChannels(2, 2);
+        setAudioChannels (2, 2);
         
         readIndex = 0;
         
@@ -30,17 +44,16 @@ public:
         
         recorder = new AudioRecorder(sampleRate, 2, 3.f);
         recorder->setSampleRate(sampleRate);
+        // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
+        // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder);
     }
 
-    ~MainContentComponent ()
+    ~MainContentComponent()
     {
-        deviceManager.removeAudioCallback(recorder);
+        deviceManager.removeAudioCallback (recorder);
         delete recorder;
-        
-        //delete playComp;
-        //delete recComp;
         shutdownAudio();
     }
 
@@ -52,22 +65,24 @@ public:
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
-        bufferToFill.clearActiveBufferRegion (); // clearing the buffer frame BEFORE writing to it
-        if (readIndex < recorder->getBufferLengthInSamples () && playComp.isPlaying)
-        {
-            const int numInputChannels = recorder->getNumChannels ();
-            const int numOutputChannels = bufferToFill.buffer->getNumChannels ();
+        bufferToFill.clearActiveBufferRegion(); // clearing the buffer frame BEFORE writing to it
 
-            int outputSamples = bufferToFill.buffer->getNumSamples (); // number of samples need to be output next frame
+        // play back the recorded audio segment
+        if (readIndex < recorder->getBufferLengthInSamples() && playComp.isPlaying)
+        {
+            const int numInputChannels = recorder->getNumChannels();
+            const int numOutputChannels = bufferToFill.buffer->getNumChannels();
+
+            int outputSamples = bufferToFill.buffer->getNumSamples(); // number of samples need to be output next frame
             writeIndex = bufferToFill.startSample; // write index, which is passed to the copyFrom() function
 
-            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples()) // run this until the frame buffer is filled and the readindex does not exceeded the input
+            // run this until the frame buffer is filled and the readindex does not exceeded the input
+            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples())
             {
                 int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
-
                     bufferToFill.buffer->copyFrom(
                         ch, // destination channel
                         writeIndex, // destination sample
@@ -77,7 +92,7 @@ public:
                         samplesToProcess); // number of samples to copy
                 }
 
-                outputSamples -= samplesToProcess; // decrement the number of output samples rquired to be written into the framebuffer
+                outputSamples -= samplesToProcess; // decrement the number of output samples required to be written into the framebuffer
                 readIndex += samplesToProcess;
                 writeIndex += samplesToProcess;
             }
@@ -91,15 +106,16 @@ public:
             readIndex = 0;
         }
         else if (!playComp.isPlaying)
+        {
              readIndex = 0;
+        }
 
-         bufferToFill.buffer->applyGain(playComp.y); // mapping of finger position ot gain
+         bufferToFill.buffer->applyGain (playComp.y); // mapping of finger position to gain
     }
 
     void releaseResources() override
     {
-        // This will be called when the audio device stops, or when it is being
-        // restarted due to a setting change.
+
     }   
 
     //==============================================================================
@@ -107,14 +123,12 @@ public:
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-        // You can add your drawing code here!
     }
 
     void resized() override
     {
-        playComp.setBounds (0, 0, getWidth(), getHeight()*3/4);
-        recComp.setBounds (0, getHeight()*3/4, getWidth(), getHeight()*1/4);
+        playComp.setBounds (0, 0, getWidth(), getHeight() * 3 / 4);
+        recComp.setBounds (0, getHeight() * 3 / 4, getWidth(), getHeight() * 1 / 4);
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
@@ -144,9 +158,8 @@ private:
     //==============================================================================
     PlayComponent playComp;
     RecComponent recComp;
-    AudioRecorder *recorder; // recording from a device to a file
+    AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
-
     int readIndex;
     int writeIndex;
     int sampleRate;
