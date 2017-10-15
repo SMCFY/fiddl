@@ -64,8 +64,8 @@ void AudioRecorder::stop()
         }
         writeIndex = 0;
 
-        truncate (recBuff,0.08f);
-        sampBuff.setDataToReferTo (recBuff,numChannels,sampStart,sampLength); //set the AudioBuffer pointer to the truncated segment
+        truncate (recBuff, 0.08f);
+        sampBuff.setDataToReferTo (recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
     }
 }
 

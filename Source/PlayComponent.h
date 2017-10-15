@@ -3,9 +3,14 @@
 
     PlayComponent.h
     Created: 11 Oct 2017 1:07:24pm
-    Authors:  Michael Castanieto
-              Jonas Holfelt
-              Gergely Csapo
+    Authors: Michael Castanieto
+             Jonas Holfelt
+             Gergely Csapo
+
+    Description:  GUI component for playing audio. Playing is triggered when
+                  the play component is held down. Playing stops when the 
+                  component is released or when playback has reached the end
+                  of the recorded segment in the buffer.
 
   ==============================================================================
 */
@@ -20,14 +25,11 @@
 class PlayComponent    : public Component
 {
 public:
-    // constructor/destructor
     PlayComponent();
     ~PlayComponent();
 
-    // public methods inherited from Component
     void paint (Graphics&) override;
-    void resized () override;
-    // mouse event handlers 
+    void resized() override;
     void mouseDown (const MouseEvent& e) override;
     void mouseDrag (const MouseEvent& e) override;
     void mouseUp (const MouseEvent& e) override;
@@ -35,8 +37,9 @@ public:
     void stopPlaying(); // stop audio playback
     void startPlaying(); // start audio playback
     
-    // public variables
     bool isPlaying; // true if recorded audio is playing
+    /* TODO: move finger tracking in PlayComponent to
+             to the Gesture class */
     float x; // x position for tracking a finger press
     float y; // y position for tracking a finger press
 
