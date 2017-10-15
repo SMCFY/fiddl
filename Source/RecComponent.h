@@ -3,7 +3,14 @@
 
     RecComponent.h
     Created: 11 Oct 2017 1:06:39pm
-    Author:  Jonas Holfelt
+    Authors: Jonas Holfelt
+             Gergely Csapo
+             Michael Castanieto
+
+    Description:  GUI component for recording audio. Recording is triggered when
+                  recordButton is held down. Recording stops when recordButton is
+                  released or when the recording buffer has reached maximum
+                  capacity.
 
   ==============================================================================
 */
@@ -25,10 +32,11 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-    void buttonClicked(Button* button) override;
-    void buttonStateChanged(Button* button) override;
-    
-    void setRecorder(AudioRecorder *recorder);
+    void buttonClicked (Button* button) override;
+    void buttonStateChanged (Button* button) override;
+    /* setRecorder uses an instance of AudioRecorder in order to allow the GUI 
+       component to record audio from the device's microphone to a buffer */
+    void setRecorder (AudioRecorder *recorder);
     void startRecording();
     void stopRecording();
 
