@@ -38,10 +38,10 @@ public:
     void startPlaying(); // start audio playback
     
     bool isPlaying; // true if recorded audio is playing
-    /* TODO: move finger tracking in PlayComponent to
-             to the Gesture class */
-    float x; // x position for tracking a finger press
-    float y; // y position for tracking a finger press
+
+    // mouse coordinates
+    float x;
+    float y;
 
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)

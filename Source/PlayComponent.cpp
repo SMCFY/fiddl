@@ -64,13 +64,12 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   x = e.position.x / getWidth();
 
   // retrieve the y position, from 0.0 to 1.0
-  double height = getHeight();
-  double yPos = height - e.position.y;
-  y = (yPos > 0 ? yPos / height : 0);
-  repaint();
+  y = ((getHeight() - e.position.y) > 0 ? (getHeight() - e.position.y) / getHeight() : 0);
 
   Gesture::setXPos(x);
   Gesture::setYPos(y);
+  
+  repaint();
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)

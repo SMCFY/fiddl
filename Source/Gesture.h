@@ -13,12 +13,12 @@
 class Gesture
 {
 	public:
-		double getXPos();
-		double getYPos();
-		static void setXPos(double x);
-		static void setYPos(double y);
-
+		static float getXPos();
+		static float getYPos();
+		static void setXPos(float x);
+		static void setYPos(float y);
+	
 	private:
-		static double xPos;
-		static double yPos;
+		static float xPos;
+		static float yPos;
 };

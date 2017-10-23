@@ -10,22 +10,25 @@
 
 #include "Gesture.h"
 
-double Gesture::getXPos()
+float Gesture::xPos;
+float Gesture::yPos;
+
+float Gesture::getXPos()
 {
 	return xPos;
 }
 
-double Gesture::getYPos()
+float Gesture::getYPos()
 {
 	return yPos;
 }
 
-void Gesture::setXPos(double x)
+void Gesture::setXPos(float x)
 {
-	xPos = x;
+	Gesture::xPos = x;
 }
 
-void Gesture::setYPos(double y)
+void Gesture::setYPos(float y)
 {
-	yPos = y;
+	Gesture::yPos = y;
 }
