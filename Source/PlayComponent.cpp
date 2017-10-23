@@ -12,6 +12,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PlayComponent.h"
+#include "Gesture.h"
 
 //==============================================================================
 PlayComponent::PlayComponent()
@@ -67,6 +68,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   double yPos = height - e.position.y;
   y = (yPos > 0 ? yPos / height : 0);
   repaint();
+
+  Gesture::setXPos(x);
+  Gesture::setYPos(y);
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)
