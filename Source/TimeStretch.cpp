@@ -3,7 +3,9 @@
 
     TimeStretch.cpp
     Created: 20 Oct 2017 3:13:32pm
-    Author:  Michael Castanieto
+    Authors: Michael Castanieto
+             Gergely Csapo
+             Jonas Holfelt
 
   ==============================================================================
 */

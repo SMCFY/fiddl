@@ -110,6 +110,7 @@ public:
              readIndex = 0;
         }
 
+         //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
          bufferToFill.buffer->applyGain (playComp.y); // mapping of finger position to gain
     }
 
