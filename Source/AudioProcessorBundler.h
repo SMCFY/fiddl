@@ -17,7 +17,7 @@
 class AudioProcessorBundler
 {
 	public:
-		static AudioBuffer<float> processBuffer(AudioBuffer<float> *buff);
+		static AudioBuffer<float>* processBuffer(AudioBuffer<float> *buff);
 
 	private:
 		static Gain *gain;

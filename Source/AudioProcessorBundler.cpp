@@ -11,11 +11,11 @@
 #include "AudioProcessorBundler.h"
 #include "Mapper.h"
 
-Gain *AudioProcessorBundler::gain = new Gain(Mapper::gainLevel);
-Gain *gain.addParameter(Mapper::gainLevel);
-
-AudioBuffer<float> AudioProcessorBundler(AudioBuffer<float> buff)
+AudioBuffer<float>* AudioProcessorBundler::processBuffer(AudioBuffer<float> *buff)
 {
 	// apply AudioProcessors here 
+	gain->process(buff);
     return buff;
 }
+
+Gain* AudioProcessorBundler::gain = new Gain(Mapper::gainLevel);

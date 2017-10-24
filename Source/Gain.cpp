@@ -22,6 +22,7 @@ Gain::Gain(AudioParameterFloat *gain)
         state[ch] = new float[bufferLengthInSamples];
     }
     */
+    this->addParameter(gain);
     this->gain = gain;
 }
 
@@ -37,7 +38,7 @@ Gain::~Gain()
     */
 }
 
-void Gain::process(AudioBuffer<float> buffer)
+void Gain::process(AudioBuffer<float> *buffer)
 {
-    /* set the gain level here */
+    buffer.applyGain(this->gain);
 }
