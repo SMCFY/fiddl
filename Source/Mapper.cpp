@@ -17,7 +17,7 @@ void Mapper::routeParameters() // all the mapping are defined here, and the valu
 
 void Mapper::mapToGain(float val)
 {
-	gainLevel->setValue(val);
+	*gainLevel = val;
 }
 
 AudioParameterFloat *Mapper::gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 0.5f, 1.0f);
