@@ -16,7 +16,6 @@ void Mapper::routeParameters() // all the mapping are defined here, and the valu
 	
 	mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
 	
-	gain->addParameter(gainLevel); // all AudioParameterFloats must be associated with an DSP object
 }
 
 void Mapper::mapToGain(float val)
@@ -57,5 +56,4 @@ void Mapper::updateParameters()
 }
 
 AudioParameterFloat *Mapper::gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 0.5f, 1.0f);
-Gain *Mapper::gain = new Gain(Mapper::gainLevel);
 std::vector< std::pair <std::string,std::string> > Mapper::mapping;
