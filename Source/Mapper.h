@@ -5,6 +5,9 @@
     Created: 23 Oct 2017 11:56:31pm
     Author:  geri
 
+    Description:  This class holds the AudioParameter objects, routes the gesture
+    			  parameters to audio parameters and updates them. 
+
   ==============================================================================
 */
 

@@ -6,6 +6,8 @@
     Authors: Michael Castanieto
              Gergely Csapo
              Jonas Holfelt
+    
+    Description:  Handles the output gain.
 
   ==============================================================================
 */

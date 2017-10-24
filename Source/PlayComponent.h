@@ -10,7 +10,8 @@
     Description:  GUI component for playing audio. Playing is triggered when
                   the play component is held down. Playing stops when the 
                   component is released or when playback has reached the end
-                  of the recorded segment in the buffer.
+                  of the recorded segment in the buffer. Passes mouse coordinates
+                  to Gesture class.
 
   ==============================================================================
 */

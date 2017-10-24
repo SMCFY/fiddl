@@ -5,6 +5,9 @@
     Created: 23 Oct 2017 1:11:42pm
     Author:  geri
 
+    Description:  Receives mouse coordinates from the PlayComponent and calculates
+    			  gesture parameters. 
+
   ==============================================================================
 */
 
