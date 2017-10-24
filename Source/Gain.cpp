@@ -12,7 +12,7 @@
 
 #include "Gain.h"
 
-Gain::Gain(AudioParameterFloat &gain)
+Gain::Gain(AudioParameterFloat *gain)
 {
     // initialise the DSP state array, something like this:
     /*

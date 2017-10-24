@@ -17,6 +17,7 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
+#include "Mapper.h"  // TODO: <-- this is only used for testing!
 
 // used for initialising the deviceManager
 static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager; 
@@ -112,6 +113,8 @@ public:
 
          //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
          bufferToFill.buffer->applyGain (playComp.y); // mapping of finger position to gain
+         std::cout << *Mapper::gainLevel << std::endl;
+         
     }
 
     void releaseResources() override

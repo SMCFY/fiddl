@@ -13,6 +13,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PlayComponent.h"
 #include "Gesture.h"
+#include "Mapper.h"
 
 //==============================================================================
 PlayComponent::PlayComponent()
@@ -68,6 +69,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
   Gesture::setXPos(x);
   Gesture::setYPos(y);
+  
+  Mapper::updateParameters();
   
   repaint();
 }
