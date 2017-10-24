@@ -38,6 +38,9 @@ public:
         
         readIndex = 0;
         
+        // Map gesture parameters to audio parameters
+        Mapper::routeParameters();
+        
         // sampleRate is hard coded for now
         // this is because the recorder cannot be initialised in prepareToPlay()
         // where the real sampleRate can be used (assumed to be 44.1K)
@@ -113,8 +116,6 @@ public:
 
          //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
          bufferToFill.buffer->applyGain (playComp.y); // mapping of finger position to gain
-         std::cout << *Mapper::gainLevel << std::endl;
-         
     }
 
     void releaseResources() override
