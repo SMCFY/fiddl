@@ -115,7 +115,7 @@ public:
         }
 
          //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
-         bufferToFill.buffer->applyGain (playComp.y); // mapping of finger position to gain
+         bufferToFill.buffer->applyGain (*Mapper::gainLevel); // mapping of finger position to gain
     }
 
     void releaseResources() override

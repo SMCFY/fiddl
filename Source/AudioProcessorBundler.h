@@ -17,8 +17,9 @@
 class AudioProcessorBundler
 {
 	public:
-		static AudioBuffer<float> processBuffer(AudioBuffer<float> *buff);
+		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
 
-	private:
+	//private:  <-- DSP processors are public so that Mapper has access to them
+    //              in order to connect a processor to an AudioParameterFloat
 		static Gain *gain;
 };

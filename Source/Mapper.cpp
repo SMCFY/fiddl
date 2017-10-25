@@ -10,11 +10,14 @@
 
 #include "Mapper.h"
 #include "Gesture.h"
+#include "AudioProcessorBundler.h"
 
 void Mapper::routeParameters() // all the mapping are defined here, and the values updated for AudioParameters
 {
 	
 	mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+	
+	AudioProcessorBundler::gain->addParameter(gainLevel); // all AudioParameterFloat objects must be connected to a DSP processor
 	
 }
 
