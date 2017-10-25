@@ -20,7 +20,7 @@ void Mapper::routeParameters() // all the mapping are defined here, and the valu
 
 void Mapper::mapToGain(float val)
 {
-	*gainLevel = val;
+	//*gainLevel = val;
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)

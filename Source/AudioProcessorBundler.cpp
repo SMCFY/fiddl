@@ -12,7 +12,7 @@
 #include "Mapper.h"
 
 Gain *AudioProcessorBundler::gain = new Gain(Mapper::gainLevel);
-Gain *gain.addParameter(Mapper::gainLevel);
+//Gain *gain.addParameter(Mapper::gainLevel);
 
 AudioBuffer<float> AudioProcessorBundler(AudioBuffer<float> buff)
 {
