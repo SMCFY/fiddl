@@ -53,10 +53,22 @@ void Gesture::setVelocity(float x, float y)
     xTemp = xNew;
     yTemp = yNew;
     
-    std::cout << xDelta << "   ";
+    //std::cout << xDelta << "   ";
 }
 
 void Gesture::getDirection()
 {
     
 }
+
+float Gesture::getVelocityX()
+{
+    return std::pow(xDelta+1,4);
+}
+
+float Gesture::getVelocityY()
+{
+    return yDelta;
+}
+
+

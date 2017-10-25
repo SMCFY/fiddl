@@ -24,6 +24,8 @@ class Gesture
 		
 		static void setVelocity(float x, float y);
 		static void getDirection();
+        static float getVelocityX();
+        static float getVelocityY();
 	    
 	private:
 		static float xPos;
