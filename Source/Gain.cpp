@@ -22,6 +22,7 @@ Gain::Gain(AudioParameterFloat *gain)
         state[ch] = new float[bufferLengthInSamples];
     }
     */
+    
     this->gain = gain;
 }
 

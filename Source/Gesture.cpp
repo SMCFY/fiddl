@@ -9,7 +9,6 @@
 */
 
 #include "Gesture.h"
-#include "PlayComponent.h"
 
 float Gesture::xPos;
 float Gesture::yPos;

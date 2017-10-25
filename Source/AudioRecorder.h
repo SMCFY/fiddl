@@ -41,6 +41,7 @@ class AudioRecorder : public AudioIODeviceCallback
         AudioBuffer<float> getSampBuff();
         int getBufferLengthInSamples();
         int getWriteIndex();
+        
 
 
     private:
