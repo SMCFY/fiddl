@@ -12,19 +12,11 @@
 
 #include "AudioRecorder.h"
 
-AudioRecorder::AudioRecorder (double sampleRate, int numChannels, double bufferLengthInSeconds)
+AudioRecorder::AudioRecorder (double bufferLengthInSeconds)
     : activeWriter (false), writeIndex (0)
 {
-    setSampleRate (sampleRate);
-    this->numChannels = numChannels;
-    bufferLengthInSamples = ceil (sampleRate * bufferLengthInSeconds); 
-    
-    // recBuff stores the recorded audio
-    recBuff = new float*[numChannels];
-    for (int ch = 0; ch < numChannels; ch++)
-    {
-        recBuff[ch] = new float[bufferLengthInSamples];
-    }
+    this->bufferLengthInSeconds = bufferLengthInSeconds;
+    numChannels = 1;
 }
 
 AudioRecorder::~AudioRecorder()
@@ -77,6 +69,15 @@ bool AudioRecorder::isRecording() const
 void AudioRecorder::audioDeviceAboutToStart (AudioIODevice* device)
 {
     sampleRate = device->getCurrentSampleRate();
+
+    bufferLengthInSamples = ceil (sampleRate * this->bufferLengthInSeconds); 
+    
+    // recBuff stores the recorded audio
+    recBuff = new float*[numChannels];
+    for (int ch = 0; ch < numChannels; ch++)
+    {
+        recBuff[ch] = new float[bufferLengthInSamples];
+    }
 }
 
 void AudioRecorder::audioDeviceStopped() 
@@ -103,11 +104,6 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
         }
         writeIndex += numSamples;
     }
-}
-
-void AudioRecorder::setSampleRate (double sampleRate) 
-{
-    this->sampleRate = sampleRate;
 }
 
 int AudioRecorder::getNumChannels()

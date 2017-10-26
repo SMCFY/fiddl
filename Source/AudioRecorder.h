@@ -22,7 +22,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        AudioRecorder (double sampleRate, int numChannels, double bufferLengthInSeconds);
+        AudioRecorder (double bufferLengthInSeconds);
         ~AudioRecorder();
         
         void startRecording(); 
@@ -34,7 +34,6 @@ class AudioRecorder : public AudioIODeviceCallback
         void audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
                                     float** outputChannelData, int numOutputChannels,
                                     int numSamples) override;
-        void setSampleRate (double sampleRate);
         double getSampleRate();
         int getNumChannels();
         float** getRecBuff();
@@ -54,6 +53,7 @@ class AudioRecorder : public AudioIODeviceCallback
         AudioBuffer<float> sampBuff;
         int numChannels;
         float **recBuff; // sample buffer, where the recordings are stored
+        float bufferLengthInSeconds;
         int bufferLengthInSamples;
         double sampleRate;
         int writeIndex; // index where the recording buffer is being written to

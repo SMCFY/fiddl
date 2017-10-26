@@ -35,23 +35,16 @@ public:
         recComp.setSize (100, 100);
 
         setSize(400, 400);
-        setAudioChannels (2, 2);
-        
-        readIndex = 0;
-        
+        setAudioChannels (1, 2);
+                
         //initialize DSP blocks and assign parameters
         AudioProcessorBundler::initDSPBlocks();
         
         // Map gesture parameters to audio parameters
         Mapper::routeParameters();
         
-        // sampleRate is hard coded for now
-        // this is because the recorder cannot be initialised in prepareToPlay()
-        // where the real sampleRate can be used (assumed to be 44.1K)
-        int sampleRate = 44100;
         
-        recorder = new AudioRecorder(sampleRate, 2, 3.f);
-        recorder->setSampleRate(sampleRate);
+        recorder = new AudioRecorder(3.f);
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
         // setup the recorder to receive input from the microphone
@@ -68,7 +61,7 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
-
+        readIndex = 0;
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
