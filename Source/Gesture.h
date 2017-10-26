@@ -12,6 +12,7 @@
 */
 
 #pragma once
+#include "../JuceLibraryCode/JuceHeader.h"
 
 class Gesture
 {
@@ -20,8 +21,21 @@ class Gesture
 		static float getYPos();
 		static void setXPos(float x);
 		static void setYPos(float y);
-	
+		
+		static void setVelocity(float x, float y);
+		static void getDirection();
+        static float getVelocityX();
+        static float getVelocityY();
+	    
 	private:
 		static float xPos;
 		static float yPos;
+		
+		static float xNew;
+		static float xTemp;
+        static float xDelta;
+    
+        static float yNew;
+        static float yTemp;
+        static float yDelta;
 };

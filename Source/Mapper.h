@@ -23,6 +23,7 @@ class Mapper
 		static void mapToGain(float val);
 		// this method takes a string pair to map a "gestureParameter" to an "audioParameter"
 		static void mapFromTo(std::string gestureParameter, std::string audioParameter);
+		// public variables
 		static AudioParameterFloat *gainLevel;
 		
 		private:		

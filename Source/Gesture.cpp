@@ -13,6 +13,15 @@
 float Gesture::xPos;
 float Gesture::yPos;
 
+float Gesture::xNew;
+float Gesture::xTemp;
+float Gesture::xDelta;
+
+float Gesture::yNew;
+float Gesture::yTemp;
+float Gesture::yDelta;
+
+
 float Gesture::getXPos()
 {
 	return xPos;
@@ -32,3 +41,34 @@ void Gesture::setYPos(float y)
 {
 	Gesture::yPos = y;
 }
+
+void Gesture::setVelocity(float x, float y)
+{
+    xNew  = x;
+    yNew = y;
+    
+    xDelta = std::sqrt(std::pow(xNew-xTemp,2));
+    yDelta = std::sqrt(std::pow(yNew-yTemp,2));
+        
+    xTemp = xNew;
+    yTemp = yNew;
+    
+    //std::cout << xDelta << "   ";
+}
+
+void Gesture::getDirection()
+{
+    
+}
+
+float Gesture::getVelocityX()
+{
+    return std::pow(xDelta+1,4);
+}
+
+float Gesture::getVelocityY()
+{
+    return yDelta;
+}
+
+

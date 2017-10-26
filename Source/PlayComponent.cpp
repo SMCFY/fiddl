@@ -45,8 +45,11 @@ void PlayComponent::paint (Graphics& g)
     }
     
     //Draw a shape on mouseDrag
-    if(isPlaying)
-        g.drawEllipse(int (x * getWidth() - 25), int (getHeight() - (y * getHeight()) - 25), 50, 50, 2);
+    if(isPlaying){
+        g.drawEllipse(int (x * getWidth() - 15), int (getHeight() - (y * getHeight()) - 15), 30*Gesture::getVelocityX(), 30*Gesture::getVelocityX(), 2);
+    }
+    
+    
 }
 
 void PlayComponent::resized()
@@ -56,6 +59,7 @@ void PlayComponent::resized()
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
   startPlaying();
+  
   mouseDrag (e);
 }
 
@@ -69,7 +73,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
   Gesture::setXPos(x);
   Gesture::setYPos(y);
-  
+  Gesture::setVelocity(x,y);
+    
   Mapper::updateParameters();
   
   repaint();
