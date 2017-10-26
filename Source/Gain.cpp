@@ -40,5 +40,5 @@ Gain::~Gain()
 
 void Gain::process(AudioBuffer<float> buffer)
 {
-    /* set the gain level here */
+    buffer.applyGain(gain->get());
 }

@@ -5,7 +5,9 @@
     Created: 24 Oct 2017 7:02:53pm
     Author:  geri
 
-    Description:  The AudioProcessor objects are declared and used here. 
+    Description:  The AudioProcessor objects are declared and initialized with
+    their audio parameters here. The individual processing blocks are chained together
+    in processBuffer.
 
   ==============================================================================
 */
@@ -19,6 +21,7 @@ class AudioProcessorBundler
 	public:
 
 		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
+    static void initDSPBlocks();
 
 	//private:  <-- DSP processors are public so that Mapper has access to them
     //              in order to connect a processor to an AudioParameterFloat

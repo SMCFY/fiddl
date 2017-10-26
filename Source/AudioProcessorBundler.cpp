@@ -17,4 +17,14 @@ AudioBuffer<float> AudioProcessorBundler::processBuffer(AudioBuffer<float> buff)
     return buff;
 }
 
-Gain *AudioProcessorBundler::gain = new Gain(Mapper::gainLevel);
+void AudioProcessorBundler::initDSPBlocks()
+{
+	//dsp blocks
+    gain = new Gain(Mapper::gainLevel);
+
+	//add parameter
+	gain->addParameter(Mapper::gainLevel); // all AudioParameterFloat objects must be connected to a DSP processor
+
+}
+
+Gain *AudioProcessorBundler::gain;

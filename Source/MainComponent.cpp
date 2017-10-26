@@ -18,6 +18,7 @@
 #include "PlayComponent.h"
 #include "RecComponent.h"
 #include "Mapper.h"  // TODO: <-- this is only used for testing!
+#include "AudioProcessorBundler.h"
 
 // used for initialising the deviceManager
 static ScopedPointer<AudioDeviceManager> sharedAudioDeviceManager; 
@@ -37,6 +38,9 @@ public:
         setAudioChannels (2, 2);
         
         readIndex = 0;
+        
+        //initialize DSP blocks and assign parameters
+        AudioProcessorBundler::initDSPBlocks();
         
         // Map gesture parameters to audio parameters
         Mapper::routeParameters();
@@ -115,7 +119,8 @@ public:
         }
 
          //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
-         bufferToFill.buffer->applyGain (*Mapper::gainLevel); // mapping of finger position to gain
+         //bufferToFill.buffer->applyGain (*Mapper::gainLevel); // mapping of finger position to gain
+        AudioProcessorBundler::gain->process(*bufferToFill.buffer);
     }
 
     void releaseResources() override
