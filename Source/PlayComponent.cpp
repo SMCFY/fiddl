@@ -46,7 +46,7 @@ void PlayComponent::paint (Graphics& g)
     
     //Draw a shape on mouseDrag
     if(isPlaying){
-        g.drawEllipse(int (x * getWidth() - 15), int (getHeight() - (y * getHeight()) - 15), 30*Gesture::getVelocityX(), 30*Gesture::getVelocityX(), 2);
+        g.drawEllipse(int (x * getWidth() - 15), int (getHeight() - (y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
     }
     
     
@@ -70,7 +70,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
   // retrieve the y position, from 0.0 to 1.0
   y = ((getHeight() - e.position.y) > 0 ? (getHeight() - e.position.y) / getHeight() : 0);
-
+                      
   Gesture::setXPos(x);
   Gesture::setYPos(y);
   Gesture::setVelocity(x,y);

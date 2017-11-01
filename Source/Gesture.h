@@ -21,13 +21,16 @@ class Gesture
 		static float getYPos();
 		static void setXPos(float x);
 		static void setYPos(float y);
-		
+    
 		static void setVelocity(float x, float y);
-		static void getDirection();
+		static void getDirection(float p [20][2]);
         static float getVelocityX();
         static float getVelocityY();
-	    
-	private:
+        static float getVelocity();
+    
+        static void fillDirBuff(float x, float y);
+    
+	private: 
 		static float xPos;
 		static float yPos;
 		
@@ -38,4 +41,11 @@ class Gesture
         static float yNew;
         static float yTemp;
         static float yDelta;
+    
+        static float dist;
+    
+        static float points [20][2];
+        static float directionHyp;
+        static float directionH;
+        static float directionAngle;
 };
