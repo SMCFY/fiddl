@@ -76,7 +76,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   Gesture::setVelocity(x,y);
     
   Mapper::updateParameters();
-    
+    /*
   //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
   if (coordIndex > 20)
   {
@@ -90,7 +90,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
       coordIndex++;
   }
   
-    
+    */
   repaint();
 }
 
