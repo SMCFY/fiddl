@@ -76,7 +76,21 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   Gesture::setVelocity(x,y);
     
   Mapper::updateParameters();
+    
+  //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
+  if (coordIndex > 20)
+  {
+      Gesture::getDirection(coordinates);
+      coordIndex = 0;
+  }
+  else
+  {
+      coordinates[coordIndex][0] = x;
+      coordinates[coordIndex][1] = y;
+      coordIndex++;
+  }
   
+    
   repaint();
 }
 
@@ -96,3 +110,4 @@ void PlayComponent::startPlaying()
     repaint();
     isPlaying = true;
 }
+

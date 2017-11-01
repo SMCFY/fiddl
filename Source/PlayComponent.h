@@ -45,5 +45,7 @@ public:
     float y;
 
 private:
+    float coordinates [20][2];
+    int coordIndex = 0;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };
