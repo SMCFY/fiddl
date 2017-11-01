@@ -21,7 +21,7 @@ void Mapper::routeParameters() // all the mapping are defined here, and the valu
 
 void Mapper::mapToGain(float val)
 {
-	*gainLevel = val;
+	*AudioProcessorBundler::gainLevel = val;
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
@@ -56,5 +56,4 @@ void Mapper::updateParameters()
     }
 }
 
-AudioParameterFloat *Mapper::gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 0.5f, 1.0f);
 std::vector< std::pair <std::string,std::string> > Mapper::mapping;
