@@ -40,10 +40,6 @@ public:
     
     bool isPlaying; // true if recorded audio is playing
 
-    // mouse coordinates
-    float x;
-    float y;
-
 private:
     float coordinates [20][2];
     int coordIndex = 0;

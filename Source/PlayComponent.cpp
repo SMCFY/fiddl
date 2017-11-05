@@ -21,6 +21,8 @@
 PlayComponent::PlayComponent()
 {
     isPlaying = false;
+    Gesture::setCompWidth(getWidth());
+    Gesture::setCompHeight(getHeight());
 }
 
 PlayComponent::~PlayComponent()
@@ -48,14 +50,15 @@ void PlayComponent::paint (Graphics& g)
     
     //Draw a shape on mouseDrag
     if(isPlaying){
-        g.drawEllipse(int (x * getWidth() - 15), int (getHeight() - (y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
+        g.drawEllipse(int (Gesture::getFingerPosition(0)->xPos * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(0)->yPos * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
     }
-    
     
 }
 
 void PlayComponent::resized()
 {
+    Gesture::setCompWidth(getWidth());
+    Gesture::setCompHeight(getHeight());
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -66,45 +69,41 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
-{
-  // retrieve the x position, from 0.0 to 1.0
-  x = e.position.x / getWidth();
-
-  // retrieve the y position, from 0.0 to 1.0
-  y = ((getHeight() - e.position.y) > 0 ? (getHeight() - e.position.y) / getHeight() : 0);
-                      
-  
+{                      
   Gesture::updateFingers(e);
 
-  Gesture::setVelocity(x,y);
+  Gesture::setVelocity(Gesture::getFingerPosition(0)->xPos, Gesture::getFingerPosition(0)->yPos);
     
   Mapper::updateParameters();
     
   //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
-    if (coordIndex > Gesture::directionBuffSize - 1)
+  if (coordIndex > Gesture::directionBuffSize - 1)
   {
       Gesture::setDirection(coordinates);
       coordIndex = 0;
       //std::cout << "Get Direction!" ;
       
-  } else if (swipeEnd)
+  }
+
+  else if (swipeEnd)
   {
       //Start writing to the first index again and set all indexes equal to the first, to make sure that the deltaPosition is 0
       coordIndex = 0;
       
       for(int i = 0; i < Gesture::directionBuffSize; i++)
       {
-          coordinates[i][0] = x;
-          coordinates[i][1] = y;
+          coordinates[i][0] = Gesture::getFingerPosition(0)->xPos;
+          coordinates[i][1] = Gesture::getFingerPosition(0)->yPos;
       }
       
       swipeEnd = false;
       //std::cout << "New Swipe!" ;
   }
+  
   else
   {
-      coordinates[coordIndex][0] = x;
-      coordinates[coordIndex][1] = y;
+      coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->xPos;
+      coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->yPos;
       coordIndex++;
   }
 
@@ -113,6 +112,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
+  Gesture::rmFinger(e);
   stopPlaying();
   
   //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated

@@ -11,7 +11,6 @@
 #include "Gesture.h"
 
 OwnedArray<Gesture::Position> Gesture::fingers;
-//Gesture::Position Gesture::fing[3];
 
 float Gesture::xNew;
 float Gesture::xTemp;
@@ -32,42 +31,55 @@ String Gesture::direction;
 
 bool Gesture::resetPos = false;
 
+float Gesture::compWidth;
+float Gesture::compHeight;
+
+Gesture::Position* Gesture::normalizeCoordinates(const MouseEvent& e)
+{
+    // retrieve the x position, from 0.0 to 1.0
+    float x = e.position.x / compWidth;
+    
+    // retrieve the y position, from 0.0 to 1.0
+    float y = ((compHeight - e.position.y) > 0 ? (compHeight - e.position.y) / compHeight : 0);
+
+    Gesture::Position* fing = new Gesture::Position(x, y);
+    return fing;
+}
+
 void Gesture::addFinger(const MouseEvent& e)
 {
-    Gesture::Position* f = new Gesture::Position();
-    f->xPos = e.position.x;
-    f->yPos = e.position.y;
+    Gesture::Position* f = normalizeCoordinates(e);
     fingers.add(f);
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
 {
-    fingers.removeObject(getFinger(e));
+    for (int i = 0; i < fingers.size(); i++)
+    {
+        if (fingers[i]->xPos == e.position.getX() && fingers[i]->yPos == e.position.getY())
+            fingers.removeObject(fingers[i]);
+    }
 }
-
+/*
 Gesture::Position* Gesture::getFinger(const MouseEvent& e)
 {
     for (int i = 0; i < fingers.size(); i++)
     {
-        //Gesture::Position *f = fingers[i];
         if (fingers[i]->xPos == e.position.getX() && fingers[i]->yPos == e.position.getY())
-            return fingers[i];
+            return fingers[i]; // returns finger which matches the mouse event
     }
     return nullptr;
 }
-
+*/
 Gesture::Position* Gesture::getFingerPosition(int index)
 {
     return fingers[index];
 }
 
-void Gesture::updateFingers(const MouseEvent& e)
+void Gesture::updateFingers(const MouseEvent& e) // under construction
 {
-    for (int i = 0; i < fingers.size(); i++)
-    {
-        fingers[i]->xPos = e.position.x;
-        fingers[i]->yPos = e.position.y;
-    }
+    fingers[0]->xPos = normalizeCoordinates(e)->xPos;
+    fingers[0]->yPos = normalizeCoordinates(e)->yPos;
 }
 
 void Gesture::setVelocity(float x, float y)
@@ -81,7 +93,6 @@ void Gesture::setVelocity(float x, float y)
         yTemp = yNew;
         resetPos = false;
     }
-    
     
     xDelta = std::sqrt(std::pow(xNew-xTemp,2));
     yDelta = std::sqrt(std::pow(yNew-yTemp,2));
@@ -167,4 +178,14 @@ bool Gesture::getResetPos()
 void Gesture::setResetPos(bool reset)
 {
     Gesture::resetPos= reset;
+}
+
+void Gesture::setCompWidth(float w)
+{
+    Gesture::compWidth = w;
+}
+
+void Gesture::setCompHeight(float h)
+{
+    Gesture::compHeight = h;
 }
