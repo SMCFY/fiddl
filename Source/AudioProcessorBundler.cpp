@@ -19,17 +19,19 @@ AudioBuffer<float> AudioProcessorBundler::processBuffer(AudioBuffer<float> buff)
 
 void AudioProcessorBundler::initDSPBlocks()
 {
-	// dsp blocks
+    // dsp parameters
+    gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 0.5f, 1.0f);
+    
+    // dsp blocks
     gain = new Gain(gainLevel);
 
-	// add parameter
-	// all AudioParameterFloat objects must be connected to a DSP processor
-	gain->addParameter(gainLevel); 
-
+    // add parameter
+    // all AudioParameterFloat objects must be connected to a DSP processor
+    gain->addParameter(gainLevel);
 }
+
+// DSP parameters:
+AudioParameterFloat *AudioProcessorBundler::gainLevel;
 
 // DSP processors:
 Gain *AudioProcessorBundler::gain;
-
-// DSP parameters:
-AudioParameterFloat *AudioProcessorBundler::gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 0.5f, 1.0f);
