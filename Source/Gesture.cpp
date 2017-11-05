@@ -10,8 +10,8 @@
 
 #include "Gesture.h"
 
-float Gesture::xPos;
-float Gesture::yPos;
+OwnedArray<Gesture::Position> Gesture::fingers;
+//Gesture::Position Gesture::fing[3];
 
 float Gesture::xNew;
 float Gesture::xTemp;
@@ -28,24 +28,42 @@ float Gesture::directionH;
 float Gesture::directionAngle;
 float Gesture::points [20][2];
 
-float Gesture::getXPos()
+void Gesture::addFinger(const MouseEvent& e)
 {
-	return xPos;
+    Gesture::Position* f = new Gesture::Position();
+    f->xPos = e.position.x;
+    f->yPos = e.position.y;
+    fingers.add(f);
 }
 
-float Gesture::getYPos()
+void Gesture::rmFinger(const MouseEvent& e)
 {
-	return yPos;
+    fingers.removeObject(getFinger(e));
 }
 
-void Gesture::setXPos(float x)
+Gesture::Position* Gesture::getFinger(const MouseEvent& e)
 {
-	Gesture::xPos = x;
+    for (int i = 0; i < fingers.size(); i++)
+    {
+        //Gesture::Position *f = fingers[i];
+        if (fingers[i]->xPos == e.position.getX() && fingers[i]->yPos == e.position.getY())
+            return fingers[i];
+    }
+    return nullptr;
 }
 
-void Gesture::setYPos(float y)
+Gesture::Position* Gesture::getFingerPosition(int index)
 {
-	Gesture::yPos = y;
+    return fingers[index];
+}
+
+void Gesture::updateFingers(const MouseEvent& e)
+{
+    for (int i = 0; i < fingers.size(); i++)
+    {
+        fingers[i]->xPos = e.position.x;
+        fingers[i]->yPos = e.position.y;
+    }
 }
 
 void Gesture::setVelocity(float x, float y)

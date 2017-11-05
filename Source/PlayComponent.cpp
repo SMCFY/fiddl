@@ -58,6 +58,7 @@ void PlayComponent::resized()
 
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
+  Gesture::addFinger(e);
   startPlaying();
   
   mouseDrag (e);
@@ -71,8 +72,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   // retrieve the y position, from 0.0 to 1.0
   y = ((getHeight() - e.position.y) > 0 ? (getHeight() - e.position.y) / getHeight() : 0);
                       
-  Gesture::setXPos(x);
-  Gesture::setYPos(y);
+  
+  Gesture::updateFingers(e);
+
   Gesture::setVelocity(x,y);
     
   Mapper::updateParameters();

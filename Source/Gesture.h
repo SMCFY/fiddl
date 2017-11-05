@@ -17,10 +17,7 @@
 class Gesture
 {
 	public:
-		static float getXPos();
-		static float getYPos();
-		static void setXPos(float x);
-		static void setYPos(float y);
+        typedef struct Position { float xPos, yPos; } Position;
     
 		static void setVelocity(float x, float y);
 		static void getDirection(float p [20][2]);
@@ -29,11 +26,17 @@ class Gesture
         static float getVelocity();
     
         static void fillDirBuff(float x, float y);
+
+        static void addFinger(const MouseEvent& e);
+        static void rmFinger(const MouseEvent& e);
+        static Position* getFinger(const MouseEvent& e);
+        static Position* getFingerPosition(int index);
+        static void updateFingers(const MouseEvent& e);
     
-	private: 
-		static float xPos;
-		static float yPos;
-		
+	private:
+        static OwnedArray<Position> fingers; // stores the mouse locations
+        //static Position fing[3];
+
 		static float xNew;
 		static float xTemp;
         static float xDelta;
