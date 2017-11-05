@@ -35,3 +35,4 @@ AudioParameterFloat *AudioProcessorBundler::gainLevel;
 
 // DSP processors:
 Gain *AudioProcessorBundler::gain;
+TimeStretch AudioProcessorBundler::timeStretch;

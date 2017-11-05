@@ -22,18 +22,17 @@ TimeStretch::TimeStretch()
         state[ch] = new float[bufferLengthInSamples];
     }
     */
+    soundTouch.setSampleRate(44100);
+    soundTouch.setChannels(2);
+    soundTouch.setTempoChange(-50.0f);
+    soundTouch.setPitchSemiTones(0.0f);
+    soundTouch.setRateChange(0.0f);
+    soundTouch.setSetting(SETTING_USE_QUICKSEEK, 0);
+    soundTouch.setSetting(SETTING_USE_AA_FILTER, 1);
     
-    // add audio parameters like this:
-    addParameter (parameter1 = new AudioParameterFloat ("param1", // parameter ID
-                                                        "Parameter 1", // parameter name
-                                                        0.0f,   // mininum value
-                                                        1.0f,   // maximum value
-                                                        0.5f)); // default value
-    addParameter (parameter2 = new AudioParameterFloat ("param2", 
-                                                        "Parameter 2", 
-                                                        0.0f,   
-                                                        1.0f,   
-                                                        0.5f)); 
+    soundTouch.setSetting(SETTING_SEQUENCE_MS, 40);
+    soundTouch.setSetting(SETTING_SEEKWINDOW_MS, 15);
+    soundTouch.setSetting(SETTING_OVERLAP_MS, 8);
 }
 
 TimeStretch::~TimeStretch()
@@ -50,5 +49,16 @@ TimeStretch::~TimeStretch()
 
 void TimeStretch::process(AudioBuffer<float> buffer)
 {
+    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+    {
+        soundTouch.putSamples(buffer.getWritePointer(ch), buffer.getNumSamples());
+    }
     /* here is where all the timestretching magic happens ;) */
+    do
+    {
+        for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+        {
+            nSamples = soundTouch.receiveSamples(buffer.getWritePointer(ch), buffer.getNumSamples());
+        }
+    } while (nSamples != 0);
 }
