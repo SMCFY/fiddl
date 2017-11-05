@@ -14,6 +14,8 @@
 #include "PlayComponent.h"
 #include "Gesture.h"
 #include "Mapper.h"
+#include <iostream>
+#include <string>
 
 //==============================================================================
 PlayComponent::PlayComponent()
@@ -60,7 +62,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
   Gesture::addFinger(e);
   startPlaying();
-  
   mouseDrag (e);
 }
 
@@ -78,12 +79,27 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   Gesture::setVelocity(x,y);
     
   Mapper::updateParameters();
-    /*
+    
   //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
-  if (coordIndex > 20)
+    if (coordIndex > Gesture::directionBuffSize - 1)
   {
-      Gesture::getDirection(coordinates);
+      Gesture::setDirection(coordinates);
       coordIndex = 0;
+      //std::cout << "Get Direction!" ;
+      
+  } else if (swipeEnd)
+  {
+      //Start writing to the first index again and set all indexes equal to the first, to make sure that the deltaPosition is 0
+      coordIndex = 0;
+      
+      for(int i = 0; i < Gesture::directionBuffSize; i++)
+      {
+          coordinates[i][0] = x;
+          coordinates[i][1] = y;
+      }
+      
+      swipeEnd = false;
+      //std::cout << "New Swipe!" ;
   }
   else
   {
@@ -91,14 +107,22 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
       coordinates[coordIndex][1] = y;
       coordIndex++;
   }
-  
-    */
+
   repaint();
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
   stopPlaying();
+  
+  //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
+  swipeEnd = true;
+  Gesture::setResetPos(swipeEnd);
+  
+  //***Buggy. Returns wrong direction on release***
+  coordinates[Gesture::directionBuffSize-1][0] = coordinates[coordIndex-1][0];
+  coordinates[Gesture::directionBuffSize-1][1] = coordinates[coordIndex-1][1];;
+  Gesture::setDirection(coordinates);
 }
 
 void PlayComponent::stopPlaying()

@@ -14,6 +14,9 @@
 #pragma once
 
 #include "DSP.h"
+#include "SoundTouch.h"
+
+using namespace soundtouch;
 
 class TimeStretch : public DSP
 {
@@ -24,11 +27,9 @@ class TimeStretch : public DSP
 		void process(AudioBuffer<float> buffer) override;
 
 	private:
-		/* parameter variables */
-		/* look at the AudioProcessorParameter class documentation
-		   for more info on how to use these parameters */
-		AudioParameterFloat* parameter1;
-		AudioParameterFloat* parameter2;
+	
+	    SoundTouch soundTouch;
+        int nSamples;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretch);
 };

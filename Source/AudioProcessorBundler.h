@@ -15,6 +15,7 @@
 #pragma once
 
 #include "Gain.h"
+#include "TimeStretch.h"
 
 class AudioProcessorBundler
 {
@@ -28,6 +29,7 @@ class AudioProcessorBundler
 	
 	    // DSP processors
 		static Gain *gain;
+        static TimeStretch timeStretch;
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;

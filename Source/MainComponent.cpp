@@ -114,6 +114,7 @@ public:
          //TODO: this needs to be removed when the Gesture and Mapping classes are implemented
          //bufferToFill.buffer->applyGain (*Mapper::gainLevel); // mapping of finger position to gain
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
+        AudioProcessorBundler::timeStretch.process(*bufferToFill.buffer);
     }
 
     void releaseResources() override

@@ -20,7 +20,8 @@ class Gesture
         typedef struct Position { float xPos, yPos; } Position;
     
 		static void setVelocity(float x, float y);
-		static void getDirection(float p [20][2]);
+		static void setDirection(float p [][2]);
+        static String getDirection();
         static float getVelocityX();
         static float getVelocityY();
         static float getVelocity();
@@ -32,6 +33,12 @@ class Gesture
         static Position* getFinger(const MouseEvent& e);
         static Position* getFingerPosition(int index);
         static void updateFingers(const MouseEvent& e);
+
+        static void setResetPos(bool reset);
+        static bool getResetPos();
+    
+        static bool resetPos;
+        static int directionBuffSize;
     
 	private:
         static OwnedArray<Position> fingers; // stores the mouse locations
@@ -47,8 +54,9 @@ class Gesture
     
         static float dist;
     
-        static float points [20][2];
-        static float directionHyp;
-        static float directionH;
-        static float directionAngle;
+        static float directionDeltaX;
+        static float directionDeltaY;
+        static float absDirectionDeltaX;
+        static float absDirectionDeltaY;
+        static String direction;
 };
