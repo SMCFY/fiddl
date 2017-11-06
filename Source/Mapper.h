@@ -23,9 +23,16 @@ class Mapper
 		static void mapToGain(float val);
 		// this method takes a string pair to map a "gestureParameter" to an "audioParameter"
 		static void mapFromTo(std::string gestureParameter, std::string audioParameter);
-		// public variables
+    
+        static float lin2log(float outMax, float outMin, float input);
 		
+    // public variables
+        static float inMax;
+        static float inMin;
 		
 		private:		
 		static std::vector< std::pair <std::string,std::string> > mapping;
+    
+        //for the lin2log function
+    
 };
