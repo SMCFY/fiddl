@@ -34,52 +34,45 @@ bool Gesture::resetPos = false;
 float Gesture::compWidth;
 float Gesture::compHeight;
 
-Gesture::Position* Gesture::normalizeCoordinates(const MouseEvent& e)
+Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
     // retrieve the x position, from 0.0 to 1.0
-    float x = e.position.x / compWidth;
+    p.x = p.x / compWidth;
     
     // retrieve the y position, from 0.0 to 1.0
-    float y = ((compHeight - e.position.y) > 0 ? (compHeight - e.position.y) / compHeight : 0);
+    p.y = ((compHeight - p.y) > 0 ? (compHeight - p.y) / compHeight : 0);
 
-    Gesture::Position* fing = new Gesture::Position(x, y);
-    return fing;
+    return p;
 }
 
 void Gesture::addFinger(const MouseEvent& e)
 {
-    Gesture::Position* f = normalizeCoordinates(e);
+    Gesture::Position* f = new Gesture::Position(e.source, normalizeCoordinates(e.position));
     fingers.add(f);
+    std::cout << "array size " << fingers.size();
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
 {
     for (int i = 0; i < fingers.size(); i++)
     {
-        if (fingers[i]->xPos == e.position.getX() && fingers[i]->yPos == e.position.getY())
+        if (fingers[i]->sourceIndex == e.source.getIndex())
+        {
             fingers.removeObject(fingers[i]);
+            std::cout << "array size " << fingers.size();
+        }
     }
 }
-/*
-Gesture::Position* Gesture::getFinger(const MouseEvent& e)
-{
-    for (int i = 0; i < fingers.size(); i++)
-    {
-        if (fingers[i]->xPos == e.position.getX() && fingers[i]->yPos == e.position.getY())
-            return fingers[i]; // returns finger which matches the mouse event
-    }
-    return nullptr;
-}
-*/
+
 Gesture::Position* Gesture::getFingerPosition(int index)
 {
     return fingers[index];
 }
 
-void Gesture::updateFingers(const MouseEvent& e) // under construction
+void Gesture::updateFingers(const MouseInputSource& mis, int index)
 {
-    fingers[0]->xPos = normalizeCoordinates(e)->xPos;
-    fingers[0]->yPos = normalizeCoordinates(e)->yPos;
+        fingers[index]->pos = normalizeCoordinates(mis.getScreenPosition());
+        std::cout << index << " " << fingers[index]->sourceIndex << " - " << fingers[index]->pos.x << " " << fingers[index]->pos.y << " " << std::endl;
 }
 
 void Gesture::setVelocity(float x, float y)
@@ -146,7 +139,7 @@ void Gesture::setDirection(float p [directionBuffSize][2])
         direction = "TAP";
     */
     //std::cout << p[directionBuffSize-1][0] << "  " << p[0][0] << "  " << p[1][0];
-    std::cout << direction << "\n";
+    //std::cout << direction << "\n";
     //std::cout << "X:  " << directionDeltaX << "   Y:   " << directionDeltaY << "   ";
 }
 

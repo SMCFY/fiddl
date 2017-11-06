@@ -39,18 +39,22 @@ void PlayComponent::paint (Graphics& g)
 
     if (isPlaying)
     {
-        g.drawText ("Playing", getLocalBounds(),
+      g.drawText ("Playing", getLocalBounds(),
                 Justification::centred, true);
     }
     else
     {
-        g.drawText ("Stopped", getLocalBounds(),
+      g.drawText ("Stopped", getLocalBounds(),
                 Justification::centred, true);
     }
     
     //Draw a shape on mouseDrag
-    if(isPlaying){
-        g.drawEllipse(int (Gesture::getFingerPosition(0)->xPos * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(0)->yPos * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
+    if(isPlaying)
+    {
+      for (int i = 0; i < Gesture::fingers.size(); i++)
+      {
+        g.drawEllipse(int (Gesture::getFingerPosition(i)->pos.x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i)->pos.y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
+      }
     }
     
 }
@@ -70,9 +74,9 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
 {                      
-  Gesture::updateFingers(e);
+  Gesture::updateFingers(e.source, e.source.getIndex());
 
-  Gesture::setVelocity(Gesture::getFingerPosition(0)->xPos, Gesture::getFingerPosition(0)->yPos);
+  Gesture::setVelocity(Gesture::getFingerPosition(0)->pos.x, Gesture::getFingerPosition(0)->pos.y);
     
   Mapper::updateParameters();
     
@@ -92,8 +96,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
       
       for(int i = 0; i < Gesture::directionBuffSize; i++)
       {
-          coordinates[i][0] = Gesture::getFingerPosition(0)->xPos;
-          coordinates[i][1] = Gesture::getFingerPosition(0)->yPos;
+          coordinates[i][0] = Gesture::getFingerPosition(0)->pos.x;
+          coordinates[i][1] = Gesture::getFingerPosition(0)->pos.y;
       }
       
       swipeEnd = false;
@@ -102,8 +106,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   
   else
   {
-      coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->xPos;
-      coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->yPos;
+      coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->pos.x;
+      coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->pos.y;
       coordIndex++;
   }
 

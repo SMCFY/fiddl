@@ -17,8 +17,14 @@
 class Gesture
 {
 	public:
-        typedef struct Position { float xPos, yPos;
-                                  Position(float x, float y){ this->xPos = x; this->yPos = y; } } Position;
+        typedef struct Position { Point<float> pos; const MouseInputSource* mis; int sourceIndex;
+                                    Position(const MouseInputSource& mouseInput, Point<float> point)
+                                    {
+                                        this->mis = &mouseInput;
+                                        this->pos = point;
+                                        this->sourceIndex = mouseInput.getIndex();
+                                    }
+                                } Position;
     
 		static void setVelocity(float x, float y);
 		static void setDirection(float p [][2]);
@@ -32,8 +38,8 @@ class Gesture
         // multi touch
         static void addFinger(const MouseEvent& e); // adds new finger struct
         static void rmFinger(const MouseEvent& e); // removes finger 
-        static Position* getFingerPosition(int index); // returns finger by its index
-        static void updateFingers(const MouseEvent& e); // update finger coordinates
+        static Position* getFingerPosition(int index); // returns finger by its array index
+        static void updateFingers(const MouseInputSource& mis, int index); // update finger coordinates
 
         static void setResetPos(bool reset);
         static bool getResetPos();
@@ -44,11 +50,10 @@ class Gesture
         static bool resetPos;
         static int directionBuffSize;
     
-	private:
         static OwnedArray<Position> fingers; // stores the finger locations
 
-        //static Position* getFinger(const MouseEvent& e); // returns finger position based on MouseEvent
-        static Position* normalizeCoordinates(const MouseEvent& e); // returns finger position with normalised coordinates
+	private:
+        static Point<float> normalizeCoordinates(Point<float> p);
 
         static float compWidth;
         static float compHeight;
