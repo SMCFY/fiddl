@@ -36,10 +36,8 @@ float Gesture::compHeight;
 
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
-    // retrieve the x position, from 0.0 to 1.0
     p.x = p.x / compWidth;
     
-    // retrieve the y position, from 0.0 to 1.0
     p.y = ((compHeight - p.y) > 0 ? (compHeight - p.y) / compHeight : 0);
 
     return p;
@@ -49,7 +47,6 @@ void Gesture::addFinger(const MouseEvent& e)
 {
     Gesture::Position* f = new Gesture::Position(e.source, normalizeCoordinates(e.position));
     fingers.add(f);
-    std::cout << "array size " << fingers.size();
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
@@ -58,21 +55,31 @@ void Gesture::rmFinger(const MouseEvent& e)
     {
         if (fingers[i]->sourceIndex == e.source.getIndex())
         {
-            fingers.removeObject(fingers[i]);
-            std::cout << "array size " << fingers.size();
+            fingers.removeObject(fingers[i]); // remove stored input source from the array which matches the MouseEvent
         }
     }
 }
 
-Gesture::Position* Gesture::getFingerPosition(int index)
+Point<float> Gesture::getFingerPosition(int index)
 {
-    return fingers[index];
+    return fingers[index]->pos;
 }
 
 void Gesture::updateFingers(const MouseInputSource& mis, int index)
 {
-        fingers[index]->pos = normalizeCoordinates(mis.getScreenPosition());
-        std::cout << index << " " << fingers[index]->sourceIndex << " - " << fingers[index]->pos.x << " " << fingers[index]->pos.y << " " << std::endl;
+        for (int i = 0; i < fingers.size(); i++)
+        {
+            if(fingers[i]->sourceIndex == index) // checks whether the stored input source exists or not
+            {
+                fingers[i]->pos = normalizeCoordinates(mis.getScreenPosition());
+                //std::cout << index << " " << fingers[i]->sourceIndex << " - " << fingers[i]->pos.x << " " << fingers[i]->pos.y << " " << std::endl;
+            }
+        }
+}
+
+int Gesture::getNumFingers()
+{
+    return fingers.size();
 }
 
 void Gesture::setVelocity(float x, float y)
@@ -93,8 +100,6 @@ void Gesture::setVelocity(float x, float y)
         
     xTemp = xNew;
     yTemp = yNew;
-    
-    //std::cout << xDelta << "   ";
 }
 
 void Gesture::setDirection(float p [directionBuffSize][2])

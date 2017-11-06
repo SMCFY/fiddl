@@ -60,14 +60,14 @@ void Mapper::updateParameters()
         {
             if (audioParameter == "gain")     // ... to gain value
             {
-                mapToGain(Gesture::getFingerPosition(0)->pos.x);
+                mapToGain(Gesture::getFingerPosition(0).x);
             }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
         {
             if (audioParameter == "gain")
             {
-                mapToGain(Gesture::getFingerPosition(0)->pos.y); // ... to gain value
+                mapToGain(Gesture::getFingerPosition(0).y); // ... to gain value
             }
         }
     }

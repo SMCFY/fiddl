@@ -36,10 +36,11 @@ class Gesture
         static void fillDirBuff(float x, float y);
 
         // multi touch
-        static void addFinger(const MouseEvent& e); // adds new finger struct
-        static void rmFinger(const MouseEvent& e); // removes finger 
-        static Position* getFingerPosition(int index); // returns finger by its array index
+        static void addFinger(const MouseEvent& e); // adds new input source to the array
+        static void rmFinger(const MouseEvent& e); // removes input source from the array
         static void updateFingers(const MouseInputSource& mis, int index); // update finger coordinates
+        static Point<float> getFingerPosition(int index); // returns input source by its index
+        static int getNumFingers(); // returns the number of fingers
 
         static void setResetPos(bool reset);
         static bool getResetPos();
@@ -50,9 +51,9 @@ class Gesture
         static bool resetPos;
         static int directionBuffSize;
     
-        static OwnedArray<Position> fingers; // stores the finger locations
-
 	private:
+        static OwnedArray<Position> fingers; // stores the input sources, with their respective coordinates and indeces
+
         static Point<float> normalizeCoordinates(Point<float> p);
 
         static float compWidth;

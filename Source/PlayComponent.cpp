@@ -51,9 +51,9 @@ void PlayComponent::paint (Graphics& g)
     //Draw a shape on mouseDrag
     if(isPlaying)
     {
-      for (int i = 0; i < Gesture::fingers.size(); i++)
+      for (int i = 0; i < Gesture::getNumFingers(); i++)
       {
-        g.drawEllipse(int (Gesture::getFingerPosition(i)->pos.x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i)->pos.y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
+        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
       }
     }
     
@@ -76,7 +76,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 {                      
   Gesture::updateFingers(e.source, e.source.getIndex());
 
-  Gesture::setVelocity(Gesture::getFingerPosition(0)->pos.x, Gesture::getFingerPosition(0)->pos.y);
+  Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
     
   Mapper::updateParameters();
     
@@ -96,8 +96,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
       
       for(int i = 0; i < Gesture::directionBuffSize; i++)
       {
-          coordinates[i][0] = Gesture::getFingerPosition(0)->pos.x;
-          coordinates[i][1] = Gesture::getFingerPosition(0)->pos.y;
+          coordinates[i][0] = Gesture::getFingerPosition(0).x;
+          coordinates[i][1] = Gesture::getFingerPosition(0).y;
       }
       
       swipeEnd = false;
@@ -106,8 +106,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   
   else
   {
-      coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->pos.x;
-      coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->pos.y;
+      coordinates[coordIndex][0] = Gesture::getFingerPosition(0).x;
+      coordinates[coordIndex][1] = Gesture::getFingerPosition(0).y;
       coordIndex++;
   }
 
@@ -117,7 +117,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
   Gesture::rmFinger(e);
-  stopPlaying();
+
+  if(Gesture::getNumFingers == 0)
+    stopPlaying();
   
   //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
   swipeEnd = true;
