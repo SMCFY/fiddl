@@ -79,38 +79,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   Gesture::setVelocity(Gesture::getFingerPosition(0)->pos.x, Gesture::getFingerPosition(0)->pos.y);
     
   Mapper::updateParameters();
+   
+  fillCoordinates();
     
-  //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
-  if (coordIndex > Gesture::directionBuffSize - 1)
-  {
-      Gesture::setDirection(coordinates);
-      coordIndex = 0;
-      //std::cout << "Get Direction!" ;
-      
-  }
-
-  else if (swipeEnd)
-  {
-      //Start writing to the first index again and set all indexes equal to the first, to make sure that the deltaPosition is 0
-      coordIndex = 0;
-      
-      for(int i = 0; i < Gesture::directionBuffSize; i++)
-      {
-          coordinates[i][0] = Gesture::getFingerPosition(0)->pos.x;
-          coordinates[i][1] = Gesture::getFingerPosition(0)->pos.y;
-      }
-      
-      swipeEnd = false;
-      //std::cout << "New Swipe!" ;
-  }
-  
-  else
-  {
-      coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->pos.x;
-      coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->pos.y;
-      coordIndex++;
-  }
-
   repaint();
 }
 
@@ -141,3 +112,35 @@ void PlayComponent::startPlaying()
     isPlaying = true;
 }
 
+void PlayComponent::fillCoordinates()
+{
+    //Fill the buffer for calculating direction, and calculate direction when the buffer reaches the end
+    if (coordIndex > Gesture::directionBuffSize - 1)
+    {
+        Gesture::setDirection(coordinates);
+        coordIndex = 0;
+        //std::cout << "Get Direction!" ;
+    }
+    
+    else if (swipeEnd)
+    {
+        //Start writing to the first index again and set all indexes equal to the first, to make sure that the deltaPosition is 0
+        coordIndex = 0;
+        
+        for(int i = 0; i < Gesture::directionBuffSize; i++)
+        {
+            coordinates[i][0] = Gesture::getFingerPosition(0)->pos.x;
+            coordinates[i][1] = Gesture::getFingerPosition(0)->pos.y;
+        }
+        
+        swipeEnd = false;
+        //std::cout << "New Swipe!" ;
+    }
+    
+    else
+    {
+        coordinates[coordIndex][0] = Gesture::getFingerPosition(0)->pos.x;
+        coordinates[coordIndex][1] = Gesture::getFingerPosition(0)->pos.y;
+        coordIndex++;
+    }
+}

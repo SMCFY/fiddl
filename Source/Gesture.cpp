@@ -32,7 +32,7 @@ String Gesture::direction;
 bool Gesture::resetPos = false;
 
 float Gesture::compWidth;
-float Gesture::compHeight;
+float Gesture::compHeight; 
 
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
@@ -139,7 +139,7 @@ void Gesture::setDirection(float p [directionBuffSize][2])
         direction = "TAP";
     */
     //std::cout << p[directionBuffSize-1][0] << "  " << p[0][0] << "  " << p[1][0];
-    //std::cout << direction << "\n";
+    std::cout << direction << "\n";
     //std::cout << "X:  " << directionDeltaX << "   Y:   " << directionDeltaY << "   ";
 }
 

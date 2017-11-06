@@ -34,6 +34,8 @@ public:
     void mouseDown (const MouseEvent& e) override;
     void mouseDrag (const MouseEvent& e) override;
     void mouseUp (const MouseEvent& e) override;
+    
+    void fillCoordinates();
 
     void stopPlaying(); // stop audio playback
     void startPlaying(); // start audio playback
