@@ -89,7 +89,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
   Gesture::rmFinger(e);
 
-  if(Gesture::getNumFingers == 0)
+  if(Gesture::getNumFingers() == 0)
     stopPlaying();
   
   //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
@@ -100,8 +100,6 @@ void PlayComponent::mouseUp (const MouseEvent& e)
   coordinates[Gesture::directionBuffSize-1][0] = coordinates[coordIndex-1][0];
   coordinates[Gesture::directionBuffSize-1][1] = coordinates[coordIndex-1][1];;
   Gesture::setDirection(coordinates);
-
-  repaint();
 }
 
 void PlayComponent::stopPlaying()

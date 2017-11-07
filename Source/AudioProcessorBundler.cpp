@@ -24,6 +24,7 @@ void AudioProcessorBundler::initDSPBlocks()
     
     // dsp blocks
     gain = new Gain(gainLevel);
+    timeStretch = new TimeStretch();
 
     // add parameter
     // all AudioParameterFloat objects must be connected to a DSP processor
@@ -35,4 +36,4 @@ AudioParameterFloat *AudioProcessorBundler::gainLevel;
 
 // DSP processors:
 Gain *AudioProcessorBundler::gain;
-TimeStretch AudioProcessorBundler::timeStretch;
+TimeStretch *AudioProcessorBundler::timeStretch;

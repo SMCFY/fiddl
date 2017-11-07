@@ -29,7 +29,7 @@ class AudioProcessorBundler
 	
 	    // DSP processors
 		static Gain *gain;
-        static TimeStretch timeStretch;
+        static TimeStretch *timeStretch;
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
