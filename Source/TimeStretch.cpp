@@ -24,7 +24,7 @@ TimeStretch::TimeStretch()
     */
     soundTouch.setSampleRate(44100);
     soundTouch.setChannels(2);
-    soundTouch.setTempoChange(-50.0f);
+    soundTouch.setTempoChange(0.0f);
     soundTouch.setPitchSemiTones(0.0f);
     soundTouch.setRateChange(0.0f);
     soundTouch.setSetting(SETTING_USE_QUICKSEEK, 0);
@@ -49,16 +49,21 @@ TimeStretch::~TimeStretch()
 
 void TimeStretch::process(AudioBuffer<float> buffer)
 {
-    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
-    {
-        soundTouch.putSamples(buffer.getWritePointer(ch), buffer.getNumSamples());
-    }
+    //for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+    //{
+    soundTouch.putSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    nSamples = soundTouch.receiveSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    
+    //if (nSamples == 0) {
+    //    soundTouch.putSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    //    nSamples = soundTouch.receiveSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    //}
+    //}
     /* here is where all the timestretching magic happens ;) */
-    do
-    {
-        for (int ch = 0; ch < buffer.getNumChannels(); ch++)
-        {
-            nSamples = soundTouch.receiveSamples(buffer.getWritePointer(ch), buffer.getNumSamples());
-        }
-    } while (nSamples != 0);
+
+    
+    //for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+    //{
+        //nSamples = soundTouch.receiveSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    //}
 }
