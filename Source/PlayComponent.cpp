@@ -100,6 +100,8 @@ void PlayComponent::mouseUp (const MouseEvent& e)
   coordinates[Gesture::directionBuffSize-1][0] = coordinates[coordIndex-1][0];
   coordinates[Gesture::directionBuffSize-1][1] = coordinates[coordIndex-1][1];;
   Gesture::setDirection(coordinates);
+
+  repaint();
 }
 
 void PlayComponent::stopPlaying()
