@@ -19,12 +19,23 @@ void Mapper::routeParameters() // all the mapping are defined here, and the valu
 {
 	
 	mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+    mapFromTo("x position","tempo");
 		
 }
 
 void Mapper::mapToGain(float val)
 {
     *AudioProcessorBundler::gainLevel = Mapper::lin2log(1,0.01,val);
+}
+
+void Mapper::mapToPitch(float val)
+{
+    *AudioProcessorBundler::pitch = -12.0f + val*24.0f;
+}
+
+void Mapper::mapToTempo(float val)
+{
+    *AudioProcessorBundler::tempo = -95.0f + val*190.0f;
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
@@ -62,12 +73,28 @@ void Mapper::updateParameters()
             {
                 mapToGain(Gesture::getFingerPosition(0).x);
             }
+            if (audioParameter == "pitch")     // ... to pitch value
+            {
+                mapToPitch(Gesture::getFingerPosition(0).x);
+            }
+            if (audioParameter == "tempo")     // ... to tempo value
+            {
+                mapToTempo(Gesture::getFingerPosition(0).x);
+            }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
         {
             if (audioParameter == "gain")
             {
                 mapToGain(Gesture::getFingerPosition(0).y); // ... to gain value
+            }
+            if (audioParameter == "pitch")     // ... to pitch value
+            {
+                mapToPitch(Gesture::getFingerPosition(0).y);
+            }
+            if (audioParameter == "tempo")     // ... to tempo value
+            {
+                mapToTempo(Gesture::getFingerPosition(0).y);
             }
         }
     }

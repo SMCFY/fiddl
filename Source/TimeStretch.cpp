@@ -12,7 +12,7 @@
 
 #include "TimeStretch.h"
 
-TimeStretch::TimeStretch()
+TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
 {
     // initialise the DSP state array, something like this:
     /*
@@ -22,9 +22,11 @@ TimeStretch::TimeStretch()
         state[ch] = new float[bufferLengthInSamples];
     }
     */
+    this->pitch = pitch;
+    this->tempo = tempo;
     soundTouch.setSampleRate(44100);
-    soundTouch.setChannels(2);
-    soundTouch.setTempoChange(0.0f);
+    soundTouch.setChannels(1);
+    soundTouch.setTempoChange(-0.0f);
     soundTouch.setPitchSemiTones(0.0f);
     soundTouch.setRateChange(0.0f);
     soundTouch.setSetting(SETTING_USE_QUICKSEEK, 0);
@@ -49,10 +51,24 @@ TimeStretch::~TimeStretch()
 
 void TimeStretch::process(AudioBuffer<float> buffer)
 {
+    
+    soundTouch.setTempoChange(tempo->get());
+    soundTouch.setPitchSemiTones(pitch->get());
     //for (int ch = 0; ch < buffer.getNumChannels(); ch++)
     //{
-    soundTouch.putSamples(buffer.getWritePointer(0), buffer.getNumSamples());
-    nSamples = soundTouch.receiveSamples(buffer.getWritePointer(0), buffer.getNumSamples());
+    float **bufferFrame = buffer.getArrayOfWritePointers();
+    int BUFF_SIZE = 512;
+    float outputSamples[BUFF_SIZE];
+    soundTouch.putSamples(*bufferFrame, buffer.getNumSamples());
+    nSamples = soundTouch.receiveSamples(outputSamples, buffer.getNumSamples());
+    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+    {
+        for (int sample = 0; sample < nSamples; sample++)
+        {
+            bufferFrame[ch][sample] = outputSamples[sample];
+        }
+    }
+    
     
     //if (nSamples == 0) {
     //    soundTouch.putSamples(buffer.getWritePointer(0), buffer.getNumSamples());

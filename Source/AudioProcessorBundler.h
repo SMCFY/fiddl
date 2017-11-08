@@ -33,4 +33,6 @@ class AudioProcessorBundler
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
+        static AudioParameterFloat *pitch;
+        static AudioParameterFloat *tempo;
 };

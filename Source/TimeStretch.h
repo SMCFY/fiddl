@@ -21,7 +21,7 @@ using namespace soundtouch;
 class TimeStretch : public DSP
 {
 	public:
-		TimeStretch();
+		TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo);
 		~TimeStretch();
 
 		void process(AudioBuffer<float> buffer) override;
@@ -30,6 +30,8 @@ class TimeStretch : public DSP
 	
 	    SoundTouch soundTouch;
         int nSamples;
+        AudioParameterFloat* pitch;
+        AudioParameterFloat* tempo;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretch);
 };

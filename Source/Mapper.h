@@ -21,6 +21,8 @@ class Mapper
 		static void routeParameters(); // wrapper mapping functions
 		static void updateParameters(); // update mappings when gesture values are updated
 		static void mapToGain(float val);
+        static void mapToPitch(float val);
+        static void mapToTempo(float val);
 		// this method takes a string pair to map a "gestureParameter" to an "audioParameter"
 		static void mapFromTo(std::string gestureParameter, std::string audioParameter);
     
