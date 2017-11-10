@@ -78,6 +78,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
   Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
     
+  Mapper::routeParameters(Gesture::getNumFingers());
   Mapper::updateParameters();
    
   fillCoordinates();

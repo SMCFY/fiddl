@@ -18,23 +18,20 @@
 class Mapper
 {
 	public:
-		static void routeParameters(); // wrapper mapping functions
+		static void routeParameters(int map); // wrapper mapping functions
 		static void updateParameters(); // update mappings when gesture values are updated
-		static void mapToGain(float val);
-        static void mapToPitch(float val);
-        static void mapToTempo(float val);
-		// this method takes a string pair to map a "gestureParameter" to an "audioParameter"
-		static void mapFromTo(std::string gestureParameter, std::string audioParameter);
-    
-        static float lin2log(float outMax, float outMin, float input);
 		
-    // public variables
         static float inMax;
         static float inMin;
 		
 		private:		
 		static std::vector< std::pair <std::string,std::string> > mapping;
+
+        static void mapToGain(float val);
+        static void mapToPitch(float val);
+        static void mapToTempo(float val);
+        // this method takes a string pair to map a "gestureParameter" to an "audioParameter"
+        static void mapFromTo(std::string gestureParameter, std::string audioParameter);
     
-        //for the lin2log function
-    
+        static float lin2log(float outMax, float outMin, float input);
 };

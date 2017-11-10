@@ -15,12 +15,18 @@
 float Mapper::inMax;
 float Mapper::inMin;
 
-void Mapper::routeParameters() // all the mapping are defined here, and the values updated for AudioParameters
+void Mapper::routeParameters(int map) // all the mapping are defined here, and the values updated for AudioParameters
 {
-	
-	mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
-    mapFromTo("x position","tempo");
-		
+    mapping.clear();
+    
+	if (map == 1)
+    {
+        mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+    }
+    if (map == 2)
+    {
+        mapFromTo("y position","pitch");
+    }
 }
 
 void Mapper::mapToGain(float val)
@@ -40,7 +46,7 @@ void Mapper::mapToTempo(float val)
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
 {
-	mapping.push_back(std::make_pair(gestureParameter,audioParameter));
+    mapping.push_back(std::make_pair(gestureParameter,audioParameter));
 }
 
 float Mapper::lin2log(float outMax, float outMin, float input)

@@ -40,10 +40,6 @@ public:
         //initialize DSP blocks and assign parameters
         AudioProcessorBundler::initDSPBlocks();
         
-        // Map gesture parameters to audio parameters
-        Mapper::routeParameters();
-        
-        
         recorder = new AudioRecorder(3.f);
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
@@ -69,7 +65,7 @@ public:
         bufferToFill.clearActiveBufferRegion(); // clearing the buffer frame BEFORE writing to it
 
         // play back the recorded audio segment
-        if (readIndex < recorder->getBufferLengthInSamples() && playComp.isPlaying)
+        if (readIndex < recorder->getSampBuff().getNumSamples() && playComp.isPlaying)
         {
             const int numInputChannels = recorder->getNumChannels();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels();
