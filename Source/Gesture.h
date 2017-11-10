@@ -29,6 +29,8 @@ class Gesture
 		static void setVelocity(float x, float y);
 		static void setDirection(float p [][2]);
         static String getDirection();
+        static void setTap (float p [2][2]);
+        static bool tap();
         static float getVelocityX();
         static float getVelocityY();
         static float getVelocity();
@@ -74,4 +76,7 @@ class Gesture
         static float absDirectionDeltaX;
         static float absDirectionDeltaY;
         static String direction;
+    
+        static float tapDist;
+        static bool isTap;
 };

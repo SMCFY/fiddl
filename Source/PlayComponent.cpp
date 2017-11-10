@@ -70,6 +70,9 @@ void PlayComponent::mouseDown (const MouseEvent& e)
   Gesture::addFinger(e);
   startPlaying();
   mouseDrag (e);
+    
+  tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
+  tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -82,6 +85,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   Mapper::updateParameters();
    
   fillCoordinates();
+  tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
+  tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
     
   repaint();
 }
@@ -97,10 +102,9 @@ void PlayComponent::mouseUp (const MouseEvent& e)
   swipeEnd = true;
   Gesture::setResetPos(swipeEnd);
   
-  //***Buggy. Returns wrong direction on release***
-  coordinates[Gesture::directionBuffSize-1][0] = coordinates[coordIndex-1][0];
-  coordinates[Gesture::directionBuffSize-1][1] = coordinates[coordIndex-1][1];;
-  Gesture::setDirection(coordinates);
+  Gesture::setTap(tapDetectCoords);
+  //if tap() outputs 1, it is a tap, else it is a swipe
+  //std::cout << Gesture::tap() << "\n";
 }
 
 void PlayComponent::stopPlaying()
