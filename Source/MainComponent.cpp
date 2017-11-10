@@ -17,6 +17,7 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
+#include "ToggleSpaceComponent.h"
 #include "Mapper.h"  // TODO: <-- this is only used for testing!
 #include "AudioProcessorBundler.h"
 
@@ -33,7 +34,9 @@ public:
         playComp.setSize (100, 100);
         addAndMakeVisible (recComp);
         recComp.setSize (100, 100);
-
+        addAndMakeVisible (toggleSpaceComp);
+        toggleSpaceComp.setSize(100,100);
+                                
         setSize(400, 400);
         setAudioChannels (1, 2);
                 
@@ -121,12 +124,14 @@ public:
     {
         // (Our component is opaque, so we must completely fill the background with a solid colour)
         g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+        //toggleSpaceComp.setLookAndFeel(&otherLookAndFeel);
     }
 
     void resized() override
     {
         playComp.setBounds (0, 0, getWidth(), getHeight() * 3 / 4);
         recComp.setBounds (0, getHeight() * 3 / 4, getWidth(), getHeight() * 1 / 4);
+        toggleSpaceComp.setBounds(getWidth()-27,5,25, 50);
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
@@ -156,6 +161,8 @@ private:
     //==============================================================================
     PlayComponent playComp;
     RecComponent recComp;
+    ToggleSpaceComponent toggleSpaceComp;
+    //LookAndFeel_V3 otherLookAndFeel;
     AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     int readIndex;
