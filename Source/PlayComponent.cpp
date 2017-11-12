@@ -23,6 +23,11 @@ PlayComponent::PlayComponent()
     isPlaying = false;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
+
+    playEnv.setAttack(1000);
+    playEnv.setDecay(100);
+    playEnv.setSustain(0.8);
+    playEnv.setRelease(1000);
 }
 
 PlayComponent::~PlayComponent()
@@ -106,12 +111,14 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 void PlayComponent::stopPlaying()
 {
     repaint();
+    playEnv.trigger = 0;
     isPlaying = false;
 }
 
 void PlayComponent::startPlaying()
 {
     repaint();
+    playEnv.trigger = 1;
     isPlaying = true;
 }
 

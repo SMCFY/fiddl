@@ -19,6 +19,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "maximilian.h"
 
 //==============================================================================
 /*
@@ -42,9 +43,12 @@ public:
     
     bool isPlaying; // true if recorded audio is playing
 
+    maxiEnv playEnv;
 private:
     float coordinates [20][2];
     int coordIndex = 0;
     bool swipeEnd = false;
+    
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

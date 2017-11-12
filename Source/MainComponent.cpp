@@ -109,6 +109,15 @@ public:
 
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
+
+        for (int samp = 0; samp < bufferToFill.buffer->getNumSamples(); ++samp)
+        {
+            for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
+            {
+                playComp.playEnv.ar(bufferToFill.buffer->getArrayOfWritePointers()[ch][samp], playComp.playEnv.trigger);
+            }
+        }
+
     }
 
     void releaseResources() override
