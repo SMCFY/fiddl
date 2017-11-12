@@ -32,7 +32,10 @@ String Gesture::direction;
 bool Gesture::resetPos = false;
 
 float Gesture::compWidth;
-float Gesture::compHeight; 
+float Gesture::compHeight;
+
+float Gesture::tapDist;
+bool Gesture::isTap = false;
 
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
@@ -141,7 +144,7 @@ void Gesture::setDirection(float p [directionBuffSize][2])
             direction = "LEFT";
         }
     } /*else if (directionDeltaX == 0 && directionDeltaY == 0)
-        direction = "TAP";
+        direction = "NULL";
     */
     //std::cout << p[directionBuffSize-1][0] << "  " << p[0][0] << "  " << p[1][0];
     //std::cout << direction << "\n";
@@ -151,6 +154,24 @@ void Gesture::setDirection(float p [directionBuffSize][2])
 String Gesture::getDirection()
 {
     return direction;
+}
+
+void Gesture::setTap(float p [2][2])
+{
+    tapDist = std::sqrt(std::pow(p[0][0]-p[1][0],2)+std::pow(p[0][1]-p[1][1],2));
+    
+    if (tapDist == 0)
+        isTap = true;
+    else
+        isTap = false;
+}
+
+bool Gesture::tap()
+{
+    if(isTap)
+        return true;
+    else
+        return false;
 }
 
 float Gesture::getVelocity()

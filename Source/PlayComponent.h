@@ -45,6 +45,7 @@ public:
 
     maxiEnv playEnv;
 private:
+    float tapDetectCoords [2][2];
     float coordinates [20][2];
     int coordIndex = 0;
     bool swipeEnd = false;
