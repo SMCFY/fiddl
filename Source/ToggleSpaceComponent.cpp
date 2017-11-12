@@ -8,7 +8,7 @@
   ==============================================================================
 */
 
-#include "../../../../../FiguraTK/JuceLibraryCode/JuceHeader.h"
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "ToggleSpaceComponent.h"
 
 //==============================================================================
