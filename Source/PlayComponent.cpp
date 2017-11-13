@@ -24,7 +24,7 @@ PlayComponent::PlayComponent()
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
 
-    playEnv.setAttack(1000);
+    playEnv.setAttack(2000);
     playEnv.setDecay(100);
     playEnv.setSustain(0.8);
     playEnv.setRelease(1000);
@@ -72,57 +72,57 @@ void PlayComponent::resized()
 
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
-  Gesture::addFinger(e);
-  startPlaying();
-  mouseDrag (e);
-    
-  tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
-  tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
+    Gesture::addFinger(e);
+    startPlaying();
+    mouseDrag (e);
+      
+    tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
+    tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
 {                      
-  Gesture::updateFingers(e.source, e.source.getIndex());
-
-  Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
-    
-  Mapper::routeParameters(Gesture::getNumFingers());
-  Mapper::updateParameters();
-   
-  fillCoordinates();
-  tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
-  tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
-    
-  repaint();
+    Gesture::updateFingers(e.source, e.source.getIndex());
+  
+    Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
+      
+    Mapper::routeParameters(Gesture::getNumFingers());
+    Mapper::updateParameters();
+     
+    fillCoordinates();
+    tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
+    tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
+      
+    repaint();
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
-  Gesture::rmFinger(e);
-
-  if(Gesture::getNumFingers() == 0)
-    stopPlaying();
+    Gesture::rmFinger(e);
   
-  //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
-  swipeEnd = true;
-  Gesture::setResetPos(swipeEnd);
-  
-  Gesture::setTap(tapDetectCoords);
-  //if tap() outputs 1, it is a tap, else it is a swipe
-  //std::cout << Gesture::tap() << "\n";
+    if(Gesture::getNumFingers() == 0)
+      stopPlaying();
+    
+    //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
+    swipeEnd = true;
+    Gesture::setResetPos(swipeEnd);
+    
+    Gesture::setTap(tapDetectCoords);
+    //if tap() outputs 1, it is a tap, else it is a swipe
+    //std::cout << Gesture::tap() << "\n";
 }
 
 void PlayComponent::stopPlaying()
 {
     repaint();
-    playEnv.trigger = 0;
+    playEnv.trigger = 0; std::cout << "trigger: " << playEnv.trigger << std::endl;
     isPlaying = false;
 }
 
 void PlayComponent::startPlaying()
 {
     repaint();
-    playEnv.trigger = 1;
+    playEnv.trigger = 1; std::cout << "trigger: " << playEnv.trigger << std::endl;
     isPlaying = true;
 }
 
