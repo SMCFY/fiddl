@@ -14,18 +14,34 @@
 
 float Mapper::inMax;
 float Mapper::inMin;
+int Mapper::toggleSpaceVal;
 
 void Mapper::routeParameters(int map) // all the mapping are defined here, and the values updated for AudioParameters
 {
     mapping.clear();
     
-	if (map == 1)
-    {
-        mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
-    }
-    if (map == 2)
-    {
-        mapFromTo("y position","pitch");
+    switch (toggleSpaceVal) {
+        case 1:
+            if (map == 1)
+            {
+                mapFromTo("y position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+            }
+            if (map == 2)
+            {
+                mapFromTo("y position","pitch");
+            }
+            break;
+        case 2:
+            if (map == 1)
+            {
+                mapFromTo("x position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+            }
+            if (map == 2)
+            {
+                mapFromTo("x position","pitch");
+            }
+        default:
+            break;
     }
 }
 
@@ -104,6 +120,11 @@ void Mapper::updateParameters()
             }
         }
     }
+}
+
+void Mapper::setToggleSpace(int t)
+{
+    toggleSpaceVal = t;
 }
 
 std::vector< std::pair <std::string,std::string> > Mapper::mapping;

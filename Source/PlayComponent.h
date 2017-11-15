@@ -19,7 +19,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "maximilian.h"
+#include "/Users/jonas/Documents/Git/touchKid2000/maximilian/maximilian.h"
+#include "ToggleSpaceComponent.h"
 
 //==============================================================================
 /*
@@ -49,7 +50,6 @@ private:
     float coordinates [20][2];
     int coordIndex = 0;
     bool swipeEnd = false;
-    
-
+    ToggleSpaceComponent togSpaceComp;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

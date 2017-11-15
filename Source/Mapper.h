@@ -23,6 +23,8 @@ class Mapper
 		
         static float inMax;
         static float inMin;
+    
+        static void setToggleSpace(int t);
 		
 		private:		
 		static std::vector< std::pair <std::string,std::string> > mapping;
@@ -34,4 +36,6 @@ class Mapper
         static void mapFromTo(std::string gestureParameter, std::string audioParameter);
     
         static float lin2log(float outMax, float outMin, float input);
+    
+        static int toggleSpaceVal;
 };

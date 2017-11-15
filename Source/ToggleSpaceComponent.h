@@ -15,7 +15,8 @@
 //==============================================================================
 /*
 */
-class ToggleSpaceComponent    : public Component
+class ToggleSpaceComponent    : public Component,
+public Button::Listener
 {
 public:
     ToggleSpaceComponent();
@@ -23,11 +24,16 @@ public:
     
     void paint (Graphics&) override;
     void resized() override;
-    //void buttonStateChanged (Button* button) override;
-    //void buttonClicked (Button* button) override;
+    void buttonClicked (Button* button) override;
+    void buttonStateChanged (Button* button) override;
+    int getToggleSpace();
+    void setToggleSpace(int t);
+    
+    
 
 private:
-    ToggleButton toggleSustain;
-    ToggleButton toggleImpulse;
+    TextButton toggleSustain;
+    TextButton toggleImpulse;
+    int toggleSpace = 1;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ToggleSpaceComponent)
 };

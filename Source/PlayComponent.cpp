@@ -28,6 +28,9 @@ PlayComponent::PlayComponent()
     playEnv.setDecay(100);
     playEnv.setSustain(0.8);
     playEnv.setRelease(1000);
+    
+    addAndMakeVisible (togSpaceComp);
+    togSpaceComp.setSize (100, 100);
 }
 
 PlayComponent::~PlayComponent()
@@ -68,6 +71,7 @@ void PlayComponent::resized()
 {
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
+    togSpaceComp.setBounds(getWidth()-82,5,80,60);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -78,6 +82,8 @@ void PlayComponent::mouseDown (const MouseEvent& e)
       
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
+    
+    Mapper::setToggleSpace(togSpaceComp.getToggleSpace());
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
