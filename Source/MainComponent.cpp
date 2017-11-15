@@ -109,6 +109,9 @@ public:
 
         //AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
+        AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
+        
+        /*
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
 
         for (int samp = 0; samp < bufferToFill.buffer->getNumSamples(); ++samp)
@@ -121,7 +124,7 @@ public:
                 std::cout << "envelope: " << playComp.playEnv.adsr(1, playComp.playEnv.trigger) << std::endl;
             }
         }
-
+        */
     }
 
     void releaseResources() override
