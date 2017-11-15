@@ -18,17 +18,14 @@
 
 class Gain : public DSP
 {
-	public:
-		Gain(AudioParameterFloat *gain);
-		~Gain();
+public:
+	Gain(AudioParameterFloat* gain);
+	~Gain();
 
-		void process(AudioBuffer<float> buffer) override;
+	void process(AudioBuffer<float> buffer) override;
 
-	private:
-		/* parameter variables */
-		/* look at the AudioProcessorParameter class documentation
-		   for more info on how to use these parameters */
-		AudioParameterFloat* gain;
+private:
+	AudioParameterFloat* gain;
 
-		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Gain);
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Gain);
 };
