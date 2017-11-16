@@ -109,22 +109,19 @@ public:
 
         //AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
-        AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
+        //AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         
-        /*
+        
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
 
         for (int samp = 0; samp < bufferToFill.buffer->getNumSamples(); ++samp)
         {
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
-                //outputFrame[ch][samp] = (float)playComp.playEnv.adsr(outputFrame[ch][samp], playComp.playEnv.trigger);
-                //outputFrame[ch][samp] *= (float)playComp.playEnv.adsr(1, playComp.playEnv.trigger);
-                if(playComp.playEnv.trigger)
-                std::cout << "envelope: " << playComp.playEnv.adsr(1, playComp.playEnv.trigger) << std::endl;
+                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 1000);
             }
         }
-        */
+        
     }
 
     void releaseResources() override

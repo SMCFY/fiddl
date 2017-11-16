@@ -19,8 +19,8 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "/Users/jonas/Documents/Git/touchKid2000/maximilian/maximilian.h"
 #include "ToggleSpaceComponent.h"
+#include "Envelope.h"
 
 //==============================================================================
 /*
@@ -43,8 +43,8 @@ public:
     void startPlaying(); // start audio playback
     
     bool isPlaying; // true if recorded audio is playing
-
-    maxiEnv playEnv;
+    Envelope env;
+    
 private:
     float tapDetectCoords [2][2];
     float coordinates [20][2];

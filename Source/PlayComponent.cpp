@@ -23,14 +23,10 @@ PlayComponent::PlayComponent()
     isPlaying = false;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-
-    playEnv.setAttack(2000);
-    playEnv.setDecay(100);
-    playEnv.setSustain(0.8);
-    playEnv.setRelease(1000);
     
     addAndMakeVisible (togSpaceComp);
     togSpaceComp.setSize (100, 100);
+    env = Envelope(44100);
 }
 
 PlayComponent::~PlayComponent()
@@ -77,6 +73,7 @@ void PlayComponent::resized()
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
+    env.trigger(1);
     startPlaying();
     mouseDrag (e);
       
@@ -105,9 +102,13 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::rmFinger(e);
-  
-    if(Gesture::getNumFingers() == 0)
+
+    env.trigger(0);
+    std::cout << "amplitude on mouseUp: " << env.getValue() << std::endl;
+    if(Gesture::getNumFingers() == 0 && env.getValue() == 0)
+    {
       stopPlaying();
+    }
     
     //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     swipeEnd = true;
@@ -121,14 +122,12 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 void PlayComponent::stopPlaying()
 {
     repaint();
-    playEnv.trigger = 0; std::cout << "trigger: " << playEnv.trigger << std::endl;
     isPlaying = false;
 }
 
 void PlayComponent::startPlaying()
 {
     repaint();
-    playEnv.trigger = 1; std::cout << "trigger: " << playEnv.trigger << std::endl;
     isPlaying = true;
 }
 
