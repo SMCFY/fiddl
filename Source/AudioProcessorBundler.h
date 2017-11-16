@@ -37,5 +37,6 @@ class AudioProcessorBundler
 		static AudioParameterFloat *gainLevel;
         static AudioParameterFloat *pitch;
         static AudioParameterFloat *tempo;
-        static AudioParameterFloat *lpCutOff;
+        //static AudioParameterFloat *lpCutOff;
+        static AudioParameterFloat *lowPassFilterFreqParam;
 };
