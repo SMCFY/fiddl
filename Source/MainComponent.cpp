@@ -107,9 +107,10 @@ public:
              readIndex = 0;
         }
 
-        //AudioProcessorBundler::gain->process(*bufferToFill.buffer);
+        AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
-        //AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
+        
+        AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         
         
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
@@ -118,7 +119,7 @@ public:
         {
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
-                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 1000);
+                //outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 1000);
             }
         }
         

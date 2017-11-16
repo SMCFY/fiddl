@@ -17,7 +17,7 @@ LowPass::LowPass(AudioParameterFloat* cutoff)
     //lp.setCoefficients(IIRCoefficients::makeLowPass(44100, cutoff->get(), 0.1));
     dsp::ProcessSpec spec { 44100, static_cast<uint32> (512), 2 };
     
-    lowPassFilter.state  = dsp::IIR::Coefficients<float>::makeLowPass  (44100, cutoff->get());
+    *lowPassFilter.state  = *dsp::IIR::Coefficients<float>::makeLowPass  (44100, cutoff->get());
     lowPassFilter.prepare (spec);
 }
 
@@ -38,12 +38,13 @@ void LowPass::process(AudioBuffer<float> buffer)
         
     }*/
     ScopedNoDenormals noDenormals;
+    *lowPassFilter.state  = *dsp::IIR::Coefficients<float>::makeLowPass  (44100, cutoff->get());
     
-    lowPassFilter.state  = dsp::IIR::Coefficients<float>::makeFirstOrderLowPass  (44100, cutoff->get());
     dsp::AudioBlock<float> block (buffer);
     lowPassFilter.process (dsp::ProcessContextReplacing<float> (block));
     auto firstChan = block.getSingleChannelBlock (0);
-	for (size_t chan = 1; chan < block.getNumChannels(); ++chan)
+    std::cout << "ch: " << block.getNumChannels() << std::endl;
+	for (size_t chan = 0; chan < block.getNumChannels(); ++chan)
             block.getSingleChannelBlock (chan).copy (firstChan);
 }
 

@@ -35,8 +35,8 @@ void Envelope::trigger(bool trig)
 
 float Envelope::envelope(int attackTime, float peak, int releaseTime)
 {
-	if(trig && !attack && !release) // init on trigger
-	{
+	//if(trig && !attack && !release) // init on trigger
+	//{
 	bool attack = 1;
     bool release = 0;
 
@@ -44,7 +44,7 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime)
     float releaseInSamples = samplingRate / (releaseTime/1000);
     float attDelta = peak / attackInSamples;
     float relDelta = peak / releaseInSamples;
-   	}
+   	//}
     
 	if(attack && amplitude < peak) // attack phase
 	{
