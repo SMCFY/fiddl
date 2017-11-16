@@ -19,7 +19,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "/Users/jonas/Documents/Git/touchKid2000/maximilian/maximilian.h"
+#include "maximilian.h"
 #include "ToggleSpaceComponent.h"
 
 //==============================================================================

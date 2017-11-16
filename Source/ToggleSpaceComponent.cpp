@@ -87,7 +87,6 @@ void ToggleSpaceComponent::buttonStateChanged (Button* button)
 
 int ToggleSpaceComponent::getToggleSpace()
 {
-    std::cout << toggleSpace;
     return toggleSpace;
 }
 
