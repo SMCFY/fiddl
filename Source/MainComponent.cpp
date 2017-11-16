@@ -118,6 +118,7 @@ public:
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
+        AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         
         
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
@@ -189,4 +190,5 @@ private:
 };
 
 // (This function is called by the app startup code to create our main component)
-Component* createMainContentComponent(){ return new MainContentComponent(); }
+Component* createMainContentComponent(){ return new MainContentComponent();
+}
