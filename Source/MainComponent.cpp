@@ -58,10 +58,18 @@ public:
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
         readIndex = 0;
+
+        isTriggered = &playComp.isPlaying;
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
+        if(playComp.initRead) // reset readIndex
+        {
+            readIndex = 0;
+            playComp.initRead = false;
+        }
+
         bufferToFill.clearActiveBufferRegion(); // clearing the buffer frame BEFORE writing to it
 
         // play back the recorded audio segment
@@ -99,17 +107,16 @@ public:
             // Component call isn't being called in a message thread,
             // make sure it is thread-safe by temporarily suspending the message thread
             const MessageManagerLock mmLock;
-            playComp.stopPlaying();
+            playComp.isPlaying = false;
             readIndex = 0;
         }
         else if (!playComp.isPlaying)
         {
-             readIndex = 0;
+            readIndex = 0; std::cout << "not playing " << std::endl;
         }
 
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
-        
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         
         
@@ -119,7 +126,7 @@ public:
         {
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
-                //outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 1000);
+                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 2000, *isTriggered);
             }
         }
         
@@ -175,6 +182,7 @@ private:
     int readIndex;
     int writeIndex;
     int sampleRate;
+    bool* isTriggered;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
     

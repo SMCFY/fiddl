@@ -43,7 +43,6 @@ void LowPass::process(AudioBuffer<float> buffer)
     dsp::AudioBlock<float> block (buffer);
     lowPassFilter.process (dsp::ProcessContextReplacing<float> (block));
     auto firstChan = block.getSingleChannelBlock (0);
-    std::cout << "ch: " << block.getNumChannels() << std::endl;
 	for (size_t chan = 0; chan < block.getNumChannels(); ++chan)
             block.getSingleChannelBlock (chan).copy (firstChan);
 }

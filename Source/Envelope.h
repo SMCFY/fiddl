@@ -18,7 +18,7 @@ class Envelope
 		~Envelope();
 
 		void trigger(bool trig);
-		float envelope(int attackTime, float peak, int releaseTime); // AR envelope
+		float envelope(int attackTime, float peak, int releaseTime, bool& isTriggered); // AR envelope
 		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime); // ADSR envelope
 		float getValue();
 
@@ -26,5 +26,14 @@ class Envelope
 		float amplitude;
 		bool trig;
 		int samplingRate;
+
+		bool attack;
+    	bool decay;
+    	bool sustain;
+    	bool release;
+	
+    	float attDelta;
+    	float decDelta; 
+    	float relDelta;
 	
 };

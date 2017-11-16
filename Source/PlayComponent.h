@@ -43,6 +43,7 @@ public:
     void startPlaying(); // start audio playback
     
     bool isPlaying; // true if recorded audio is playing
+    bool initRead; // resets readIndex in MCC
     Envelope env;
     
 private:

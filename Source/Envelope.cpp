@@ -7,7 +7,7 @@
 
   ==============================================================================
 */
-
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "Envelope.h"
 Envelope::Envelope()
 {
@@ -28,23 +28,21 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
-
-	if(trig)
-	this->amplitude = 0; // init amplitude on trigger
 }
 
-float Envelope::envelope(int attackTime, float peak, int releaseTime)
+float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTriggered)
 {
-	//if(trig && !attack && !release) // init on trigger
-	//{
-	bool attack = 1;
-    bool release = 0;
+	if(trig) // init on trigger/re-trigger
+	{
+		amplitude = 0;
+	
+		attack = 1;
+    	release = 0;
+	
+    	attDelta = peak / std::round(samplingRate * (attackTime/1000));
+    	relDelta = peak / std::round(samplingRate * (releaseTime/1000));
+   	}
 
-    float attackInSamples = samplingRate / (attackTime/1000);
-    float releaseInSamples = samplingRate / (releaseTime/1000);
-    float attDelta = peak / attackInSamples;
-    float relDelta = peak / releaseInSamples;
-   	//}
     
 	if(attack && amplitude < peak) // attack phase
 	{
@@ -56,18 +54,18 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime)
 		amplitude = peak;
 		attack = 0;
 		release = 1;
-
 		return amplitude;
 	}
-	else if(release && amplitude >= 0)// release phase
+	else if(release && amplitude >= 0) // release phase
 	{
 		amplitude -= relDelta;
 		return amplitude;
 	}
-	else
+	else if(release && amplitude < 0)
 	{	
 		amplitude = 0;
 		release = 0;
+		isTriggered = 0; // set isPlaying false and resets readIndex
 		return 0.0f;
 	}
 }
