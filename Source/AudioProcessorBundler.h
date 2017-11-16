@@ -16,7 +16,7 @@
 
 #include "Gain.h"
 #include "TimeStretch.h"
-#include "LowPass.h"
+#include "Filter.h"
 
 class AudioProcessorBundler
 {
@@ -31,11 +31,13 @@ class AudioProcessorBundler
 	    // DSP processors
 		static Gain *gain;
         static TimeStretch *timeStretch;
-        static LowPass *lopass;
+        static Filter *lopass;
+        static Filter *hipass;
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
         static AudioParameterFloat *pitch;
         static AudioParameterFloat *tempo;
-        static AudioParameterFloat *lpCutOff;
+        static AudioParameterFloat *lowPassFilterFreqParam;
+        static AudioParameterFloat *highPassFilterFreqParam;
 };

@@ -28,17 +28,17 @@ void Mapper::routeParameters(int map) // all the mapping are defined here, and t
             }
             if (map == 2)
             {
-                mapFromTo("y position","pitch");
+                mapFromTo("y position","gain");
             }
             break;
         case 2:
             if (map == 1)
             {
-                mapFromTo("x position","gain"); // call a method like this to do a mapping from a gesture to audio parameter
+                mapFromTo("x position","lowpass"); // call a method like this to do a mapping from a gesture to audio parameter
             }
             if (map == 2)
             {
-                mapFromTo("x position","pitch");
+                mapFromTo("x position","highpass");
             }
         default:
             break;
@@ -58,6 +58,16 @@ void Mapper::mapToPitch(float val)
 void Mapper::mapToTempo(float val)
 {
     *AudioProcessorBundler::tempo = -95.0f + val*190.0f;
+}
+
+void Mapper::mapToLowPass(float val)
+{
+    *AudioProcessorBundler::lowPassFilterFreqParam = 20.0f + val*19980.0f;
+}
+
+void Mapper::mapToHighPass(float val)
+{
+    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*19980.0f;
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
@@ -103,6 +113,14 @@ void Mapper::updateParameters()
             {
                 mapToTempo(Gesture::getFingerPosition(0).x);
             }
+            if (audioParameter == "lowpass")     // ... to tempo value
+            {
+                mapToLowPass(Gesture::getFingerPosition(0).x);
+            }
+            if (audioParameter == "highpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getFingerPosition(0).x);
+            }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
         {
@@ -117,6 +135,14 @@ void Mapper::updateParameters()
             if (audioParameter == "tempo")     // ... to tempo value
             {
                 mapToTempo(Gesture::getFingerPosition(0).y);
+            }
+            if (audioParameter == "lowpass")     // ... to tempo value
+            {
+                mapToLowPass(Gesture::getFingerPosition(0).y);
+            }
+            if (audioParameter == "highpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getFingerPosition(0).y);
             }
         }
     }
