@@ -105,9 +105,8 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::rmFinger(e);
 
-    //if(Gesture::getNumFingers == 0)
-        env.trigger(0); // note off (initiate release)
-    
+    if(Gesture::getNumFingers() == 0)
+        env.trigger(0); // note off (initiate release)  
     
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     Gesture::setResetPos(swipeEnd);
