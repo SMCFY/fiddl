@@ -74,7 +74,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
 
-    /*env.trigger(0)*/ env.trigger(1); // retrigger on new touch or not?
+    env.trigger(1);
     initRead = true;
     isPlaying = true;
     
@@ -115,6 +115,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     Gesture::setTap(tapDetectCoords);
     //if tap() outputs 1, it is a tap, else it is a swipe
     //std::cout << Gesture::tap() << "\n";
+    repaint();
 }
 
 void PlayComponent::fillCoordinates()

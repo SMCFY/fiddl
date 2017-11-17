@@ -33,7 +33,7 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
-
+	
 // note off
 	if(!trig)
 		sustain = 0;
