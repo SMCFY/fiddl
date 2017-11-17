@@ -34,6 +34,7 @@ class Mapper
         static void mapToTempo(float val);
         static void mapToLowPass(float val);
         static void mapToHighPass(float val);
+        static void mapToBandPass(float val);
     
         // this method takes a string pair to map a "gestureParameter" to an "audioParameter"
         static void mapFromTo(std::string gestureParameter, std::string audioParameter);

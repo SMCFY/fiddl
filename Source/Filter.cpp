@@ -12,7 +12,7 @@
 #include "AudioProcessorBundler.h"
 
 Filter::Filter(AudioParameterFloat* cutoff, const String filterType)
-: isHighPass(false), isLowPass(false)
+: isHighPass(false), isLowPass(false), isBandPass(false)
 {
     if (filterType == "lowpass")
     {
@@ -22,6 +22,10 @@ Filter::Filter(AudioParameterFloat* cutoff, const String filterType)
     {
         isHighPass = true;
     }
+    else if (filterType == "bandpass")
+    {
+        isBandPass = true;
+    }
     
 	this->cutoff = cutoff;
     dsp::ProcessSpec spec { 44100, static_cast<uint32> (512), 2 };
@@ -30,6 +34,8 @@ Filter::Filter(AudioParameterFloat* cutoff, const String filterType)
     lowPassFilter.prepare (spec);
     *highPassFilter.state  = *dsp::IIR::Coefficients<float>::makeHighPass  (44100, cutoff->get());
     highPassFilter.prepare (spec);
+    *bandPassFilter.state  = *dsp::IIR::Coefficients<float>::makeBandPass  (44100, cutoff->get());
+    bandPassFilter.prepare (spec);
 }
 
 Filter::~Filter()
@@ -51,6 +57,11 @@ void Filter::process(AudioBuffer<float> buffer)
     {
         *highPassFilter.state = *dsp::IIR::Coefficients<float>::makeHighPass  (44100, cutoff->get());
         highPassFilter.process (dsp::ProcessContextReplacing<float> (block));
+    }
+    else if (isBandPass)
+    {
+        *bandPassFilter.state = *dsp::IIR::Coefficients<float>::makeBandPass  (44100, cutoff->get());
+        bandPassFilter.process (dsp::ProcessContextReplacing<float> (block));
     }
     
     
