@@ -10,6 +10,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Envelope.h"
 Envelope::Envelope()
+: aMin(0.001f)
 {
     this->samplingRate = 44100;
     this->amplitude = 0;
@@ -17,6 +18,7 @@ Envelope::Envelope()
 }
 
 Envelope::Envelope(int sr)
+: aMin(0.001f)
 {
 	this->samplingRate = sr;
 	this->amplitude = 0;
@@ -43,14 +45,14 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
     if(trig) // init on trigger/re-trigger
 	{
 		amplitude = 0;
-	
+		std::cout << aMin << std::endl;
 		attack = 1;
     	release = 0;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
-    	relDelta = peak / std::round(samplingRate * (releaseTime/1000));
+    	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
 
-    	trig = 0; std::cout << "trigoff";
+    	trig = 0;
    	}
 
     
@@ -68,9 +70,9 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
 	}
 	else if(release) // release phase
 	{
-		if(amplitude >=0)
+		if(amplitude >= aMin)
 		{
-			amplitude -= relDelta;
+			amplitude *= relDelta;
 			return amplitude;
 		}
 		else
@@ -97,8 +99,8 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
     	release = 0;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
-    	decDelta = peak / std::round(samplingRate * (decayTime/1000));
-    	relDelta = peak / std::round(samplingRate * (releaseTime/1000));
+    	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
+    	relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
 
     	// trig = 0; std::cout << "trigoff";
    	}
@@ -117,7 +119,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	}
 	else if(decay && amplitude > sustainLevel) // decay phase
 	{
-		amplitude -= decDelta;
+		amplitude *= decDelta;
 		return amplitude;
 	}
 	else if(sustain && amplitude <= sustainLevel) // sustain phase
@@ -129,9 +131,9 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	}
 	else if(release) // release phase
 	{
-		if(amplitude >=0)
+		if(amplitude >= aMin)
 		{
-			amplitude -= relDelta;
+			amplitude *= relDelta;
 			return amplitude;
 		}
 		else

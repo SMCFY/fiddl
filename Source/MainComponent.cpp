@@ -118,7 +118,7 @@ public:
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
-        //AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
+        AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         
         
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();

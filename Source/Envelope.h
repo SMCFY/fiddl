@@ -25,6 +25,7 @@ class Envelope
 		float amplitude;
 		bool trig;
 		int samplingRate;
+		float aMin;
 
 		bool attack;
     	bool decay;
