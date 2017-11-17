@@ -90,7 +90,7 @@ int ToggleSpaceComponent::getToggleSpace()
     return toggleSpace;
 }
 
-void ToggleSpaceComponent::setToggleSpace(int t)
+void ToggleSpaceComponent::setToggleSpace(int id)
 {
-    toggleSpace = t;
+    toggleSpace = id;
 }

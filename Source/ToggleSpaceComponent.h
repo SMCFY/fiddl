@@ -27,7 +27,7 @@ public:
     void buttonClicked (Button* button) override;
     void buttonStateChanged (Button* button) override;
     int getToggleSpace();
-    void setToggleSpace(int t);
+    void setToggleSpace(int id);
     
     
 

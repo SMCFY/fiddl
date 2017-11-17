@@ -18,13 +18,13 @@
 class Mapper
 {
 	public:
-		static void routeParameters(int map); // wrapper mapping functions
+		static void routeParameters(int numFingers); // wrapper mapping functions
 		static void updateParameters(); // update mappings when gesture values are updated
 		
         static float inMax;
         static float inMin;
     
-        static void setToggleSpace(int t);
+        static void setToggleSpace(int id);
 		
 		private:		
 		static std::vector< std::pair <std::string,std::string> > mapping;
@@ -40,5 +40,5 @@ class Mapper
     
         static float lin2log(float outMax, float outMin, float input);
     
-        static int toggleSpaceVal;
+        static int toggleSpaceID;
 };
