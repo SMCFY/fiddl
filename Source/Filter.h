@@ -21,8 +21,8 @@ public:
 
 private:
 	AudioParameterFloat* cutoff;
-	dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter;
-    bool isHighPass, isLowPass;
+	dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter, bandPassFilter;
+    bool isHighPass, isLowPass, isBandPass;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Filter);
 };

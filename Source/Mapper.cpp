@@ -25,7 +25,7 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
             if (numFingers == 1)
             {
                 mapFromTo("y position","pitch");
-                mapFromTo("x position", "lowpass");
+                mapFromTo("x position", "bandpass");
             }
             if (numFingers == 2)
             {
@@ -66,12 +66,17 @@ void Mapper::mapToTempo(float val)
 
 void Mapper::mapToLowPass(float val)
 {
-    *AudioProcessorBundler::lowPassFilterFreqParam = 20.0f + val*19980.0f;
+    *AudioProcessorBundler::lowPassFilterFreqParam = 20.0f + val*3000.0f;
 }
 
 void Mapper::mapToHighPass(float val)
 {
-    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*19980.0f;
+    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*3000.0f;
+}
+
+void Mapper::mapToBandPass(float val)
+{
+    *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
@@ -125,6 +130,10 @@ void Mapper::updateParameters()
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
+            if (audioParameter == "bandpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getFingerPosition(0).x);
+            }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
         {
@@ -147,6 +156,10 @@ void Mapper::updateParameters()
             if (audioParameter == "highpass")     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+            }
+            if (audioParameter == "bandpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getFingerPosition(0).y);
             }
         }
     }

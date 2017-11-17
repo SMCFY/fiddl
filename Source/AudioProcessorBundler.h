@@ -33,6 +33,7 @@ class AudioProcessorBundler
         static TimeStretch *timeStretch;
         static Filter *lopass;
         static Filter *hipass;
+        static Filter *bapass;
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
@@ -40,4 +41,5 @@ class AudioProcessorBundler
         static AudioParameterFloat *tempo;
         static AudioParameterFloat *lowPassFilterFreqParam;
         static AudioParameterFloat *highPassFilterFreqParam;
+        static AudioParameterFloat *bandPassFilterFreqParam;
 };
