@@ -17,7 +17,7 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
-#include "Mapper.h"  // TODO: <-- this is only used for testing!
+//#include "Mapper.h"  // TODO: <-- this is only used for testing!
 #include "AudioProcessorBundler.h"
 
 // used for initialising the deviceManager
@@ -64,7 +64,7 @@ public:
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
-        if(playComp.initRead) // reset readIndex
+        if(playComp.initRead) // reset readIndex on new trigger
         {
             readIndex = 0;
             playComp.initRead = false;
@@ -112,13 +112,13 @@ public:
         }
         else if (!playComp.isPlaying)
         {
-            readIndex = 0; std::cout << "not playing " << std::endl;
+            readIndex = 0;
         }
 
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
-        AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
+        //AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         
         
         float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
@@ -127,7 +127,10 @@ public:
         {
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
-                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 2000, *isTriggered);
+                if(playComp.togSpaceComp.getToggleSpace() == 2) // impulse
+                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 2000, *isTriggered); // APR
+                else // sustain
+                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 500, 0.5, 2000, *isTriggered); // APDSR
             }
         }
         

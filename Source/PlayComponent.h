@@ -45,12 +45,13 @@ public:
     bool isPlaying; // true if recorded audio is playing
     bool initRead; // resets readIndex in MCC
     Envelope env;
+    ToggleSpaceComponent togSpaceComp;
     
 private:
     float tapDetectCoords [2][2];
     float coordinates [20][2];
     int coordIndex = 0;
     bool swipeEnd = false;
-    ToggleSpaceComponent togSpaceComp;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

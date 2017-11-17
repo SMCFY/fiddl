@@ -73,9 +73,11 @@ void PlayComponent::resized()
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
-    env.trigger(1);
+
+    /*env.trigger(0)*/ env.trigger(1); // retrigger on new touch or not?
     initRead = true;
     isPlaying = true;
+    
     mouseDrag (e);
       
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
@@ -105,11 +107,6 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     Gesture::rmFinger(e);
 
     env.trigger(0);
-    //if(Gesture::getNumFingers() == 0 && env.getValue() == 0)
-    //{
-    //    std::cout << "Fuck this shit     ";
-    //    stopPlaying();
-    //}
     
     //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     swipeEnd = true;
@@ -119,18 +116,6 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     //if tap() outputs 1, it is a tap, else it is a swipe
     //std::cout << Gesture::tap() << "\n";
 }
-
-//void PlayComponent::stopPlaying()
-//{
-//    repaint();
-//    isPlaying = false;
-//}
-//
-//void PlayComponent::startPlaying()
-//{
-//    repaint();
-//    isPlaying = true;
-//}
 
 void PlayComponent::fillCoordinates()
 {

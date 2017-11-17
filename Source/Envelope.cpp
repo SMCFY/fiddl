@@ -12,12 +12,15 @@
 Envelope::Envelope()
 {
     this->samplingRate = 44100;
+    this->amplitude = 0;
+    this->sustain = 0;
 }
 
 Envelope::Envelope(int sr)
 {
 	this->samplingRate = sr;
 	this->amplitude = 0;
+	this->sustain = 0;
 }
 
 Envelope::~Envelope()
@@ -28,11 +31,16 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
+
+// note off
+	if(!trig)
+		sustain = 0;
 }
 
-float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTriggered)
+float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTriggered) // AR
 {
-	if(trig) // init on trigger/re-trigger
+
+    if(trig) // init on trigger/re-trigger
 	{
 		amplitude = 0;
 	
@@ -41,41 +49,99 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	relDelta = peak / std::round(samplingRate * (releaseTime/1000));
+
+    	trig = 0; std::cout << "trigoff";
    	}
 
     
-	if(attack && amplitude < peak) // attack phase
+	if(attack) // attack phase
 	{
-		amplitude += attDelta;
+        amplitude += attDelta;
+        if(amplitude >= peak)
+        {
+            amplitude = peak;
+            attack = 0;
+            release = 1;
+            return amplitude;
+        }
 		return amplitude;
 	}
-	else if(attack && amplitude >= peak) // cap amplitude to peak
+	else if(release) // release phase
 	{
-		amplitude = peak;
-		attack = 0;
+		if(amplitude >=0)
+		{
+			amplitude -= relDelta;
+			return amplitude;
+		}
+		else
+		{
+			amplitude = 0;
+			release = 0;
+			isTriggered = 0; // set isPlaying false and resets readIndex
+			return 0.0f;
+		}
+	}
+	
+    return 0.0f;
+}
+
+float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime, bool& isTriggered) // ADSR
+{
+	if(trig && !sustain) // init on trigger/re-trigger
+	{
+		amplitude = 0;
+	
+		attack = 1;
+		decay = 0;
+		sustain = 1;
+    	release = 0;
+	
+    	attDelta = peak / std::round(samplingRate * (attackTime/1000));
+    	decDelta = peak / std::round(samplingRate * (decayTime/1000));
+    	relDelta = peak / std::round(samplingRate * (releaseTime/1000));
+
+    	// trig = 0; std::cout << "trigoff";
+   	}
+
+    
+	if(attack) // attack phase
+	{
+		amplitude += attDelta;
+		if (amplitude >= peak)
+		{
+            amplitude = peak;
+			attack = 0;
+			decay = 1;
+		}
+		return amplitude;
+	}
+	else if(decay && amplitude > sustainLevel) // decay phase
+	{
+		amplitude -= decDelta;
+		return amplitude;
+	}
+	else if(sustain && amplitude <= sustainLevel) // sustain phase
+	{
+		amplitude = sustainLevel;
+		decay = 0;
 		release = 1;
 		return amplitude;
 	}
-	else if(release && amplitude >= 0) // release phase
+	else if(release) // release phase
 	{
-		amplitude -= relDelta;
-		return amplitude;
+		if(amplitude >=0)
+		{
+			amplitude -= relDelta;
+			return amplitude;
+		}
+		else
+		{
+			amplitude = 0;
+			release = 0;
+			isTriggered = 0; // set isPlaying false and resets readIndex
+			return 0.0f;
+		}
 	}
-	else if(release && amplitude < 0)
-	{	
-		amplitude = 0;
-		release = 0;
-		isTriggered = 0; // set isPlaying false and resets readIndex
-		return 0.0f;
-	}
-}
 
-float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime)
-{
-	return 0.0;
-}
-
-float Envelope::getValue()
-{
-	return amplitude;
+    return 0.0f;
 }
