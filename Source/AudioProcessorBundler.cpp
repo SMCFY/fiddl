@@ -38,7 +38,7 @@ void AudioProcessorBundler::initDSPBlocks()
     timeStretch->addParameter(pitch);
     timeStretch->addParameter(tempo);
     lopass->addParameter(lowPassFilterFreqParam);
-    hipass->addParameter(lowPassFilterFreqParam);
+    hipass->addParameter(highPassFilterFreqParam);
 }
 
 // DSP parameters:

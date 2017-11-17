@@ -24,22 +24,24 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
         case 1: // sustain
             if (numFingers == 1)
             {
-                mapFromTo("y position","pitch"); // call a method like this to do a mapping from a gesture to audio parameter
+                mapFromTo("y position","pitch");
                 mapFromTo("x position", "lowpass");
             }
             if (numFingers == 2)
             {
                 mapFromTo("y position","pitch");
-                mapFromTo("x position", "gain");
+                mapFromTo("x position", "lowpass");
             }
             break;
         case 2: // impulse
             if (numFingers == 1)
             {
-                mapFromTo("x position","lowpass"); // call a method like this to do a mapping from a gesture to audio parameter
+                mapFromTo("y position","pitch");
+                mapFromTo("x position","highpass");
             }
             if (numFingers == 2)
             {
+                mapFromTo("y position","pitch");
                 mapFromTo("x position","highpass");
             }
         default:

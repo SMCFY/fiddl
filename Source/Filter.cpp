@@ -28,7 +28,7 @@ Filter::Filter(AudioParameterFloat* cutoff, const String filterType)
     
     *lowPassFilter.state  = *dsp::IIR::Coefficients<float>::makeLowPass  (44100, cutoff->get());
     lowPassFilter.prepare (spec);
-    *highPassFilter.state  = *dsp::IIR::Coefficients<float>::makeLowPass  (44100, cutoff->get());
+    *highPassFilter.state  = *dsp::IIR::Coefficients<float>::makeHighPass  (44100, cutoff->get());
     highPassFilter.prepare (spec);
 }
 
@@ -44,12 +44,12 @@ void Filter::process(AudioBuffer<float> buffer)
     dsp::AudioBlock<float> block (buffer);
     if (isLowPass)
     {
-        *lowPassFilter.state  = *dsp::IIR::Coefficients<float>::makeLowPass (44100, cutoff->get());
+        *lowPassFilter.state = *dsp::IIR::Coefficients<float>::makeLowPass (44100, cutoff->get());
         lowPassFilter.process (dsp::ProcessContextReplacing<float> (block));
     }
     else if (isHighPass)
     {
-        *highPassFilter.state =*dsp::IIR::Coefficients<float>::makeHighPass  (44100, cutoff->get());
+        *highPassFilter.state = *dsp::IIR::Coefficients<float>::makeHighPass  (44100, cutoff->get());
         highPassFilter.process (dsp::ProcessContextReplacing<float> (block));
     }
     

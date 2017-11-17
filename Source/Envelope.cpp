@@ -45,8 +45,8 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
     if(trig) // init on trigger/re-trigger
 	{
 		amplitude = 0;
-		std::cout << aMin << std::endl;
-		attack = 1;
+ 
+ 		attack = 1;
     	release = 0;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));

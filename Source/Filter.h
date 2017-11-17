@@ -21,7 +21,6 @@ public:
 
 private:
 	AudioParameterFloat* cutoff;
-	IIRFilter lp;
 	dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter;
     bool isHighPass, isLowPass;
 
