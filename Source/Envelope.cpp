@@ -34,8 +34,10 @@ void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
 	
-// note off
-	if(!trig)
+	if (trig) // note on
+		amplitude = 0;
+
+	if(!trig) // note off
 		sustain = 0;
 }
 
@@ -44,15 +46,11 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
 
     if(trig) // init on trigger/re-trigger
 	{
-		amplitude = 0;
- 
  		attack = 1;
     	release = 0;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
-
-    	trig = 0;
    	}
 
     
@@ -91,8 +89,6 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 {
 	if(trig && !sustain) // init on trigger/re-trigger
 	{
-		amplitude = 0;
-	
 		attack = 1;
 		decay = 0;
 		sustain = 1;
@@ -101,8 +97,6 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
     	relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
-
-    	// trig = 0; std::cout << "trigoff";
    	}
 
     

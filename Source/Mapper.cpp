@@ -27,7 +27,7 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
                 mapFromTo("y position","pitch");
                 mapFromTo("x position", "bandpass");
             }
-            if (numFingers == 2)
+            if (numFingers >= 2)
             {
                 mapFromTo("y position","pitch");
                 mapFromTo("x position", "lowpass");
@@ -39,7 +39,7 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
                 mapFromTo("y position","pitch");
                 mapFromTo("x position","highpass");
             }
-            if (numFingers == 2)
+            if (numFingers >= 2)
             {
                 mapFromTo("y position","pitch");
                 mapFromTo("x position","highpass");
@@ -132,7 +132,7 @@ void Mapper::updateParameters()
             }
             if (audioParameter == "bandpass")     // ... to tempo value
             {
-                mapToHighPass(Gesture::getFingerPosition(0).x);
+                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
@@ -159,7 +159,7 @@ void Mapper::updateParameters()
             }
             if (audioParameter == "bandpass")     // ... to tempo value
             {
-                mapToHighPass(Gesture::getFingerPosition(0).y);
+                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
         }
     }

@@ -35,9 +35,9 @@ PlayComponent::~PlayComponent()
 
 void PlayComponent::paint (Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+    g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
     g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);   // draw an outline around the component
+    g.drawRect (getLocalBounds(), 1);
     g.setColour (Colours::white);
     g.setFont (14.0f);
 
@@ -52,12 +52,11 @@ void PlayComponent::paint (Graphics& g)
                 Justification::centred, true);
     }
     
-    //Draw a shape on mouseDrag
-    if(isPlaying)
+    if(Gesture::getNumFingers() != 0)
     {
       for (int i = 0; i < Gesture::getNumFingers(); i++)
       {
-        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 30*Gesture::getVelocity(), 30*Gesture::getVelocity(), 2);
+        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
       }
     }
     
@@ -74,8 +73,8 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
 
-    env.trigger(1);
-    initRead = true;
+    env.trigger(1); // note on (initiate attack)
+    initRead = true; // reset readIndex
     isPlaying = true;
     
     mouseDrag (e);
@@ -106,15 +105,15 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::rmFinger(e);
 
-    env.trigger(0);
+    //if(Gesture::getNumFingers == 0)
+        env.trigger(0); // note off (initiate release)
     
-    //swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
-    swipeEnd = true;
+    
+    swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     Gesture::setResetPos(swipeEnd);
     
     Gesture::setTap(tapDetectCoords);
-    //if tap() outputs 1, it is a tap, else it is a swipe
-    //std::cout << Gesture::tap() << "\n";
+
     repaint();
 }
 
@@ -125,7 +124,6 @@ void PlayComponent::fillCoordinates()
     {
         Gesture::setDirection(coordinates);
         coordIndex = 0;
-        //std::cout << "Get Direction!" ;
     }
     
     else if (swipeEnd)
@@ -140,7 +138,6 @@ void PlayComponent::fillCoordinates()
         }
         
         swipeEnd = false;
-        //std::cout << "New Swipe!" ;
     }
     
     else
