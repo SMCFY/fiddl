@@ -48,6 +48,8 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
 	{
  		attack = 1;
     	release = 0;
+
+    	trig = 0;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
