@@ -41,7 +41,7 @@ void Envelope::trigger(bool trig)
 		noteOn = 0;
 }
 
-float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTriggered) // AR
+float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 {
 
     if(trig && !noteOn) // init on trigger/re-trigger
@@ -86,7 +86,7 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
     return 0.0f;
 }
 
-float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime, bool& isTriggered) // ADSR
+float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime) // ADSR
 {
 	if(trig && !noteOn) // init on trigger/re-trigger
 	{

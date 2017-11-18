@@ -18,16 +18,17 @@ class Envelope
 		~Envelope();
 
 		void trigger(bool trig);
-		float envelope(int attackTime, float peak, int releaseTime, bool& isTriggered); // AR envelope
-		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime, bool& isTriggered); // ADSR envelope
+		float envelope(int attackTime, float peak, int releaseTime); // AR envelope
+		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime); // ADSR envelope
 
-		bool noteOn;
-		
+		bool* isTriggered; // takes the address of isPlaying
+
 	private:
 		float amplitude;
 		bool trig;
 		int samplingRate;
 		float aMin;
+		bool noteOn;
 
 		// phase conditions
 		bool attack;

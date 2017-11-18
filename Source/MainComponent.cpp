@@ -59,7 +59,6 @@ public:
     {
         readIndex = 0;
 
-        isTriggered = &playComp.isPlaying;
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -128,9 +127,9 @@ public:
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
                 if(playComp.togSpaceComp.getToggleSpace() == 2) // impulse
-                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 1000, *isTriggered); // APR
+                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 1000); // APR
                 else // sustain
-                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 500, 0.5, 2000, *isTriggered); // APDSR
+                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 500, 0.5, 2000); // APDSR
             }
         }
         
@@ -186,7 +185,6 @@ private:
     int readIndex;
     int writeIndex;
     int sampleRate;
-    bool* isTriggered;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
     

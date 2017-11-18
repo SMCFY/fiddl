@@ -26,7 +26,9 @@ PlayComponent::PlayComponent()
     
     addAndMakeVisible (togSpaceComp);
     togSpaceComp.setSize (100, 100);
+    
     env = Envelope(44100);
+    env.isTriggered = &isPlaying;
 }
 
 PlayComponent::~PlayComponent()
