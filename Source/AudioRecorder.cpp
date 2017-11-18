@@ -13,7 +13,7 @@
 #include "AudioRecorder.h"
 
 AudioRecorder::AudioRecorder (double bufferLengthInSeconds)
-    : activeWriter (false), writeIndex (0)
+    : writeIndex (0), activeWriter (false)
 {
     this->bufferLengthInSeconds = bufferLengthInSeconds;
     numChannels = 1;

@@ -14,7 +14,7 @@ Envelope::Envelope()
 {
     this->samplingRate = 44100;
     this->amplitude = 0;
-    this->sustain = 0;
+    this->noteOn = 0;
 }
 
 Envelope::Envelope(int sr)
@@ -22,7 +22,7 @@ Envelope::Envelope(int sr)
 {
 	this->samplingRate = sr;
 	this->amplitude = 0;
-	this->sustain = 0;
+	this->noteOn = 0;
 }
 
 Envelope::~Envelope()
@@ -38,16 +38,16 @@ void Envelope::trigger(bool trig)
 		amplitude = 0;
 
 	if(!trig) // note off
-		sustain = 0;
+		noteOn = 0;
 }
 
 float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTriggered) // AR
 {
 
-    if(trig) // init on trigger/re-trigger
+    if(trig && !noteOn) // init on trigger/re-trigger
 	{
  		attack = 1;
-    	release = 0;
+    	release = 1;
 
     	trig = 0;
 	
@@ -63,7 +63,6 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
         {
             amplitude = peak;
             attack = 0;
-            release = 1;
             return amplitude;
         }
 		return amplitude;
@@ -89,12 +88,12 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime, bool& isTr
 
 float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime, bool& isTriggered) // ADSR
 {
-	if(trig && !sustain) // init on trigger/re-trigger
+	if(trig && !noteOn) // init on trigger/re-trigger
 	{
 		attack = 1;
-		decay = 0;
-		sustain = 1;
-    	release = 0;
+		decay = 1;
+    	release = 1;
+    	noteOn = 1;
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
@@ -109,36 +108,34 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		{
             amplitude = peak;
 			attack = 0;
-			decay = 1;
 		}
 		return amplitude;
 	}
 	else if(decay && amplitude > sustainLevel) // decay phase
 	{
 		amplitude *= decDelta;
+		if (attack <= sustainLevel)
+		{
+			amplitude = sustainLevel;
+			decay = 0;
+		}
 		return amplitude;
 	}
-	else if(sustain && amplitude <= sustainLevel) // sustain phase
+	else if(noteOn) // sustain phase
 	{
 		amplitude = sustainLevel;
-		decay = 0;
-		release = 1;
 		return amplitude;
 	}
 	else if(release) // release phase
 	{
-		if(amplitude >= aMin)
-		{
-			amplitude *= relDelta;
-			return amplitude;
-		}
-		else
+		amplitude *= relDelta;
+		if(amplitude <= aMin)
 		{
 			amplitude = 0;
 			release = 0;
-			isTriggered = 0; // set isPlaying false and resets readIndex
-			return 0.0f;
+			isTriggered = 0; // set isPlaying false and resets readIndex			
 		}
+		return amplitude;
 	}
 
     return 0.0f;
