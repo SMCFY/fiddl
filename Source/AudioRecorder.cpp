@@ -12,7 +12,7 @@
 
 #include "AudioRecorder.h"
 
-AudioRecorder::AudioRecorder (double bufferLengthInSeconds)
+AudioRecorder::AudioRecorder (float bufferLengthInSeconds)
     : writeIndex (0), activeWriter (false)
 {
     this->bufferLengthInSeconds = bufferLengthInSeconds;

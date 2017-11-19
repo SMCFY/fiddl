@@ -22,7 +22,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        AudioRecorder (double bufferLengthInSeconds);
+        AudioRecorder (float bufferLengthInSeconds);
         ~AudioRecorder();
         
         void startRecording(); 
