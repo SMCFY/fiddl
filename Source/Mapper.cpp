@@ -57,6 +57,7 @@ void Mapper::mapToGain(float val)
 void Mapper::mapToPitch(float val)
 {
     *AudioProcessorBundler::pitch = -12.0f + val*24.0f;
+    AudioProcessorBundler::timeStretch->pitchUpdated = true;
 }
 
 void Mapper::mapToTempo(float val)

@@ -25,6 +25,7 @@ class TimeStretch : public DSP
 		~TimeStretch();
 
 		void process(AudioBuffer<float> buffer) override;
+        bool pitchUpdated;
 
 	private:
 	
@@ -32,6 +33,7 @@ class TimeStretch : public DSP
         int nSamples;
         AudioParameterFloat* pitch;
         AudioParameterFloat* tempo;
+    int counter;
 
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretch);
 };
