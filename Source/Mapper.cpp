@@ -36,8 +36,8 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
         case 2: // impulse
             if (numFingers == 1)
             {
-                mapFromTo("y position","pitch");
-                mapFromTo("x position","highpass");
+                mapFromTo("abs dist","pitch");
+                mapFromTo("abs dist","highpass");
             }
             if (numFingers >= 2)
             {
@@ -160,6 +160,33 @@ void Mapper::updateParameters()
             if (audioParameter == "bandpass")     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+            }
+        }
+        if (gestureParameter == "abs dist") // mapping is being done from the absolute distance from origin
+        {
+            if (audioParameter == "gain")
+            {
+                mapToGain(Gesture::getAbsDistFromOrigin()); // ... to gain value
+            }
+            if (audioParameter == "pitch")     // ... to pitch value
+            {
+                mapToPitch(Gesture::getAbsDistFromOrigin());
+            }
+            if (audioParameter == "tempo")     // ... to tempo value
+            {
+                mapToTempo(Gesture::getAbsDistFromOrigin());
+            }
+            if (audioParameter == "lowpass")     // ... to tempo value
+            {
+                mapToLowPass(Gesture::getAbsDistFromOrigin());
+            }
+            if (audioParameter == "highpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getAbsDistFromOrigin());
+            }
+            if (audioParameter == "bandpass")     // ... to tempo value
+            {
+                mapToHighPass(Gesture::getAbsDistFromOrigin());
             }
         }
     }

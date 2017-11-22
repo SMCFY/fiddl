@@ -21,6 +21,7 @@ float Gesture::yTemp;
 float Gesture::yDelta;
 
 float Gesture::dist;
+float Gesture::absDistFromOrigin;
 
 float Gesture::directionDeltaX;
 float Gesture::directionDeltaY;
@@ -172,6 +173,17 @@ bool Gesture::tap()
         return true;
     else
         return false;
+}
+
+void Gesture::setAbsDistFromOrigin(float x, float y)
+{
+    absDistFromOrigin = std::sqrt(std::pow(0.5-x,2)+std::pow(0.5-y,2));
+    std::cout << absDistFromOrigin << "\n";
+}
+
+float Gesture::getAbsDistFromOrigin()
+{
+   return absDistFromOrigin;   
 }
 
 float Gesture::getVelocity()

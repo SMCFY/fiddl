@@ -92,6 +92,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     Gesture::updateFingers(e.source, e.source.getIndex());
   
     Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
+    Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
       
     Mapper::routeParameters(Gesture::getNumFingers());
     Mapper::updateParameters();
