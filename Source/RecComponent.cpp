@@ -35,7 +35,7 @@ void RecComponent::paint (Graphics& g)
 
 void RecComponent::resized()
 {
-    recordButton.setBounds (getWidth() / 2 - (getWidth() / 3 / 2), getHeight() / 2 - (getHeight() / 3 / 2), getWidth() / 3, getHeight() / 3);
+    recordButton.setBounds (getWidth() / 2 - (getWidth() / 3 / 2), getHeight() / 2 - (getHeight() / 4), getWidth() / 3, getHeight() / 2);
 }
 
 void RecComponent::buttonClicked (Button* button)

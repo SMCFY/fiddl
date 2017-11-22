@@ -25,6 +25,7 @@ class Mapper
         static float inMin;
     
         static void setToggleSpace(int id);
+        static int getToggleSpaceID();
 		
 		private:		
 		static std::vector< std::pair <std::string,std::string> > mapping;
@@ -35,6 +36,7 @@ class Mapper
         static void mapToLowPass(float val);
         static void mapToHighPass(float val);
         static void mapToBandPass(float val);
+        static void mapToDiscretePitch(float val);
     
         // this method takes a string pair to map a "gestureParameter" to an "audioParameter"
         static void mapFromTo(std::string gestureParameter, std::string audioParameter);

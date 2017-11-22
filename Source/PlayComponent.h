@@ -53,5 +53,7 @@ private:
     int coordIndex = 0;
     bool swipeEnd = false;
     
+    RectangleList<float> rectList;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

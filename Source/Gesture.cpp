@@ -38,6 +38,8 @@ float Gesture::compHeight;
 float Gesture::tapDist;
 bool Gesture::isTap = false;
 
+float Gesture::discretePitchVal;
+
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
     p.x = p.x / compWidth;
@@ -178,12 +180,17 @@ bool Gesture::tap()
 void Gesture::setAbsDistFromOrigin(float x, float y)
 {
     absDistFromOrigin = std::sqrt(std::pow(0.5-x,2)+std::pow(0.5-y,2));
-    std::cout << absDistFromOrigin << "\n";
+    //std::cout << absDistFromOrigin << "\n";
 }
 
 float Gesture::getAbsDistFromOrigin()
 {
    return absDistFromOrigin;   
+}
+
+float Gesture::getDiscretePitch()
+{
+    return 2 * floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).x * 12) - 6);
 }
 
 float Gesture::getVelocity()

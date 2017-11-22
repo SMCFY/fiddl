@@ -149,8 +149,8 @@ public:
 
     void resized() override
     {
-        playComp.setBounds (0, 0, getWidth(), getHeight() * 3 / 4);
-        recComp.setBounds (0, getHeight() * 3 / 4, getWidth(), getHeight() * 1 / 4);
+        playComp.setBounds (0, 0, getWidth(), getHeight() * 5 / 6);
+        recComp.setBounds (0, getHeight() * 5 / 6, getWidth(), getHeight() * 1 / 6);
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.

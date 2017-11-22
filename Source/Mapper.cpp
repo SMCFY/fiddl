@@ -24,13 +24,18 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
         case 1: // sustain
             if (numFingers == 1)
             {
-                mapFromTo("y position","pitch");
-                mapFromTo("x position", "bandpass");
+                mapFromTo("x position","pitch");
+                mapFromTo("y position", "bandpass");
             }
             if (numFingers >= 2)
             {
                 mapFromTo("y position","pitch");
                 mapFromTo("x position", "lowpass");
+            }
+            if (numFingers >= 5)
+            {
+                mapFromTo("x position","discrete pitch");
+                //mapFromTo("y position", "lowpass");
             }
             break;
         case 2: // impulse
@@ -57,6 +62,12 @@ void Mapper::mapToGain(float val)
 void Mapper::mapToPitch(float val)
 {
     *AudioProcessorBundler::pitch = -12.0f + val*24.0f;
+    AudioProcessorBundler::timeStretch->pitchUpdated = true;
+}
+
+void Mapper::mapToDiscretePitch(float val)
+{
+    *AudioProcessorBundler::pitch = val;
     AudioProcessorBundler::timeStretch->pitchUpdated = true;
 }
 
@@ -118,6 +129,10 @@ void Mapper::updateParameters()
             if (audioParameter == "pitch")     // ... to pitch value
             {
                 mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+            }
+            if (audioParameter == "discrete pitch")     // ... to pitch value
+            {
+                mapToDiscretePitch(Gesture::getDiscretePitch());
             }
             if (audioParameter == "tempo")     // ... to tempo value
             {
@@ -196,6 +211,11 @@ void Mapper::updateParameters()
 void Mapper::setToggleSpace(int id)
 {
     toggleSpaceID = id;
+}
+
+int Mapper::getToggleSpaceID()
+{
+    return toggleSpaceID;
 }
 
 std::vector< std::pair <std::string,std::string> > Mapper::mapping;

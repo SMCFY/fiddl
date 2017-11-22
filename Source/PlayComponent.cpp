@@ -29,6 +29,7 @@ PlayComponent::PlayComponent()
     
     env = Envelope(44100);
     env.isTriggered = &isPlaying;
+    togSpaceComp.setToggleSpace(1);
 }
 
 PlayComponent::~PlayComponent()
@@ -62,6 +63,31 @@ void PlayComponent::paint (Graphics& g)
       }
     }
     
+    ////Draw discrete pitch bar if sustain mode is picked
+    if(togSpaceComp.getToggleSpace() == 1)
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-75,getWidth()/12+0.5,75));
+        }
+        
+        for (int i = 0; i < 12; i++)
+        {
+            if(i%2 == 0)
+            {
+                g.setColour (Colours::grey);
+                g.fillRect(rectList.getRectangle(i));
+            }
+            else
+            {
+                g.setColour (Colours::darkgrey);
+                g.fillRect(rectList.getRectangle(i));
+            }
+            
+            g.setColour (Colours::white);
+            g.drawRect(rectList.getRectangle(i));
+        }
+    }
 }
 
 void PlayComponent::resized()
@@ -93,10 +119,18 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
   
     Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-      
-    Mapper::routeParameters(Gesture::getNumFingers());
-    Mapper::updateParameters();
-     
+    
+    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75 && togSpaceComp.getToggleSpace() == 1)
+    {
+        Mapper::routeParameters(5);
+        Mapper::updateParameters();
+    }
+    else
+    {
+        Mapper::routeParameters(Gesture::getNumFingers());
+        Mapper::updateParameters();
+    }
+    
     fillCoordinates();
     tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;

@@ -39,6 +39,8 @@ class Gesture
         
         static void setAbsDistFromOrigin(float x, float y);
         static float getAbsDistFromOrigin();
+    
+        static float getDiscretePitch();
 
         // multi touch
         static void addFinger(const MouseEvent& e); // adds new input source to the array
@@ -74,6 +76,8 @@ class Gesture
     
         static float dist;
         static float absDistFromOrigin;
+    
+        static float discretePitchVal;
     
         static float directionDeltaX;
         static float directionDeltaY;
