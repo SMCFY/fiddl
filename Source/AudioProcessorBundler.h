@@ -17,6 +17,7 @@
 #include "Gain.h"
 #include "TimeStretch.h"
 #include "Filter.h"
+#include "Envelope.h"
 
 class AudioProcessorBundler
 {
@@ -34,6 +35,10 @@ class AudioProcessorBundler
         static Filter *lopass;
         static Filter *hipass;
         static Filter *bapass;
+
+        // Envelopes
+        static Envelope ar;
+        static Envelope adsr;
 		
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;

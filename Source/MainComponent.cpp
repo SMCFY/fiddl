@@ -114,24 +114,12 @@ public:
             readIndex = 0;
         }
 
+        // DSP chain
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
-        
-        
-        float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
-
-        for (int samp = 0; samp < bufferToFill.buffer->getNumSamples(); ++samp)
-        {
-            for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
-            {
-                if(playComp.togSpaceComp.getToggleSpace() == 2) // impulse
-                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 1000); // APR
-                else // sustain
-                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 500, 0.5, 2000); // APDSR
-            }
-        }
+        playComp.env.process(*bufferToFill.buffer);
         
     }
 

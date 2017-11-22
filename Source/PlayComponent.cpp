@@ -27,7 +27,7 @@ PlayComponent::PlayComponent()
     addAndMakeVisible (togSpaceComp);
     togSpaceComp.setSize (100, 100);
     
-    env = Envelope(44100);
+    env = Envelope(44100, Envelope::ar);
     env.isTriggered = &isPlaying;
     togSpaceComp.setToggleSpace(1);
 }

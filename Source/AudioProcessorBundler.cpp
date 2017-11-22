@@ -34,8 +34,10 @@ void AudioProcessorBundler::initDSPBlocks()
     hipass = new Filter(highPassFilterFreqParam, "highpass");
     bapass = new Filter(bandPassFilterFreqParam, "bandpass");
 
-    // add parameter
-    // all AudioParameterFloat objects must be connected to a DSP processor
+    //ar = Envelope(44100, Envelope::ar);
+    //adsr = Envelope(44100, Envelope::adsr);
+
+    // add parameter        - all AudioParameterFloat objects must be connected to a DSP processor
     gain->addParameter(gainLevel);
     timeStretch->addParameter(pitch);
     timeStretch->addParameter(tempo);
