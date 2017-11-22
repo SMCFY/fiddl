@@ -17,7 +17,7 @@ AudioBuffer<float> AudioProcessorBundler::processBuffer(AudioBuffer<float> buff)
     return buff;
 }
 
-void AudioProcessorBundler::initDSPBlocks()
+void AudioProcessorBundler::initDSPBlocks(int samplingRate)
 {
     // dsp parameters
     gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 1.0f, 0.5f);
@@ -34,8 +34,8 @@ void AudioProcessorBundler::initDSPBlocks()
     hipass = new Filter(highPassFilterFreqParam, "highpass");
     bapass = new Filter(bandPassFilterFreqParam, "bandpass");
 
-    //ar = Envelope(44100, Envelope::ar);
-    //adsr = Envelope(44100, Envelope::adsr);
+    ar = Envelope(samplingRate, Envelope::ar);
+    adsr = Envelope(samplingRate, Envelope::adsr);
 
     // add parameter        - all AudioParameterFloat objects must be connected to a DSP processor
     gain->addParameter(gainLevel);
@@ -60,3 +60,6 @@ TimeStretch *AudioProcessorBundler::timeStretch;
 Filter *AudioProcessorBundler::lopass;
 Filter *AudioProcessorBundler::hipass;
 Filter *AudioProcessorBundler::bapass;
+
+Envelope AudioProcessorBundler::ar;
+Envelope AudioProcessorBundler::adsr;

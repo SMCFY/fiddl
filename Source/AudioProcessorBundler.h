@@ -24,7 +24,7 @@ class AudioProcessorBundler
 	public:
 
 		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
-        static void initDSPBlocks();
+        static void initDSPBlocks(int samplingRate);
 
 	//private:  <-- DSP processors are public so that MainContentComponent has access to them.
 	//              AudioParameterFloats are public so that Mapper has access to them.
@@ -36,10 +36,9 @@ class AudioProcessorBundler
         static Filter *hipass;
         static Filter *bapass;
 
-        // Envelopes
         static Envelope ar;
-        static Envelope adsr;
-		
+		static Envelope adsr;
+
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
         static AudioParameterFloat *pitch;

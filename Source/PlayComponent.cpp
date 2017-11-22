@@ -14,6 +14,7 @@
 #include "PlayComponent.h"
 #include "Gesture.h"
 #include "Mapper.h"
+#include "AudioProcessorBundler.h"
 #include <iostream>
 #include <string>
 
@@ -27,8 +28,9 @@ PlayComponent::PlayComponent()
     addAndMakeVisible (togSpaceComp);
     togSpaceComp.setSize (100, 100);
     
-    env = Envelope(44100, Envelope::ar);
-    env.isTriggered = &isPlaying;
+    AudioProcessorBundler::ar.isTriggered = &isPlaying;
+    AudioProcessorBundler::adsr.isTriggered = &isPlaying;
+
     togSpaceComp.setToggleSpace(1);
 }
 
@@ -101,7 +103,11 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
 
-    env.trigger(1); // note on (initiate attack)
+    if(togSpaceComp.getToggleSpace() == 1) // note on
+        AudioProcessorBundler::ar.trigger(1);
+    if(togSpaceComp.getToggleSpace() == 2)
+        AudioProcessorBundler::adsr.trigger(1);
+
     initRead = true; // reset readIndex
     isPlaying = true;
     
@@ -142,8 +148,12 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::rmFinger(e);
 
-    if(Gesture::getNumFingers() == 0)
-        env.trigger(0); // note off (initiate release)  
+    if(Gesture::getNumFingers() == 0) // note off (initiate release) 
+    {
+        AudioProcessorBundler::ar.trigger(0);
+        AudioProcessorBundler::adsr.trigger(0);
+
+    }
     
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     Gesture::setResetPos(swipeEnd);

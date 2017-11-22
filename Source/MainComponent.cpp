@@ -17,7 +17,6 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
-//#include "Mapper.h"  // TODO: <-- this is only used for testing!
 #include "AudioProcessorBundler.h"
 
 // used for initialising the deviceManager
@@ -36,10 +35,7 @@ public:
 
         setSize(400, 400);
         setAudioChannels (1, 2);
-                
-        //initialize DSP blocks and assign parameters
-        AudioProcessorBundler::initDSPBlocks();
-        
+
         recorder = new AudioRecorder(3.f);
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
@@ -57,8 +53,9 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
+        //initialize DSP blocks and assign parameters
+        AudioProcessorBundler::initDSPBlocks((int)sampleRate);
         readIndex = 0;
-
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -119,7 +116,13 @@ public:
         AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
-        playComp.env.process(*bufferToFill.buffer);
+        
+        AudioProcessorBundler::ar.process(*bufferToFill.buffer);
+        AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
+        //if(playComp.togSpaceComp.getToggleSpace() == 1)
+        //    AudioProcessorBundler::ar.process(*bufferToFill.buffer);
+        //else if(playComp.togSpaceComp.getToggleSpace() == 2)
+        //    AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
         
     }
 

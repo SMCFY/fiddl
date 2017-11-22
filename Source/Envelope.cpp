@@ -150,22 +150,25 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 
 void Envelope::process(AudioBuffer<float> buffer)
 {
-	float **outputFrame = buffer.getArrayOfWritePointers();
-
-	for (int samp = 0; samp < buffer.getNumSamples(); ++samp)
+	if(amplitude >= aMin)
 	{
-	    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
-	    {
-	    	switch (envelopeType)
-	    	{
-            case ar:
-	    	outputFrame[ch][samp] *= envelope(50, 0.95, 1000); // APR
-	        break;
-                    
-            case adsr:
-	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
-	        break;
-            };
-	    }
+		float **outputFrame = buffer.getArrayOfWritePointers();
+	
+		for (int samp = 0; samp < buffer.getNumSamples(); ++samp)
+		{
+		    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+		    {
+		    	switch (envelopeType)
+		    	{
+    	        case ar:
+		    	outputFrame[ch][samp] *= envelope(50, 0.95, 1000); // APR
+		        break;
+    	                
+    	        case adsr:
+		        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
+		        break;
+    	        };
+		    }
+		}
 	}
 }
