@@ -24,10 +24,13 @@ TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
     */
     this->pitch = pitch;
     this->tempo = tempo;
+    pitchUpdated = false;
+    
+    counter = 0;
 
     soundTouch.setSampleRate(44100);
     soundTouch.setChannels(1);
-    soundTouch.setTempoChange(-0.0f);
+    soundTouch.setTempoChange(0.0f);
     soundTouch.setPitchSemiTones(0.0f);
     soundTouch.setRateChange(0.0f);
     soundTouch.setSetting(SETTING_USE_QUICKSEEK, 0);
@@ -53,10 +56,13 @@ TimeStretch::~TimeStretch()
 
 void TimeStretch::process(AudioBuffer<float> buffer)
 {
+    // TODO: The soundTouch parameters need to be changed when the gesture mappings are updated
+    //soundTouch.setTempoChange(tempo->get());
+    if (pitchUpdated)
+    {
+        soundTouch.setPitchSemiTones(pitch->get());
+    }
     
-    soundTouch.setTempoChange(tempo->get());
-    soundTouch.setPitchSemiTones(pitch->get());
-  
     float **bufferFrame = buffer.getArrayOfWritePointers();
     int BUFF_SIZE = 512;
     float outputSamples[BUFF_SIZE];
