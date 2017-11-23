@@ -14,7 +14,7 @@
 5. Add the `soundtouch` folder to your JUCE project
 6. In `Project Settings` add the `soundtouch/include` path to `Header search paths` and change `C++ Language Standard` to `C++14`
 7. Add the `juce_dsp` module to your JUCE project.
-8. Select desired target to export and click `Save and Open in IDE` (currently only working for iOS and OSX)
+8. Select `Xcode (iOS)` as the `Selected exporter` and click `Save and Open in IDE`
 9. Build the application
 
 #### Release notes v0.4(Moustachio):
