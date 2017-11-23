@@ -7,14 +7,17 @@
 
 
 #### Instructions:
-1. Create a new Audio Application template from Projucer with the name _FiguraTK_
-2. Clone or download the repo
-3. Replace the Source folder in your Projucer project with the new Source folder
-4. Open the Projucer project
-5. Add the Source and soundtouch folder to your JUCE project
-6. In `Project Settings`, add the `soundtouch/include` path to `Header search paths` 
-6. Select desired target and click `Save and Open in IDE` (currently only working for iOS and OSX)
-7. Build the application
+1. Clone or download the repo for this project.
+2. Open the Projucer
+3. Create a new Audio Application template from Projucer with the name _FiguraTK_ and select iOS as a target platform.
+4. Replace the `Source` folder in your JUCE project with the `Source` folder in the repo.
+5. Add the soundtouch folder to your JUCE project
+6. In `Project Settings`
+&nbsp;&nbsp;Add the `soundtouch/include` path to `Header search paths` 
+&nbsp;&nbsp;Change `C++ Language Standard` to `C++14
+7. Add the `juce_dsp` module to your JUCE project.
+8. Select desired target to export and click `Save and Open in IDE` (currently only working for iOS and OSX)
+9. Build the application
 
 #### Release notes v0.4(Moustachio):
 >Lowpass and highpass filters are added to the list of audio processors, and envelopes are implemented for playback. This release is introducing two different parameter spaces with different mapping schemes. One intended to be used for sustained sound and the other for impulse sounds. The `sustained space` features an array of buttons representing discrete pitches. The `impulse space` is inspired by a cicular membrane, using the distance from center to control pitch, release time, and highpass filter cutoff.
