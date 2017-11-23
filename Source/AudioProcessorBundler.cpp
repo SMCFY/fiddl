@@ -62,8 +62,4 @@ Filter *AudioProcessorBundler::hipass;
 Filter *AudioProcessorBundler::bapass;
 
 Envelope AudioProcessorBundler::ar;
-<<<<<<< HEAD
 Envelope AudioProcessorBundler::adsr;
-=======
-Envelope AudioProcessorBundler::adsr;
->>>>>>> 05c7e62c4733b2efd02f71a23364ef2f902fceb4

@@ -104,9 +104,9 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     Gesture::addFinger(e);
 
     if(togSpaceComp.getToggleSpace() == 1) // note on
-        AudioProcessorBundler::ar.trigger(1);
-    if(togSpaceComp.getToggleSpace() == 2)
         AudioProcessorBundler::adsr.trigger(1);
+    if(togSpaceComp.getToggleSpace() == 2)
+        AudioProcessorBundler::ar.trigger(1);
 
     initRead = true; // reset readIndex
     isPlaying = true;
@@ -152,7 +152,6 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     {
         AudioProcessorBundler::ar.trigger(0);
         AudioProcessorBundler::adsr.trigger(0);
-
     }
     
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated

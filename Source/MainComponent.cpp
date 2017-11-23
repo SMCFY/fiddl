@@ -117,12 +117,11 @@ public:
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         
-        AudioProcessorBundler::ar.process(*bufferToFill.buffer);
-        AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
-        //if(playComp.togSpaceComp.getToggleSpace() == 1)
-        //    AudioProcessorBundler::ar.process(*bufferToFill.buffer);
-        //else if(playComp.togSpaceComp.getToggleSpace() == 2)
-        //    AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
+        // Envelopes
+        if(playComp.togSpaceComp.getToggleSpace() == 1)
+            AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
+        else if(playComp.togSpaceComp.getToggleSpace() == 2)
+            AudioProcessorBundler::ar.process(*bufferToFill.buffer);
         
     }
 
