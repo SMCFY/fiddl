@@ -24,7 +24,6 @@ Envelope::Envelope(int sr, Envelope::env type)
 	this->amplitude = 0;
 	this->noteOn = 0;
 	this->envelopeType = type;
-    this->releaseTime = 2000;
 }
 
 Envelope::~Envelope()

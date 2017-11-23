@@ -20,7 +20,7 @@ AudioBuffer<float> AudioProcessorBundler::processBuffer(AudioBuffer<float> buff)
 void AudioProcessorBundler::initDSPBlocks(int samplingRate)
 {
     // dsp parameters
-    gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 1.0f, 0.5f);
+    gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 1.0f, 1.0f);
     pitch = new AudioParameterFloat("pitch", "Pitch", 0.0f, 1.0f, 0.5f);
     tempo = new AudioParameterFloat("tempo", "Tempo", 0.0f, 1.0f, 0.5f);
     lowPassFilterFreqParam  = new AudioParameterFloat ("LPFREQ", "Post Lowpass Freq.", { 20.f, 3000.f, 0.f, 0.5f }, 3000.f, "Hz");
