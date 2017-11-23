@@ -126,10 +126,10 @@ public:
         {
             for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
             {
-                if(playComp.togSpaceComp.getToggleSpace() == 2) // impulse
-                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.8, 1000); // APR
+                if(playComp.getToggleSpaceID() == 2) // impulse
+                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.95, 1000); // APR
                 else // sustain
-                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.8, 500, 0.5, 2000); // APDSR
+                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
             }
         }
         

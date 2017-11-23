@@ -24,12 +24,20 @@ PlayComponent::PlayComponent()
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
     
-    addAndMakeVisible (togSpaceComp);
-    togSpaceComp.setSize (100, 100);
-    
     env = Envelope(44100);
     env.isTriggered = &isPlaying;
-    togSpaceComp.setToggleSpace(1);
+    
+    //ToggleSpace buttons
+    addAndMakeVisible (toggleSustain);
+    toggleSustain.setButtonText ("Sustain");
+    toggleSustain.setClickingTogglesState(true);
+    toggleSustain.setToggleState(true, dontSendNotification);
+    toggleSustain.addListener (this);
+    
+    addAndMakeVisible (toggleImpulse);
+    toggleImpulse.setButtonText ("Impulse");
+    toggleImpulse.setClickingTogglesState(true);
+    toggleImpulse.addListener (this);
 }
 
 PlayComponent::~PlayComponent()
@@ -55,16 +63,8 @@ void PlayComponent::paint (Graphics& g)
                 Justification::centred, true);
     }
     
-    if(Gesture::getNumFingers() != 0)
-    {
-      for (int i = 0; i < Gesture::getNumFingers(); i++)
-      {
-        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
-      }
-    }
-    
     ////Draw discrete pitch bar if sustain mode is picked
-    if(togSpaceComp.getToggleSpace() == 1)
+    if(toggleSpaceID == 1)
     {
         for (int i = 0; i < 12; i++)
         {
@@ -75,18 +75,42 @@ void PlayComponent::paint (Graphics& g)
         {
             if(i%2 == 0)
             {
-                g.setColour (Colours::grey);
+                g.setColour (Colours::darkgrey);
+                g.setOpacity(0.3);
                 g.fillRect(rectList.getRectangle(i));
             }
             else
             {
                 g.setColour (Colours::darkgrey);
+                g.setOpacity(0.3);
                 g.fillRect(rectList.getRectangle(i));
             }
             
             g.setColour (Colours::white);
+            g.setOpacity(0.3);
             g.drawRect(rectList.getRectangle(i));
         }
+        
+        if(Gesture::getNumFingers() != 0)
+        {
+            if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75)
+            {
+                g.setColour (Colours::darkgrey);
+                g.setOpacity(1.0);
+                g.fillRect(rectList.getRectangle(rectNum));
+                g.setColour (Colours::white);
+                g.drawRect(rectList.getRectangle(rectNum));
+            }
+        }
+    }
+    
+    if(Gesture::getNumFingers() != 0)
+    {
+      for (int i = 0; i < Gesture::getNumFingers(); i++)
+      {
+        g.setOpacity(1.0);
+        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
+      }
     }
 }
 
@@ -94,7 +118,8 @@ void PlayComponent::resized()
 {
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    togSpaceComp.setBounds(getWidth()-82,5,80,60);
+    toggleSustain.setBounds(getWidth()-82, 5, 80,30);
+    toggleImpulse.setBounds(getWidth()-82, 35, 80,30);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -110,7 +135,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
     
-    Mapper::setToggleSpace(togSpaceComp.getToggleSpace());
+    Mapper::setToggleSpace(toggleSpaceID);
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -120,21 +145,23 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
-    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75 && togSpaceComp.getToggleSpace() == 1)
+    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75 && toggleSpaceID == 1)
     {
-        Mapper::routeParameters(5);
+        Mapper::routeParameters(Gesture::getNumFingers(),true);
         Mapper::updateParameters();
     }
     else
     {
-        Mapper::routeParameters(Gesture::getNumFingers());
+        Mapper::routeParameters(Gesture::getNumFingers(),false);
         Mapper::updateParameters();
     }
     
     fillCoordinates();
     tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
-      
+    
+    rectNum = int(Gesture::getDiscretePitch()/2+6);
+    std::cout << Gesture::getDiscretePitch()/2+6 << "\n";
     repaint();
 }
 
@@ -150,7 +177,43 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     
     Gesture::setTap(tapDetectCoords);
 
+    rectNum = 12;
     repaint();
+}
+
+void PlayComponent::buttonClicked (Button* button)
+{
+    if(button == &toggleImpulse)
+    {
+        if(toggleImpulse.getToggleState()==0)
+        {
+            toggleImpulse.setToggleState(true, dontSendNotification);
+        }
+        else
+        {
+            toggleSustain.setToggleState(false, dontSendNotification);
+            toggleSpaceID = 2;
+        }
+    }
+    
+    if(button == &toggleSustain)
+    {
+        if(toggleSustain.getToggleState()==0)
+        {
+            toggleSustain.setToggleState(true,dontSendNotification);
+        }
+        else
+        {
+            toggleImpulse.setToggleState(false, dontSendNotification);
+            toggleSpaceID = 1;
+        }
+    }
+    repaint();
+}
+
+int PlayComponent::getToggleSpaceID()
+{
+    return toggleSpaceID;
 }
 
 void PlayComponent::fillCoordinates()

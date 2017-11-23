@@ -18,7 +18,7 @@
 class Mapper
 {
 	public:
-		static void routeParameters(int numFingers); // wrapper mapping functions
+		static void routeParameters(int numFingers, bool isInPitchBar); // wrapper mapping functions
 		static void updateParameters(); // update mappings when gesture values are updated
 		
         static float inMax;

@@ -19,13 +19,14 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "ToggleSpaceComponent.h"
+//#include "ToggleSpaceComponent.h"
 #include "Envelope.h"
 
 //==============================================================================
 /*
 */
-class PlayComponent    : public Component
+class PlayComponent    : public Component,
+public Button::Listener
 {
 public:
     PlayComponent();
@@ -45,7 +46,13 @@ public:
     bool isPlaying; // true if recorded audio is playing
     bool initRead; // resets readIndex in MCC
     Envelope env;
-    ToggleSpaceComponent togSpaceComp;
+  //  ToggleSpaceComponent togSpaceComp;
+    
+    //for ToggleSpace buttons
+    int getToggleSpaceID();
+    void buttonClicked (Button* button) override;
+    int getToggleSpace();
+    void setToggleSpace(int id);
     
 private:
     float tapDetectCoords [2][2];
@@ -54,6 +61,12 @@ private:
     bool swipeEnd = false;
     
     RectangleList<float> rectList;
+    int rectNum = 12;
+    
+    //Togglespace buttons
+    TextButton toggleSustain;
+    TextButton toggleImpulse;
+    int toggleSpaceID = 1;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

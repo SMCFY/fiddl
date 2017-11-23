@@ -16,7 +16,7 @@ float Mapper::inMax;
 float Mapper::inMin;
 int Mapper::toggleSpaceID;
 
-void Mapper::routeParameters(int numFingers) // all the mapping are defined here, and the values updated for AudioParameters
+void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mapping are defined here, and the values updated for AudioParameters
 {
     mapping.clear();
     
@@ -32,7 +32,7 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
                 mapFromTo("y position","pitch");
                 mapFromTo("x position", "lowpass");
             }
-            if (numFingers >= 5)
+            if (isInPitchBar)
             {
                 mapFromTo("x position","discrete pitch");
                 //mapFromTo("y position", "lowpass");
@@ -148,7 +148,7 @@ void Mapper::updateParameters()
             }
             if (audioParameter == "bandpass")     // ... to tempo value
             {
-                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
         }
         if (gestureParameter == "y position") // mapping is being done from y position value ...
@@ -175,7 +175,7 @@ void Mapper::updateParameters()
             }
             if (audioParameter == "bandpass")     // ... to tempo value
             {
-                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
         }
         if (gestureParameter == "abs dist") // mapping is being done from the absolute distance from origin
@@ -202,7 +202,7 @@ void Mapper::updateParameters()
             }
             if (audioParameter == "bandpass")     // ... to tempo value
             {
-                mapToHighPass(Gesture::getAbsDistFromOrigin());
+                mapToBandPass(Gesture::getAbsDistFromOrigin());
             }
         }
     }
