@@ -25,7 +25,11 @@ class TimeStretch : public DSP
 		~TimeStretch();
 
 		void process(AudioBuffer<float> buffer) override;
+        void process(AudioBuffer<float> inputBuffer, AudioBuffer<float> outputBuffer, int &readIndex);
+        // returns true if pitch or tempo values are updated from gesture mappings
         bool pitchUpdated;
+        bool tempoUpdated;
+        int timeStretchIndex;
 
 	private:
 	

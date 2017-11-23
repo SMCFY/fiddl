@@ -113,9 +113,10 @@ public:
         {
             readIndex = 0;
         }
-
+        
+        AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex);
+        //AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
-        AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         

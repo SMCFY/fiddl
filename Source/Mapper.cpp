@@ -73,7 +73,8 @@ void Mapper::mapToDiscretePitch(float val)
 
 void Mapper::mapToTempo(float val)
 {
-    *AudioProcessorBundler::tempo = -95.0f + val*190.0f;
+    *AudioProcessorBundler::tempo = -50.0f + val*100.0f;
+    AudioProcessorBundler::timeStretch->tempoUpdated = true;
 }
 
 void Mapper::mapToLowPass(float val)
@@ -120,7 +121,6 @@ void Mapper::updateParameters()
     {
         gestureParameter = it->first;
         audioParameter = it->second;
-
         switch (gestureParameter) {
             case X_POSITION:
                 switch (audioParameter) {

@@ -26,6 +26,8 @@ TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
     this->tempo = tempo;
     pitchUpdated = false;
     
+    timeStretchIndex = 0;
+    
     counter = 0;
 
     soundTouch.setSampleRate(44100);
@@ -56,9 +58,30 @@ TimeStretch::~TimeStretch()
 
 void TimeStretch::process(AudioBuffer<float> buffer)
 {
-    // TODO: The soundTouch parameters need to be changed when the gesture mappings are updated
-    //soundTouch.setTempoChange(tempo->get());
     if (pitchUpdated)
+    {
+        soundTouch.setPitchSemiTones(pitch->get());
+        pitchUpdated = false;
+    }
+    
+    float **bufferFrame = buffer.getArrayOfWritePointers();
+    int BUFF_SIZE = 512;
+    float outputSamples[BUFF_SIZE];
+    soundTouch.putSamples(*bufferFrame, buffer.getNumSamples());
+    nSamples = soundTouch.receiveSamples(outputSamples, buffer.getNumSamples());
+    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+    {
+        for (int sample = 0; sample < nSamples; sample++)
+        {
+            bufferFrame[ch][sample] = outputSamples[sample];
+        }
+    }
+}
+
+void TimeStretch::process(AudioBuffer<float> inputBuffer, AudioBuffer<float> outputBuffer, int &readIndex)
+{
+    // TODO: The soundTouch parameters need to be changed when the gesture mappings are updated
+    if (tempoUpdated)
     {
         soundTouch.setPitchSemiTones(pitch->get());
         soundTouch.setPitchSemiTones(pitch->get());
@@ -73,7 +96,8 @@ void TimeStretch::process(AudioBuffer<float> buffer)
     {
         for (int sample = 0; sample < nSamples; sample++)
         {
-            bufferFrame[ch][sample] = outputSamples[sample];
+            outputBufferFrame[ch][sample] = processedSamples[sample];
         }
     }
+    timeStretchIndex += INPUT_BUFF_SIZE;*/
 }
