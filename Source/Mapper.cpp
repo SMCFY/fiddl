@@ -120,90 +120,83 @@ void Mapper::updateParameters()
     {
         gestureParameter = it->first;
         audioParameter = it->second;
-        if (gestureParameter == X_POSITION) // mapping is being done from x position value ...
-        {
-            if (audioParameter == GAIN)     // ... to gain value
-            {
-                mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-            if (audioParameter == PITCH)     // ... to pitch value
-            {
-                mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-            if (audioParameter == DISCRETE_PITCH)     // ... to pitch value
-            {
-                mapToDiscretePitch(Gesture::getDiscretePitch());
-            }
-            if (audioParameter == TEMPO)     // ... to tempo value
-            {
-                mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-            if (audioParameter == LOWPASS)     // ... to tempo value
-            {
-                mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-            if (audioParameter == HIGHPASS)     // ... to tempo value
-            {
-                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-            if (audioParameter == BANDPASS)     // ... to tempo value
-            {
-                mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
-            }
-        }
-        if (gestureParameter == Y_POSITION) // mapping is being done from y position value ...
-        {
-            if (audioParameter == GAIN)
-            {
-                mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y); // ... to gain value
-            }
-            if (audioParameter == PITCH)     // ... to pitch value
-            {
-                mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-            }
-            if (audioParameter == TEMPO)     // ... to tempo value
-            {
-                mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-            }
-            if (audioParameter == LOWPASS)     // ... to tempo value
-            {
-                mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-            }
-            if (audioParameter == HIGHPASS)     // ... to tempo value
-            {
-                mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-            }
-            if (audioParameter == BANDPASS)     // ... to tempo value
-            {
-                mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
-            }
-        }
-        if (gestureParameter == ABS_DIST) // mapping is being done from the absolute distance from origin
-        {
-            if (audioParameter == GAIN)
-            {
-                mapToGain(Gesture::getAbsDistFromOrigin()); // ... to gain value
-            }
-            if (audioParameter == PITCH)     // ... to pitch value
-            {
-                mapToPitch(Gesture::getAbsDistFromOrigin());
-            }
-            if (audioParameter == TEMPO)     // ... to tempo value
-            {
-                mapToTempo(Gesture::getAbsDistFromOrigin());
-            }
-            if (audioParameter == LOWPASS)     // ... to tempo value
-            {
-                mapToLowPass(Gesture::getAbsDistFromOrigin());
-            }
-            if (audioParameter == HIGHPASS)     // ... to tempo value
-            {
-                mapToHighPass(Gesture::getAbsDistFromOrigin());
-            }
-            if (audioParameter == BANDPASS)     // ... to tempo value
-            {
-                mapToBandPass(Gesture::getAbsDistFromOrigin());
-            }
+
+        switch (gestureParameter) {
+            case X_POSITION:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case DISCRETE_PITCH:
+                        mapToDiscretePitch(Gesture::getDiscretePitch());
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case LOWPASS:
+                        mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case HIGHPASS:
+                        mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case BANDPASS:
+                        mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                }
+                break;
+            case Y_POSITION:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                    case DISCRETE_PITCH:
+                        /* Y_POSITION currently not mapped to DISCRETE_PITCH */
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                    case LOWPASS:
+                        mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                    case HIGHPASS:
+                        mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                    case BANDPASS:
+                        mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
+                }
+                break;
+            case ABS_DIST:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case DISCRETE_PITCH:
+                        /* ABS_DIST currently not mapped to DISCRETE_PITCH */
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case LOWPASS:
+                        mapToLowPass(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case HIGHPASS:
+                        mapToHighPass(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case BANDPASS:
+                        mapToHighPass(Gesture::getAbsDistFromOrigin());
+                        break;
+                }
+                break;
         }
     }
 }
