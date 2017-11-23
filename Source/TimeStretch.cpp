@@ -86,7 +86,7 @@ void TimeStretch::process(AudioBuffer<float> inputBuffer, AudioBuffer<float> out
         soundTouch.setPitchSemiTones(pitch->get());
         soundTouch.setPitchSemiTones(pitch->get());
     }
-    
+    /*
     float **bufferFrame = buffer.getArrayOfWritePointers();
     int BUFF_SIZE = 512;
     float outputSamples[BUFF_SIZE];
