@@ -15,6 +15,9 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+enum GestureParameter {X_POSITION, Y_POSITION, ABS_DIST, d};
+enum AudioParameter {GAIN, PITCH, DISCRETE_PITCH, TEMPO, HIGHPASS, LOWPASS, BANDPASS};
+
 class Mapper
 {
 	public:
@@ -27,8 +30,8 @@ class Mapper
         static void setToggleSpace(int id);
         static int getToggleSpaceID();
 		
-		private:		
-		static std::vector< std::pair <std::string,std::string> > mapping;
+    private:		
+		static std::vector< std::pair <GestureParameter, AudioParameter> > mapping;
 
         static void mapToGain(float val);
         static void mapToPitch(float val);
@@ -39,7 +42,7 @@ class Mapper
         static void mapToDiscretePitch(float val);
     
         // this method takes a string pair to map a "gestureParameter" to an "audioParameter"
-        static void mapFromTo(std::string gestureParameter, std::string audioParameter);
+        static void mapFromTo(GestureParameter gestureParameter, AudioParameter audioParameter);
     
         static float lin2log(float outMax, float outMin, float input);
     
