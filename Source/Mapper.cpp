@@ -25,7 +25,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             if (numFingers == 1)
             {
                 mapFromTo(X_POSITION, PITCH);
-                mapFromTo(Y_POSITION, LOWPASS);
+                //mapFromTo(X_POSITION, LOWPASS);
             }
             else if (numFingers >= 2)
             {
