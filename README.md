@@ -11,10 +11,8 @@
 2. Open the Projucer
 3. Create a new Audio Application template from Projucer with the name _FiguraTK_ and select iOS as a target platform.
 4. Replace the `Source` folder in your JUCE project with the `Source` folder in the repo.
-5. Add the soundtouch folder to your JUCE project
-6. In `Project Settings`
-&nbsp;&nbsp;Add the `soundtouch/include` path to `Header search paths` 
-&nbsp;&nbsp;Change `C++ Language Standard` to `C++14
+5. Add the `soundtouch` folder to your JUCE project
+6. In `Project Settings` add the `soundtouch/include` path to `Header search paths` and change `C++ Language Standard` to `C++14`
 7. Add the `juce_dsp` module to your JUCE project.
 8. Select desired target to export and click `Save and Open in IDE` (currently only working for iOS and OSX)
 9. Build the application
