@@ -126,6 +126,7 @@ void PlayComponent::resized()
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
+    mouseDrag (e);
 
     if(getToggleSpaceID() == 1) // note on
         AudioProcessorBundler::adsr.trigger(1);
@@ -134,8 +135,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 
     initRead = true; // reset readIndex
     isPlaying = true;
-    
-    mouseDrag (e);
       
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;

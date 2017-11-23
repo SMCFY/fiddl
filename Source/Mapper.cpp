@@ -25,12 +25,12 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             if (numFingers == 1)
             {
                 mapFromTo(X_POSITION, PITCH);
-                mapFromTo(Y_POSITION, BANDPASS);
+                mapFromTo(Y_POSITION, LOWPASS);
             }
             else if (numFingers >= 2)
             {
                 mapFromTo(Y_POSITION, PITCH);
-                mapFromTo(X_POSITION, LOWPASS);
+                mapFromTo(X_POSITION, HIGHPASS);
             }
 
             if (isInPitchBar)
@@ -48,8 +48,9 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             }
             else if (numFingers >= 2)
             {
-                mapFromTo(Y_POSITION, PITCH);
-                mapFromTo(X_POSITION, HIGHPASS);
+                mapFromTo(ABS_DIST, PITCH);
+                mapFromTo(ABS_DIST, HIGHPASS);
+                mapFromTo(ABS_DIST, RELEASE);
             }
         default:
             break;
