@@ -1,4 +1,4 @@
-# Semester project at Sound and Music Computing, AAU Copenhagen
+# fiddl
 
 ### Authors
 - Michael Castanieto
@@ -15,6 +15,9 @@
 6. In `Project Settings`, add the `soundtouch/include` path to `Header search paths` 
 6. Select desired target and click `Save and Open in IDE` (currently only working for iOS and OSX)
 7. Build the application
+
+#### Release notes v0.4(Moustachio):
+>Lowpass and highpass filters are added to the list of audio processors, and envelopes are implemented for playback. This release is introducing two different parameter spaces with different mapping schemes. One intended to be used for sustained sound and the other for impulse sounds. The `sustained space` features an array of buttons representing discrete pitches. The `impulse space` is inspired by a cicular membrane, using the distance from center to control pitch, release time, and highpass filter cutoff.
 
 #### Release notes v0.3(Jolene):
 >Pitch shifting, utilizing the Soundtouch library. Multitouch functionality added, two finger's `Y` position controls the pitch and one finger's `Y` position is mapped to gain on a logarithmic scale.
