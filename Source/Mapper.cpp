@@ -24,30 +24,30 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
         case 1: // sustain
             if (numFingers == 1)
             {
-                mapFromTo("x position","pitch");
-                mapFromTo("y position", "bandpass");
+                mapFromTo(X_POSITION, PITCH);
+                mapFromTo(Y_POSITION, BANDPASS);
             }
             if (numFingers >= 2)
             {
-                mapFromTo("y position","pitch");
-                mapFromTo("x position", "lowpass");
+                mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(X_POSITION, LOWPASS);
             }
             if (numFingers >= 5)
             {
-                mapFromTo("x position","discrete pitch");
-                //mapFromTo("y position", "lowpass");
+                mapFromTo(X_POSITION, DISCRETE_PITCH);
+                //mapFromTo(Y_POSITION, LOWPASS);
             }
             break;
         case 2: // impulse
             if (numFingers == 1)
             {
-                mapFromTo("abs dist","pitch");
-                mapFromTo("abs dist","highpass");
+                mapFromTo(ABS_DIST, PITCH);
+                mapFromTo(ABS_DIST, HIGHPASS);
             }
             if (numFingers >= 2)
             {
-                mapFromTo("y position","pitch");
-                mapFromTo("x position","highpass");
+                mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(X_POSITION, HIGHPASS);
             }
         default:
             break;
@@ -91,7 +91,7 @@ void Mapper::mapToBandPass(float val)
     *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
 }
 
-void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
+void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
 {
     mapping.push_back(std::make_pair(gestureParameter,audioParameter));
 }
@@ -113,94 +113,94 @@ float Mapper::lin2log(float outMax, float outMin, float input)
 // this method is called in the PlayComponent class to update all the mapping values
 void Mapper::updateParameters()
 {
-    std::string gestureParameter;
-    std::string audioParameter;
+    GestureParameter gestureParameter;
+    AudioParameter audioParameter;
     //iterate through the mapping string pairs to map a "gestureParameter" to "audioParameter"
-    for (std::vector<std::pair<std::string, std::string>>::iterator it = mapping.begin() ; it != mapping.end(); ++it)
+    for (std::vector<std::pair<GestureParameter, AudioParameter>>::iterator it = mapping.begin() ; it != mapping.end(); ++it)
     {
         gestureParameter = it->first;
         audioParameter = it->second;
-        if (gestureParameter == "x position") // mapping is being done from x position value ...
+        if (gestureParameter == X_POSITION) // mapping is being done from x position value ...
         {
-            if (audioParameter == "gain")     // ... to gain value
+            if (audioParameter == GAIN)     // ... to gain value
             {
                 mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
-            if (audioParameter == "pitch")     // ... to pitch value
+            if (audioParameter == PITCH)     // ... to pitch value
             {
                 mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
-            if (audioParameter == "discrete pitch")     // ... to pitch value
+            if (audioParameter == DISCRETE_PITCH)     // ... to pitch value
             {
                 mapToDiscretePitch(Gesture::getDiscretePitch());
             }
-            if (audioParameter == "tempo")     // ... to tempo value
+            if (audioParameter == TEMPO)     // ... to tempo value
             {
                 mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
-            if (audioParameter == "lowpass")     // ... to tempo value
+            if (audioParameter == LOWPASS)     // ... to tempo value
             {
                 mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
-            if (audioParameter == "highpass")     // ... to tempo value
+            if (audioParameter == HIGHPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
-            if (audioParameter == "bandpass")     // ... to tempo value
+            if (audioParameter == BANDPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
             }
         }
-        if (gestureParameter == "y position") // mapping is being done from y position value ...
+        if (gestureParameter == Y_POSITION) // mapping is being done from y position value ...
         {
-            if (audioParameter == "gain")
+            if (audioParameter == GAIN)
             {
                 mapToGain(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y); // ... to gain value
             }
-            if (audioParameter == "pitch")     // ... to pitch value
+            if (audioParameter == PITCH)     // ... to pitch value
             {
                 mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
-            if (audioParameter == "tempo")     // ... to tempo value
+            if (audioParameter == TEMPO)     // ... to tempo value
             {
                 mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
-            if (audioParameter == "lowpass")     // ... to tempo value
+            if (audioParameter == LOWPASS)     // ... to tempo value
             {
                 mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
-            if (audioParameter == "highpass")     // ... to tempo value
+            if (audioParameter == HIGHPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
-            if (audioParameter == "bandpass")     // ... to tempo value
+            if (audioParameter == BANDPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
             }
         }
-        if (gestureParameter == "abs dist") // mapping is being done from the absolute distance from origin
+        if (gestureParameter == ABS_DIST) // mapping is being done from the absolute distance from origin
         {
-            if (audioParameter == "gain")
+            if (audioParameter == GAIN)
             {
                 mapToGain(Gesture::getAbsDistFromOrigin()); // ... to gain value
             }
-            if (audioParameter == "pitch")     // ... to pitch value
+            if (audioParameter == PITCH)     // ... to pitch value
             {
                 mapToPitch(Gesture::getAbsDistFromOrigin());
             }
-            if (audioParameter == "tempo")     // ... to tempo value
+            if (audioParameter == TEMPO)     // ... to tempo value
             {
                 mapToTempo(Gesture::getAbsDistFromOrigin());
             }
-            if (audioParameter == "lowpass")     // ... to tempo value
+            if (audioParameter == LOWPASS)     // ... to tempo value
             {
                 mapToLowPass(Gesture::getAbsDistFromOrigin());
             }
-            if (audioParameter == "highpass")     // ... to tempo value
+            if (audioParameter == HIGHPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getAbsDistFromOrigin());
             }
-            if (audioParameter == "bandpass")     // ... to tempo value
+            if (audioParameter == BANDPASS)     // ... to tempo value
             {
                 mapToHighPass(Gesture::getAbsDistFromOrigin());
             }
@@ -218,4 +218,4 @@ int Mapper::getToggleSpaceID()
     return toggleSpaceID;
 }
 
-std::vector< std::pair <std::string,std::string> > Mapper::mapping;
+std::vector< std::pair <GestureParameter,AudioParameter> > Mapper::mapping;
