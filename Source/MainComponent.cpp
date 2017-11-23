@@ -17,7 +17,6 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
-//#include "Mapper.h"  // TODO: <-- this is only used for testing!
 #include "AudioProcessorBundler.h"
 
 // used for initialising the deviceManager
@@ -36,10 +35,7 @@ public:
 
         setSize(400, 400);
         setAudioChannels (1, 2);
-                
-        //initialize DSP blocks and assign parameters
-        AudioProcessorBundler::initDSPBlocks();
-        
+
         recorder = new AudioRecorder(3.f);
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
@@ -57,8 +53,9 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
+        //initialize DSP blocks and assign parameters
+        AudioProcessorBundler::initDSPBlocks((int)sampleRate);
         readIndex = 0;
-
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -114,25 +111,20 @@ public:
             readIndex = 0;
         }
         
-        //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex);
-        AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer);
+        
+        // DSP chain
+        //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex); // time stretch
+        AudioProcessorBundler::gain->process(*bufferToFill.buffer);
+        AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer); // pitch
         AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         
-        
-        float **outputFrame = bufferToFill.buffer->getArrayOfWritePointers();
-
-        for (int samp = 0; samp < bufferToFill.buffer->getNumSamples(); ++samp)
-        {
-            for (int ch = 0; ch < bufferToFill.buffer->getNumChannels(); ++ch)
-            {
-                if(playComp.getToggleSpaceID() == 2) // impulse
-                outputFrame[ch][samp] *= playComp.env.envelope(10, 0.95, 1000); // APR
-                else // sustain
-                outputFrame[ch][samp] *= playComp.env.envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
-            }
-        }
+        // Envelopes
+        if(playComp.getToggleSpaceID() == 1)
+            AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
+        else if(playComp.getToggleSpaceID() == 2)
+            AudioProcessorBundler::ar.process(*bufferToFill.buffer);
         
     }
 

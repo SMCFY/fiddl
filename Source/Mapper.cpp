@@ -27,11 +27,12 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 mapFromTo(X_POSITION, PITCH);
                 mapFromTo(Y_POSITION, BANDPASS);
             }
-            if (numFingers >= 2)
+            else if (numFingers >= 2)
             {
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, LOWPASS);
             }
+
             if (isInPitchBar)
             {
                 mapFromTo(X_POSITION, DISCRETE_PITCH);
@@ -43,8 +44,9 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 mapFromTo(ABS_DIST, PITCH);
                 mapFromTo(ABS_DIST, HIGHPASS);
+                mapFromTo(ABS_DIST, RELEASE);
             }
-            if (numFingers >= 2)
+            else if (numFingers >= 2)
             {
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS);
@@ -92,6 +94,13 @@ void Mapper::mapToBandPass(float val)
     *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
 }
 
+void Mapper::mapToRelease(float val)
+{
+    //int time = (int)(1/(val+0.1)*800);
+    int time = (int)(abs(val - 0.75)*1800)+1000;
+    AudioProcessorBundler::ar.setReleaseTime(time);
+}
+
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
 {
     mapping.push_back(std::make_pair(gestureParameter,audioParameter));
@@ -121,6 +130,7 @@ void Mapper::updateParameters()
     {
         gestureParameter = it->first;
         audioParameter = it->second;
+
         switch (gestureParameter) {
             case X_POSITION:
                 switch (audioParameter) {
@@ -144,6 +154,9 @@ void Mapper::updateParameters()
                         break;
                     case BANDPASS:
                         mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         break;
                 }
                 break;
@@ -170,6 +183,9 @@ void Mapper::updateParameters()
                     case BANDPASS:
                         mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
                 }
                 break;
             case ABS_DIST:
@@ -194,6 +210,9 @@ void Mapper::updateParameters()
                         break;
                     case BANDPASS:
                         mapToHighPass(Gesture::getAbsDistFromOrigin());
+                        break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getAbsDistFromOrigin());
                         break;
                 }
                 break;

@@ -14,6 +14,7 @@
 #include "PlayComponent.h"
 #include "Gesture.h"
 #include "Mapper.h"
+#include "AudioProcessorBundler.h"
 #include <iostream>
 #include <string>
 
@@ -23,9 +24,6 @@ PlayComponent::PlayComponent()
     isPlaying = false;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    
-    env = Envelope(44100);
-    env.isTriggered = &isPlaying;
     
     //ToggleSpace buttons
     addAndMakeVisible (toggleSustain);
@@ -38,6 +36,9 @@ PlayComponent::PlayComponent()
     toggleImpulse.setButtonText ("Impulse");
     toggleImpulse.setClickingTogglesState(true);
     toggleImpulse.addListener (this);
+
+    AudioProcessorBundler::ar.isTriggered = &isPlaying;
+    AudioProcessorBundler::adsr.isTriggered = &isPlaying;
 }
 
 PlayComponent::~PlayComponent()
@@ -126,7 +127,11 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
 
-    env.trigger(1); // note on (initiate attack)
+    if(getToggleSpaceID() == 1) // note on
+        AudioProcessorBundler::adsr.trigger(1);
+    if(getToggleSpaceID() == 2)
+        AudioProcessorBundler::ar.trigger(1);
+
     initRead = true; // reset readIndex
     isPlaying = true;
     
@@ -143,6 +148,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     Gesture::updateFingers(e.source, e.source.getIndex());
   
     Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
+
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
     if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75 && toggleSpaceID == 1)
@@ -168,8 +174,11 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::rmFinger(e);
 
-    if(Gesture::getNumFingers() == 0)
-        env.trigger(0); // note off (initiate release)  
+    if(Gesture::getNumFingers() == 0) // note off (initiate release) 
+    {
+        AudioProcessorBundler::ar.trigger(0);
+        AudioProcessorBundler::adsr.trigger(0);
+    }
     
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     Gesture::setResetPos(swipeEnd);

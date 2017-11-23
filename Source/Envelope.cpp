@@ -17,12 +17,14 @@ Envelope::Envelope()
     this->noteOn = 0;
 }
 
-Envelope::Envelope(int sr)
+Envelope::Envelope(int sr, Envelope::env type)
 : aMin(0.001f)
 {
 	this->samplingRate = sr;
 	this->amplitude = 0;
 	this->noteOn = 0;
+	this->envelopeType = type;
+    this->releaseTime = 2000;
 }
 
 Envelope::~Envelope()
@@ -33,8 +35,8 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
-	
-	if (trig) // note on
+ 
+ 	if(trig) // note on
 		amplitude = 0;
 
 	if(!trig) // note off
@@ -139,4 +141,33 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	}
 
     return 0.0f;
+}
+
+void Envelope::process(AudioBuffer<float> buffer)
+{
+
+	float **outputFrame = buffer.getArrayOfWritePointers();
+
+	for (int samp = 0; samp < buffer.getNumSamples(); ++samp)
+	{
+	    for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+	    {
+	    	switch (envelopeType)
+	    	{
+            case AR:
+	    	outputFrame[ch][samp] *= envelope(500, 0.95, releaseTime); // APR
+	        break;
+                    
+            case ADSR:
+	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
+	        break;
+            };
+	    }
+	}
+	
+}
+
+void Envelope::setReleaseTime(int time)
+{
+	this->releaseTime = time;
 }
