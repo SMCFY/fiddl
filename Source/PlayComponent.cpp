@@ -65,7 +65,7 @@ void PlayComponent::paint (Graphics& g)
     }
     
     ////Draw discrete pitch bar if sustain mode is picked
-    if(toggleSpaceID == 1)
+    if(toggleSpaceID == 1) //graphics for sustained space
     {
         for (int i = 0; i < 12; i++)
         {
@@ -103,15 +103,23 @@ void PlayComponent::paint (Graphics& g)
                 g.drawRect(rectList.getRectangle(rectNum));
             }
         }
+        
+        if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
+        {
+            for (int i = 0; i < Gesture::getNumFingers(); i++)
+            {
+                g.setOpacity(1.0f);
+                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 25), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 25), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
+            }
+        }
     }
-    
-    if(Gesture::getNumFingers() != 0)
+    else if (toggleSpaceID == 2) //graphics for impulse space
     {
-      for (int i = 0; i < Gesture::getNumFingers(); i++)
-      {
-        g.setOpacity(1.0);
-        g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 15), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 15), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
-      }
+        g.setOpacity(circleAlpha); //draw ripples on users finger position
+        for (int i = 0; i < 3; i++)
+        {
+           g.drawEllipse(int (tapDetectCoords[1][0] * getWidth() - circleSize[i]/2), int (getHeight() - (tapDetectCoords[1][1] * getHeight()) - circleSize[i]/2), circleSize[i], circleSize[i], 2);
+        }
     }
 }
 
@@ -140,6 +148,16 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
     
     Mapper::setToggleSpace(toggleSpaceID);
+    
+    
+    //Reset ripple values
+    for(int i = 0; i < 3; i++)
+    {
+        circleSize[i] = 20 + 10 *i;
+    }
+    circleAlpha = 1.0f;
+    stopTimer();
+    startRipple();
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -221,6 +239,31 @@ void PlayComponent::buttonClicked (Button* button)
 int PlayComponent::getToggleSpaceID()
 {
     return toggleSpaceID;
+}
+
+void PlayComponent::timerCallback()
+{
+    circleAlpha -= 0.08f;
+    
+    for(int i = 0; i < 3; i++)
+    {
+        circleSize[i] *= circleRippleSpeed[i];
+    }
+        
+    
+    if(circleAlpha <= 0.1)
+    {
+        circleAlpha = 0.0f;
+        stopTimer();
+        repaint();
+    }
+    
+    repaint();
+}
+
+void PlayComponent::startRipple()
+{
+    startTimerHz(25);
 }
 
 void PlayComponent::fillCoordinates()

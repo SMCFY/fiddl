@@ -26,7 +26,8 @@
 /*
 */
 class PlayComponent    : public Component,
-public Button::Listener
+public Button::Listener,
+private Timer
 {
 public:
     PlayComponent();
@@ -67,6 +68,13 @@ private:
     TextButton toggleSustain;
     TextButton toggleImpulse;
     int toggleSpaceID = 1;
+    
+    //GUI effects
+    void timerCallback() override;
+    void startRipple();
+    float circleAlpha = 0.0f;
+    float circleSize [3] = {20,30,50};
+    float circleRippleSpeed [3] = {1.15,1.15,1.15};
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };
