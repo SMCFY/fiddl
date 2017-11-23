@@ -24,6 +24,8 @@ class Envelope
 		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime); // ADSR envelope
 		void process(AudioBuffer<float> buffer); // processses an audio buffer based on the envelope type
 
+		void setReleaseTime(int time);
+
 		bool* isTriggered; // takes the address of isPlaying
     
 	private:
@@ -33,6 +35,7 @@ class Envelope
 		float aMin;
 		bool noteOn;
 
+		int releaseTime;
 		env envelopeType; 
 
 		// phase conditions

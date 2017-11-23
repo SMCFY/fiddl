@@ -24,7 +24,7 @@ Envelope::Envelope(int sr, Envelope::env type)
 	this->amplitude = 0;
 	this->noteOn = 0;
 	this->envelopeType = type;
-	
+    this->releaseTime = 2000;
 }
 
 Envelope::~Envelope()
@@ -155,7 +155,8 @@ void Envelope::process(AudioBuffer<float> buffer)
 	    	switch (envelopeType)
 	    	{
             case ar:
-	    	outputFrame[ch][samp] *= envelope(50, 0.95, 1000); // APR
+	    	outputFrame[ch][samp] *= envelope(500, 0.95, releaseTime); // APR
+	    	std::cout << releaseTime << std::endl;
 	        break;
                     
             case adsr:
@@ -165,4 +166,9 @@ void Envelope::process(AudioBuffer<float> buffer)
 	    }
 	}
 	
+}
+
+void Envelope::setReleaseTime(int time)
+{
+	this->releaseTime = time;
 }

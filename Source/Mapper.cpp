@@ -27,15 +27,14 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
                 mapFromTo("x position","pitch");
                 mapFromTo("y position", "bandpass");
             }
-            if (numFingers >= 2)
+            else if (numFingers >= 2)
             {
                 mapFromTo("y position","pitch");
                 mapFromTo("x position", "lowpass");
             }
-            if (numFingers >= 5)
+            else if (numFingers >= 5)
             {
                 mapFromTo("x position","discrete pitch");
-                //mapFromTo("y position", "lowpass");
             }
             break;
         case 2: // impulse
@@ -43,8 +42,9 @@ void Mapper::routeParameters(int numFingers) // all the mapping are defined here
             {
                 mapFromTo("abs dist","pitch");
                 mapFromTo("abs dist","highpass");
+                mapFromTo("abs dist","release");
             }
-            if (numFingers >= 2)
+            else if (numFingers >= 2)
             {
                 mapFromTo("y position","pitch");
                 mapFromTo("x position","highpass");
@@ -89,6 +89,13 @@ void Mapper::mapToHighPass(float val)
 void Mapper::mapToBandPass(float val)
 {
     *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
+}
+
+void Mapper::mapToRelease(float val)
+{
+    //int time = (int)(1/(val+0.1)*800);
+    int time = (int)(abs(val - 0.75)*1800)+1000;
+    AudioProcessorBundler::ar.setReleaseTime(time);
 }
 
 void Mapper::mapFromTo(const std::string gestureParameter, const std::string audioParameter)
@@ -203,6 +210,10 @@ void Mapper::updateParameters()
             if (audioParameter == "bandpass")     // ... to tempo value
             {
                 mapToHighPass(Gesture::getAbsDistFromOrigin());
+            }
+            if (audioParameter == "release")
+            {
+                mapToRelease(Gesture::getAbsDistFromOrigin());
             }
         }
     }
