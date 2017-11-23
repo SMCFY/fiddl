@@ -161,7 +161,6 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
     
     rectNum = int(Gesture::getDiscretePitch()/2+6);
-    std::cout << Gesture::getDiscretePitch()/2+6 << "\n";
     repaint();
 }
 
