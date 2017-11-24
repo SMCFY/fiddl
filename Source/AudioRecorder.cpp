@@ -11,6 +11,7 @@
 */
 
 #include "AudioRecorder.h"
+#include "Envelope.h"
 
 AudioRecorder::AudioRecorder (float bufferLengthInSeconds)
     : writeIndex (0), activeWriter (false)
@@ -150,16 +151,13 @@ void AudioRecorder::truncate (float** recording, float threshold)
         j--;
     }
 
-    //roll off
-    int tRollOff = 1000; //roll off time in milliseconds
-    int nRollOff = std::round(sampleRate * (tRollOff/1000)); //roll off in samples
-    float rollOff = pow(0.001, 1 / nRollOff); //roll off rate
-
-    for (int i = sampLength-nRollOff; i < sampLength; i++)
-    {
-        recording[0][i] *= rollOff; 
-    }
-
-
-
+    //Envelope::generateRamp(1.0f, 0.001f, 20000, "exp");
+    //
+    //j = 0;
+    //for (int i = (sampStart+sampLength)-(20000+1); i <= sampLength; i++)
+    //{
+    //    recording[0][i] *= Envelope::ramp[j];
+    //    j++;
+    //}
+    
 }

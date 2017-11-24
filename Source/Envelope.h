@@ -22,14 +22,17 @@ class Envelope
 		void trigger(bool trig);
 		float envelope(int attackTime, float peak, int releaseTime); // AR envelope
 		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime); // ADSR envelope
-		void process(AudioBuffer<float> buffer); // processses an audio buffer based on the envelope type
 
+		void process(AudioBuffer<float> buffer); // processses an audio buffer based on the envelope type
 		void setReleaseTime(int time);
 
 		bool* isTriggered; // takes the address of isPlaying
     
         float getAmplitude();
     
+        static void generateRamp(float start, float end, int lengthInSamples, String type);
+    	static float ramp[96000];
+
 	private:
 		float amplitude;
 		bool trig;

@@ -143,6 +143,32 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
     return 0.0f;
 }
 
+void Envelope::generateRamp(float start, float end, int lengthInSamples, String type)
+{
+    if(type == "exp")
+    {
+        float k = pow(end, start / lengthInSamples);
+        float val = start;
+
+        for (int i = 0; i < lengthInSamples; i++)
+        {
+            Envelope::ramp[i] = val;
+            val *= k;
+        }
+    }
+    else if(type == "lin")
+    {
+        float k = (end-start) / lengthInSamples;
+        float val = start;
+
+        for (int i = 0; i < lengthInSamples; i++)
+        {
+            Envelope::ramp[i] = val;
+            val += k;
+        }
+    }
+}
+
 void Envelope::process(AudioBuffer<float> buffer)
 {
 
@@ -176,3 +202,5 @@ float Envelope::getAmplitude()
 {
     return amplitude;
 }
+
+float Envelope::ramp[96000];
