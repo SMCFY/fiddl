@@ -114,9 +114,8 @@ public:
         
         // DSP chain
         //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex); // time stretch
-        AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer); // pitch
-        AudioProcessorBundler::gain->process(*bufferToFill.buffer);
+        //AudioProcessorBundler::gain->process(*bufferToFill.buffer);
         AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
         AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
         

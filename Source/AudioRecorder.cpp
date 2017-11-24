@@ -56,8 +56,8 @@ void AudioRecorder::stop()
         }
         writeIndex = 0;
 
-        truncate (recBuff, 0.08f);
-        sampBuff.setDataToReferTo (recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
+        truncate(recBuff, 0.08f);
+        sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
     }
 }
 
@@ -74,7 +74,7 @@ void AudioRecorder::audioDeviceAboutToStart (AudioIODevice* device)
     
     // recBuff stores the recorded audio
     recBuff = new float*[numChannels];
-    for (int ch = 0; ch < numChannels; ch++)
+    for(int ch = 0; ch < numChannels; ch++)
     {
         recBuff[ch] = new float[bufferLengthInSamples];
     }
@@ -139,14 +139,27 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
     for (int i = 0; i < this->bufferLengthInSamples; i++)
     {
-        if(fabs (recording[0][i]) > threshold && this->sampStart == 0)
+        if(fabs(recording[0][i]) > threshold && this->sampStart == 0)
         {
             this->sampStart = i;
         }
-        if(fabs (recording[0][j]) > threshold && this->sampLength == 0)
+        if(fabs(recording[0][j]) > threshold && this->sampLength == 0)
         {
             this->sampLength = this->bufferLengthInSamples - (sampStart + this->bufferLengthInSamples - j);
         }
         j--;
     }
+
+    //roll off
+    int tRollOff = 1000; //roll off time in milliseconds
+    int nRollOff = std::round(sampleRate * (tRollOff/1000)); //roll off in samples
+    float rollOff = pow(0.001, 1 / nRollOff); //roll off rate
+
+    for (int i = sampLength-nRollOff; i < sampLength; i++)
+    {
+        recording[0][i] *= rollOff; 
+    }
+
+
+
 }
