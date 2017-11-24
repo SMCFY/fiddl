@@ -28,6 +28,8 @@ class Envelope
 
 		bool* isTriggered; // takes the address of isPlaying
     
+        float getAmplitude();
+    
 	private:
 		float amplitude;
 		bool trig;

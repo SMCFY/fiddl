@@ -171,3 +171,8 @@ void Envelope::setReleaseTime(int time)
 {
 	this->releaseTime = time;
 }
+
+float Envelope::getAmplitude()
+{
+    return amplitude;
+}

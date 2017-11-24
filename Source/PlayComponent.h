@@ -70,11 +70,15 @@ private:
     int toggleSpaceID = 1;
     
     //GUI effects
+    void drawPitchBar(Graphics& g);
     void timerCallback() override;
     void startRipple();
+    void fillRippleCoords();
+    void drawRipples(Graphics& g);
     float circleAlpha = 0.0f;
-    float circleSize [3] = {20,30,50};
-    float circleRippleSpeed [3] = {1.15,1.15,1.15};
+    float circleSize [3] = {20,20,20};
+    float circleRippleSpeed [3] = {1.15,1.2,1.25};
+    float rippleCoords [10][2];
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

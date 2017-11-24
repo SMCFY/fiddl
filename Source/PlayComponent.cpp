@@ -52,7 +52,7 @@ void PlayComponent::paint (Graphics& g)
     g.drawRect (getLocalBounds(), 1);
     g.setColour (Colours::white);
     g.setFont (14.0f);
-
+    
     if (isPlaying)
     {
       g.drawText ("Playing", getLocalBounds(),
@@ -67,42 +67,7 @@ void PlayComponent::paint (Graphics& g)
     ////Draw discrete pitch bar if sustain mode is picked
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        for (int i = 0; i < 12; i++)
-        {
-            rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-75,getWidth()/12+0.5,75));
-        }
-        
-        for (int i = 0; i < 12; i++)
-        {
-            if(i%2 == 0)
-            {
-                g.setColour (Colours::darkgrey);
-                g.setOpacity(0.3);
-                g.fillRect(rectList.getRectangle(i));
-            }
-            else
-            {
-                g.setColour (Colours::darkgrey);
-                g.setOpacity(0.3);
-                g.fillRect(rectList.getRectangle(i));
-            }
-            
-            g.setColour (Colours::white);
-            g.setOpacity(0.3);
-            g.drawRect(rectList.getRectangle(i));
-        }
-        
-        if(Gesture::getNumFingers() != 0)
-        {
-            if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75)
-            {
-                g.setColour (Colours::darkgrey);
-                g.setOpacity(1.0);
-                g.fillRect(rectList.getRectangle(rectNum));
-                g.setColour (Colours::white);
-                g.drawRect(rectList.getRectangle(rectNum));
-            }
-        }
+        drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
         {
@@ -115,11 +80,7 @@ void PlayComponent::paint (Graphics& g)
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
-        g.setOpacity(circleAlpha); //draw ripples on users finger position
-        for (int i = 0; i < 3; i++)
-        {
-           g.drawEllipse(int (tapDetectCoords[1][0] * getWidth() - circleSize[i]/2), int (getHeight() - (tapDetectCoords[1][1] * getHeight()) - circleSize[i]/2), circleSize[i], circleSize[i], 2);
-        }
+        drawRipples(g);
     }
 }
 
@@ -147,13 +108,24 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
     
+    fillRippleCoords();
+    
     Mapper::setToggleSpace(toggleSpaceID);
     
     
     //Reset ripple values
+    if(Gesture::getNumFingers() == 1)
+    {
+        for (int i = 1; i < 8; i++)
+        {
+            rippleCoords[i][0] = 0;
+            rippleCoords[i][1] = 0;
+        }
+    }
+    
     for(int i = 0; i < 3; i++)
     {
-        circleSize[i] = 20 + 10 *i;
+        circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
     stopTimer();
@@ -243,7 +215,7 @@ int PlayComponent::getToggleSpaceID()
 
 void PlayComponent::timerCallback()
 {
-    circleAlpha -= 0.08f;
+    circleAlpha = AudioProcessorBundler::ar.getAmplitude();
     
     for(int i = 0; i < 3; i++)
     {
@@ -294,5 +266,74 @@ void PlayComponent::fillCoordinates()
         coordinates[coordIndex][0] = Gesture::getFingerPosition(0).x;
         coordinates[coordIndex][1] = Gesture::getFingerPosition(0).y;
         coordIndex++;
+    }
+}
+
+void PlayComponent::fillRippleCoords()
+{
+    
+    //Fill coordinates array for administrating the ripple effects
+    for (int i = 0; i < Gesture::getNumFingers(); i++)
+    {
+        rippleCoords[i][0] = Gesture::getFingerPosition(i).x;
+        rippleCoords[i][1] = Gesture::getFingerPosition(i).y;
+    }
+}
+
+void PlayComponent::drawRipples(Graphics& g)
+{
+    g.setOpacity(circleAlpha); //draw ripples on users finger position
+    for(int k = 0; k < 8; k++)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if(rippleCoords[k][0] == 0)
+                g.setOpacity(0.0);
+            else
+            {
+                g.setOpacity(circleAlpha);
+                g.drawEllipse(int (rippleCoords[k][0] * getWidth() - circleSize[i]/2), int (getHeight() - (rippleCoords[k][1] * getHeight()) - circleSize[i]/2), circleSize[i], circleSize[i], 2);
+            }
+        }
+    }
+}
+
+void PlayComponent::drawPitchBar(Graphics& g)
+{
+    for (int i = 0; i < 12; i++)
+    {
+        rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-75,getWidth()/12+0.5,75));
+    }
+    
+    for (int i = 0; i < 12; i++)
+    {
+        if(i%2 == 0)
+        {
+            g.setColour (Colours::darkgrey);
+            g.setOpacity(0.3);
+            g.fillRect(rectList.getRectangle(i));
+        }
+        else
+        {
+            g.setColour (Colours::darkgrey);
+            g.setOpacity(0.3);
+            g.fillRect(rectList.getRectangle(i));
+        }
+        
+        g.setColour (Colours::white);
+        g.setOpacity(0.3);
+        g.drawRect(rectList.getRectangle(i));
+    }
+    
+    if(Gesture::getNumFingers() != 0)
+    {
+        if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75)
+        {
+            g.setColour (Colours::darkgrey);
+            g.setOpacity(1.0);
+            g.fillRect(rectList.getRectangle(rectNum));
+            g.setColour (Colours::white);
+            g.drawRect(rectList.getRectangle(rectNum));
+        }
     }
 }
