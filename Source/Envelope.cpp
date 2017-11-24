@@ -65,7 +65,6 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
         {
             amplitude = peak;
             attack = 0;
-            return amplitude;
         }
 		return amplitude;
 	}
