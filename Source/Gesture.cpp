@@ -189,7 +189,7 @@ float Gesture::getDiscretePitch()
 
 float Gesture::getVelocity()
 {
-    return dist;//std::pow(dist+1,4) ;
+    return std::pow(dist+1,4) ;
 }
 
 float Gesture::getVelocityX()
