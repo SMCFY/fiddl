@@ -19,12 +19,16 @@
 #include "Filter.h"
 #include "Envelope.h"
 
+enum ProcessorSwitch {GAIN_ON, PITCH_ON, TEMPO_ON, LOWPASS_ON, HIGHPASS_ON, BANDPASS_ON};
+
 class AudioProcessorBundler
 {
 	public:
 
 		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
         static void initDSPBlocks(int samplingRate);
+        static void turnOffProcessors();
+        static void turnOnProcessor(ProcessorSwitch processorSwtich);
 
 	//private:  <-- DSP processors are public so that MainContentComponent has access to them.
 	//              AudioParameterFloats are public so that Mapper has access to them.
@@ -46,4 +50,13 @@ class AudioProcessorBundler
         static AudioParameterFloat *lowPassFilterFreqParam;
         static AudioParameterFloat *highPassFilterFreqParam;
         static AudioParameterFloat *bandPassFilterFreqParam;
+    
+        // DSP processor switches
+        static bool gainIsEnabled;
+        static bool pitchIsEnabled;
+        static bool tempoIsEnabled;
+        static bool lowPassISEnabled;
+        static bool highPassIsEnabled;
+        static bool bandPassIsEnabled;
+
 };

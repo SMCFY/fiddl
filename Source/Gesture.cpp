@@ -157,12 +157,7 @@ void Gesture::setDirection(float p [directionBuffSize][2])
         {
             direction = "LEFT";
         }
-    } /*else if (directionDeltaX == 0 && directionDeltaY == 0)
-        direction = "NULL";
-    */
-    //std::cout << p[directionBuffSize-1][0] << "  " << p[0][0] << "  " << p[1][0];
-    //std::cout << direction << "\n";
-    //std::cout << "X:  " << directionDeltaX << "   Y:   " << directionDeltaY << "   ";
+    } 
 }
 
 String Gesture::getDirection()
@@ -191,7 +186,6 @@ bool Gesture::tap()
 void Gesture::setAbsDistFromOrigin(float x, float y)
 {
     absDistFromOrigin = std::sqrt(std::pow(0.5-x,2)+std::pow(0.5-y,2));
-    //std::cout << absDistFromOrigin << "\n";
 }
 
 float Gesture::getAbsDistFromOrigin()
