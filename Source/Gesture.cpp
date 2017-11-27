@@ -51,8 +51,9 @@ Point<float> Gesture::normalizeCoordinates(Point<float> p)
 
 void Gesture::addFinger(const MouseEvent& e)
 {
-    Gesture::Position* f = new Gesture::Position(e.source, normalizeCoordinates(e.position));
+    Gesture::Position* f = new Gesture::Position(e.source, e.position);
     fingers.add(f);
+    f->path.startNewSubPath(f->pos);
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
@@ -68,7 +69,12 @@ void Gesture::rmFinger(const MouseEvent& e)
 
 Point<float> Gesture::getFingerPosition(int index)
 {
-    return fingers[index]->pos;
+    return normalizeCoordinates(fingers[index]->pos);
+}
+
+Path Gesture::getPath(int index)
+{
+    return fingers[index]->path;
 }
 
 void Gesture::updateFingers(const MouseInputSource& mis, int index)
@@ -77,8 +83,13 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
         {
             if(fingers[i]->sourceIndex == index) // checks whether the stored input source exists or not
             {
-                fingers[i]->pos = normalizeCoordinates(mis.getScreenPosition());
-                //std::cout << index << " " << fingers[i]->sourceIndex << " - " << fingers[i]->pos.x << " " << fingers[i]->pos.y << " " << std::endl;
+                fingers[i]->prevPos = fingers[i]->pos;
+                fingers[i]->pos = mis.getScreenPosition();
+
+                Path newSegment;
+                newSegment.startNewSubPath(fingers[i]->prevPos); // start of new segment
+                newSegment.lineTo(mis.getScreenPosition()); // end of new segment
+                fingers[i]->path.addPath(newSegment);
             }
         }
 }

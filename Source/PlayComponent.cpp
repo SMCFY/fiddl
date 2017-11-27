@@ -64,7 +64,7 @@ void PlayComponent::paint (Graphics& g)
                 Justification::centred, true);
     }
     
-    ////Draw discrete pitch bar if sustain mode is picked
+
     if(toggleSpaceID == 1) //graphics for sustained space
     {
         drawPitchBar(g); //draws Pitchbar
@@ -75,6 +75,7 @@ void PlayComponent::paint (Graphics& g)
             {
                 g.setOpacity(1.0f);
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 25), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 25), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
+                g.strokePath(Gesture::getPath(i), PathStrokeType(5.0f));
             }
         }
     }
