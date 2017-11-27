@@ -19,38 +19,48 @@ int Mapper::toggleSpaceID;
 void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mapping are defined here, and the values updated for AudioParameters
 {
     mapping.clear();
+    AudioProcessorBundler::turnOffProcessors();
     
     switch (toggleSpaceID) {
         case 1: // sustain
             if (numFingers == 1)
             {
-                mapFromTo(X_POSITION, PITCH);
-                //mapFromTo(X_POSITION, LOWPASS);
+                //mapFromTo(X_POSITION, PITCH);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                mapFromTo(X_POSITION, BANDPASS);
+                AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
             }
             else if (numFingers >= 2)
             {
-                mapFromTo(Y_POSITION, PITCH);
+                //mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
             }
-
+            
             if (isInPitchBar)
             {
-                mapFromTo(X_POSITION, DISCRETE_PITCH);
+                //mapFromTo(X_POSITION, DISCRETE_PITCH);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                 //mapFromTo(Y_POSITION, LOWPASS);
             }
             break;
         case 2: // impulse
             if (numFingers == 1)
             {
-                mapFromTo(ABS_DIST, PITCH);
-                mapFromTo(ABS_DIST, HIGHPASS);
+                //mapFromTo(ABS_DIST, PITCH);
+                mapFromTo(ABS_DIST, BANDPASS);
                 mapFromTo(ABS_DIST, RELEASE);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
             }
             else if (numFingers >= 2)
             {
-                mapFromTo(ABS_DIST, PITCH);
+                //mapFromTo(ABS_DIST, PITCH);
                 mapFromTo(ABS_DIST, HIGHPASS);
                 mapFromTo(ABS_DIST, RELEASE);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
             }
         default:
             break;

@@ -44,7 +44,51 @@ void AudioProcessorBundler::initDSPBlocks(int samplingRate)
     lopass->addParameter(lowPassFilterFreqParam);
     hipass->addParameter(highPassFilterFreqParam);
     bapass->addParameter(bandPassFilterFreqParam);
+    
+    // set process switches
+    gainIsEnabled = false;
+    pitchIsEnabled = false;
+    tempoIsEnabled = false;
+    lowPassISEnabled = false;
+    highPassIsEnabled = false;
+    bandPassIsEnabled = false;
 }
+
+void AudioProcessorBundler::turnOffProcessors()
+{
+    gainIsEnabled = false;
+    pitchIsEnabled = false;
+    tempoIsEnabled = false;
+    lowPassISEnabled = false;
+    highPassIsEnabled = false;
+    bandPassIsEnabled = false;
+}
+
+void AudioProcessorBundler::turnOnProcessor(ProcessorSwitch processorSwitch)
+{
+    switch (processorSwitch)
+    {
+        case GAIN_ON:
+            gainIsEnabled = true;
+            break;
+        case PITCH_ON:
+            pitchIsEnabled = true;
+            break;
+        case TEMPO_ON:
+            tempoIsEnabled = true;
+            break;
+        case LOWPASS_ON:
+            lowPassISEnabled = true;
+            break;
+        case HIGHPASS_ON:
+            highPassIsEnabled = true;
+            break;
+        case BANDPASS_ON:
+            bandPassIsEnabled = true;
+            break;
+    }
+}
+
 
 // DSP parameters:
 AudioParameterFloat *AudioProcessorBundler::gainLevel;
@@ -63,3 +107,11 @@ Filter *AudioProcessorBundler::bapass;
 
 Envelope AudioProcessorBundler::ar;
 Envelope AudioProcessorBundler::adsr;
+
+// DSP processor switches:
+bool AudioProcessorBundler::gainIsEnabled;
+bool AudioProcessorBundler::pitchIsEnabled;
+bool AudioProcessorBundler::tempoIsEnabled;
+bool AudioProcessorBundler::lowPassISEnabled;
+bool AudioProcessorBundler::highPassIsEnabled;
+bool AudioProcessorBundler::bandPassIsEnabled;
