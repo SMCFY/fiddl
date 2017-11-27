@@ -56,11 +56,13 @@ public:
     void setToggleSpace(int id);
     
 private:
+    //Detect tap and/or direction of swipe
     float tapDetectCoords [2][2];
     float coordinates [20][2];
     int coordIndex = 0;
     bool swipeEnd = false;
     
+    //Rectangle array for the discrete pitch bar
     RectangleList<float> rectList;
     int rectNum = 12;
     

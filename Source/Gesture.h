@@ -14,7 +14,7 @@
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
 
-class Gesture
+class Gesture 
 {
 	public:
         typedef struct Position { Point<float> pos; const MouseInputSource* mis; int sourceIndex;

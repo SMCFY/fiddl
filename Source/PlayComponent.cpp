@@ -86,6 +86,8 @@ void PlayComponent::paint (Graphics& g)
 
 void PlayComponent::resized()
 {
+    std::cout << getWidth() << "    ";
+    std::cout << getHeight();
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
     toggleSustain.setBounds(getWidth()-82, 5, 80,30);
@@ -128,7 +130,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
-    stopTimer();
+    //stopTimer();
     startRipple();
 }
 
@@ -140,7 +142,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
-    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75 && toggleSpaceID == 1)
+    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6 && toggleSpaceID == 1)
     {
         Mapper::routeParameters(Gesture::getNumFingers(),true);
         Mapper::updateParameters();
@@ -156,6 +158,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
     
     rectNum = int(Gesture::getDiscretePitch()/2+6);
+    
     repaint();
 }
 
@@ -175,6 +178,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     Gesture::setTap(tapDetectCoords);
 
     rectNum = 12;
+    
     repaint();
 }
 
@@ -235,7 +239,7 @@ void PlayComponent::timerCallback()
 
 void PlayComponent::startRipple()
 {
-    startTimerHz(25);
+    startTimerHz(30);
 }
 
 void PlayComponent::fillCoordinates()
@@ -302,7 +306,7 @@ void PlayComponent::drawPitchBar(Graphics& g)
 {
     for (int i = 0; i < 12; i++)
     {
-        rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-75,getWidth()/12+0.5,75));
+        rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-getHeight()/6,getWidth()/12+0.5,getHeight()/6));
     }
     
     for (int i = 0; i < 12; i++)
@@ -327,7 +331,7 @@ void PlayComponent::drawPitchBar(Graphics& g)
     
     if(Gesture::getNumFingers() != 0)
     {
-        if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - 75)
+        if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6)
         {
             g.setColour (Colours::darkgrey);
             g.setOpacity(1.0);
