@@ -114,10 +114,27 @@ public:
         
         // DSP chain
         //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex); // time stretch
-        AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer); // pitch
-        //AudioProcessorBundler::gain->process(*bufferToFill.buffer);
-        AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
-        AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
+        if (AudioProcessorBundler::gainIsEnabled)
+        {
+            AudioProcessorBundler::gain->process(*bufferToFill.buffer);
+        }
+        if (AudioProcessorBundler::pitchIsEnabled)
+        {
+            AudioProcessorBundler::timeStretch->process(*bufferToFill.buffer); // pitch
+        }
+        if (AudioProcessorBundler::lowPassISEnabled)
+        {
+            AudioProcessorBundler::lopass->process(*bufferToFill.buffer);
+        }
+        if (AudioProcessorBundler::highPassIsEnabled)
+        {
+            AudioProcessorBundler::hipass->process(*bufferToFill.buffer);
+        }
+        if (AudioProcessorBundler::bandPassIsEnabled)
+        {
+            AudioProcessorBundler::bapass->process(*bufferToFill.buffer);
+        }
+
         
         // Envelopes
         if(playComp.getToggleSpaceID() == 1)
