@@ -151,11 +151,14 @@ void AudioRecorder::truncate (float** recording, float threshold)
         j--;
     }
 
-    int rampLength = 5000;
-    Envelope::generateRamp(1.0f, 0.001f, rampLength, "exp");
+    int rollOffLength = 5000;
+    if(rollOffLength > sampLength)
+        rollOffLength = sampLength;
+
+    Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
     
     j = 0;
-    for (int i = sampStart+sampLength-rampLength+1; i <= sampStart+sampLength; i++)
+    for (int i = sampStart+sampLength-rollOffLength+1; i <= sampStart+sampLength; i++)
     {
         recording[0][i] *= Envelope::ramp[j];
         j++;
