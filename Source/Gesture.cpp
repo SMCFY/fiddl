@@ -100,21 +100,36 @@ int Gesture::getNumFingers()
     return fingers.size();
 }
 
-void Gesture::drawPath(Graphics& g, Path p)
+void Gesture::drawPath(Graphics& g, Path p) // reconstruct the stored path for each finger with updated appearance
 {
-    //while(Path::Iterator(p).next())
-    //{
-        Point<float> prevPos = Point<float>(Path::Iterator(p).x1, Path::Iterator(p).y1);
-        Path::Iterator(p).next();
-        Point<float> nextPos = Point<float>(Path::Iterator(p).x1, Path::Iterator(p).y1);
+    Path trail = p; // copy stored path
+    p.clear(); // clear stored path
+    
+    Path::Iterator it(trail); 
+    p.startNewSubPath(Point<float>(it.x1, it.y1)); // reinit the stored path
 
-        Path pathRender;
+    Point<float> prevPos;
+    Point<float> nextPos;
+
+    int segmentNr = 0; // segment number
+
+    while(it.next()) // iterate through the copy of the stored path
+    {
+        prevPos = nextPos;
+        nextPos = Point<float>(it.x1, it.y1);
+
+        Path pathRender; // create a new segment connecting the extracted positions
         pathRender.startNewSubPath(prevPos);
         pathRender.lineTo(nextPos);
         
-        //PathStrokeType(getVelocity()*30-30, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender); // velocity mapped to new segment thickness
-        g.strokePath(p, PathStrokeType(std::pow(getVelocity()+1,2)*30-30));
-    //}
+        PathStrokeType(segmentNr/3, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
+
+        p.addPath(pathRender); // add segment to reconstructed path
+        
+        segmentNr++;
+    }
+    g.fillPath(p);
+        
 }
 
 void Gesture::setVelocity(float x, float y)
