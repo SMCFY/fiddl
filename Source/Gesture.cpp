@@ -89,6 +89,7 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
                 Path newSegment;
                 newSegment.startNewSubPath(fingers[i]->prevPos); // start of new segment
                 newSegment.lineTo(mis.getScreenPosition()); // end of new segment
+
                 fingers[i]->path.addPath(newSegment);
             }
         }
@@ -97,6 +98,23 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
 int Gesture::getNumFingers()
 {
     return fingers.size();
+}
+
+void Gesture::drawPath(Graphics& g, Path p)
+{
+    //while(Path::Iterator(p).next())
+    //{
+        Point<float> prevPos = Point<float>(Path::Iterator(p).x1, Path::Iterator(p).y1);
+        Path::Iterator(p).next();
+        Point<float> nextPos = Point<float>(Path::Iterator(p).x1, Path::Iterator(p).y1);
+
+        Path pathRender;
+        pathRender.startNewSubPath(prevPos);
+        pathRender.lineTo(nextPos);
+        
+        //PathStrokeType(getVelocity()*30-30, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender); // velocity mapped to new segment thickness
+        g.strokePath(p, PathStrokeType(getVelocity()*30-30));
+    //}
 }
 
 void Gesture::setVelocity(float x, float y)
