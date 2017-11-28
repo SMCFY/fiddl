@@ -127,6 +127,13 @@ void Mapper::mapToRelease(float val)
     AudioProcessorBundler::ar.setReleaseTime(time);
 }
 
+void Mapper::mapToSustainedRelease(float val)
+{
+    //int time = (int)(1/(val+0.1)*800);
+    int time = (int)(abs(val - 0.75)*1800)+1000;
+    AudioProcessorBundler::adsr.setReleaseTime(time);
+}
+
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
 {
     mapping.push_back(std::make_pair(gestureParameter,audioParameter));
@@ -202,7 +209,10 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
                         break;
                     case RELEASE:
-                        mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        break;
+                    case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         break;
                 }
                 break;
@@ -251,6 +261,9 @@ void Mapper::updateParameters()
                     case RELEASE:
                         mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         break;
+                    case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        break;
                 }
                 break;
             case ABS_DIST:
@@ -298,6 +311,9 @@ void Mapper::updateParameters()
                     case RELEASE:
                         mapToRelease(Gesture::getAbsDistFromOrigin());
                         break;
+                    case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getAbsDistFromOrigin());
+                        break;
                 }
                 break;
             case VELOCITY:
@@ -340,6 +356,9 @@ void Mapper::updateParameters()
                         break;
                     case RELEASE:
                         mapToRelease(Gesture::getVelocity());
+                        break;
+                    case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getVelocity());
                         break;
                 }
                 break;
