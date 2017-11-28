@@ -24,15 +24,18 @@ void AudioProcessorBundler::initDSPBlocks(int samplingRate)
     pitch = new AudioParameterFloat("pitch", "Pitch", 0.0f, 1.0f, 0.5f);
     tempo = new AudioParameterFloat("tempo", "Tempo", 0.0f, 1.0f, 0.5f);
     lowPassFilterFreqParam  = new AudioParameterFloat ("LPFREQ", "Post Lowpass Freq.", { 20.f, 3000.f, 0.f, 0.5f }, 3000.f, "Hz");
+    lowPassFilterQParam = new AudioParameterFloat("LPQ", "Lowpass Q", { 0.1f, 100.0f, 0.f, 1.f }, 50.0f, "Q");
     highPassFilterFreqParam  = new AudioParameterFloat ("HPFREQ", "Pre Highpass Freq.", { 20.f, 3000.f, 0.f, 0.5f }, 3000.f, "Hz");
+    highPassFilterQParam = new AudioParameterFloat("HPQ", "Highpass Q", { 0.1f, 100.0f, 0.f, 1.f }, 50.0f, "Q");
     bandPassFilterFreqParam  = new AudioParameterFloat ("BPFREQ", "Pre Bandpass Freq.", { 20.f, 3000.f, 0.f, 0.5f }, 3000.f, "Hz");
+    bandPassFilterQParam = new AudioParameterFloat("BPQ", "Bandpass Q", { 0.1f, 100.0f, 0.f, 1.f }, 50.0f, "Q");
     
     // dsp blocks
     gain = new Gain(gainLevel);
     timeStretch = new TimeStretch(pitch, tempo);
-    lopass = new Filter(lowPassFilterFreqParam, "lowpass");
-    hipass = new Filter(highPassFilterFreqParam, "highpass");
-    bapass = new Filter(bandPassFilterFreqParam, "bandpass");
+    lopass = new Filter(lowPassFilterFreqParam, lowPassFilterQParam, "lowpass");
+    hipass = new Filter(highPassFilterFreqParam, highPassFilterQParam, "highpass");
+    bapass = new Filter(bandPassFilterFreqParam, bandPassFilterQParam, "bandpass");
 
     ar = Envelope(samplingRate, Envelope::AR);
     adsr = Envelope(samplingRate, Envelope::ADSR);
@@ -42,8 +45,11 @@ void AudioProcessorBundler::initDSPBlocks(int samplingRate)
     timeStretch->addParameter(pitch);
     timeStretch->addParameter(tempo);
     lopass->addParameter(lowPassFilterFreqParam);
+    lopass->addParameter(lowPassFilterQParam);
     hipass->addParameter(highPassFilterFreqParam);
+    hipass->addParameter(highPassFilterQParam);
     bapass->addParameter(bandPassFilterFreqParam);
+    bapass->addParameter(bandPassFilterQParam);
     
     // set process switches
     gainIsEnabled = false;
@@ -95,8 +101,11 @@ AudioParameterFloat *AudioProcessorBundler::gainLevel;
 AudioParameterFloat *AudioProcessorBundler::pitch;
 AudioParameterFloat *AudioProcessorBundler::tempo;
 AudioParameterFloat *AudioProcessorBundler::lowPassFilterFreqParam;
+AudioParameterFloat *AudioProcessorBundler::lowPassFilterQParam;
 AudioParameterFloat *AudioProcessorBundler::highPassFilterFreqParam;
+AudioParameterFloat *AudioProcessorBundler::highPassFilterQParam;
 AudioParameterFloat *AudioProcessorBundler::bandPassFilterFreqParam;
+AudioParameterFloat *AudioProcessorBundler::bandPassFilterQParam;
 
 // DSP processors:
 Gain *AudioProcessorBundler::gain;

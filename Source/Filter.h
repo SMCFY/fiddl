@@ -14,13 +14,14 @@
 class Filter : public DSP
 {
 public:
-	Filter(AudioParameterFloat* cutoff, const String filterType);
+	Filter(AudioParameterFloat* cutoff, AudioParameterFloat* q, const String filterType);
 	~Filter();
 
 	void process(AudioBuffer<float> buffer) override;
 
 private:
 	AudioParameterFloat* cutoff;
+    AudioParameterFloat* q;
 	dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter, bandPassFilter;
     bool isHighPass, isLowPass, isBandPass;
 
