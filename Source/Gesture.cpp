@@ -113,7 +113,7 @@ void Gesture::drawPath(Graphics& g, Path p)
         pathRender.lineTo(nextPos);
         
         //PathStrokeType(getVelocity()*30-30, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender); // velocity mapped to new segment thickness
-        g.strokePath(p, PathStrokeType(getVelocity()*30-30));
+        g.strokePath(p, PathStrokeType(std::pow(getVelocity()+1,2)*30-30));
     //}
 }
 
