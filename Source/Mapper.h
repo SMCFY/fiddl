@@ -16,7 +16,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 enum GestureParameter {X_POSITION, Y_POSITION, ABS_DIST, VELOCITY};
-enum AudioParameter {GAIN, PITCH, DISCRETE_PITCH, TEMPO, HIGHPASS, LOWPASS, BANDPASS, RELEASE};
+enum AudioParameter {GAIN, PITCH, DISCRETE_PITCH, TEMPO, HIGHPASS_CUTOFF, HIGHPASS_Q, LOWPASS_CUTOFF, LOWPASS_Q, BANDPASS_CUTOFF, BANDPASS_Q, RELEASE};
 
 class Mapper
 {
@@ -36,9 +36,12 @@ class Mapper
         static void mapToGain(float val);
         static void mapToPitch(float val);
         static void mapToTempo(float val);
-        static void mapToLowPass(float val);
-        static void mapToHighPass(float val);
-        static void mapToBandPass(float val);
+        static void mapToLowPassCutoff(float val);
+        static void mapToLowPassQ(float val);
+        static void mapToHighPassCutoff(float val);
+        static void mapToHighPassQ(float val);
+        static void mapToBandPassCutoff(float val);
+        static void mapToBandPassQ(float val);
         static void mapToDiscretePitch(float val);
         static void mapToRelease(float val);
     

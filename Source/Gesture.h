@@ -17,11 +17,12 @@
 class Gesture 
 {
 	public:
-        typedef struct Position { Point<float> pos; const MouseInputSource* mis; int sourceIndex;
+        typedef struct Position { Point<float> pos; Point<float> prevPos; const MouseInputSource* mis; int sourceIndex; Path path;
                                     Position(const MouseInputSource& mouseInput, Point<float> point)
                                     {
                                         this->mis = &mouseInput;
                                         this->pos = point;
+                                        this->prevPos = pos;
                                         this->sourceIndex = mouseInput.getIndex();
                                     }
                                 } Position;
@@ -47,7 +48,8 @@ class Gesture
         static void addFinger(const MouseEvent& e); // adds new input source to the array
         static void rmFinger(const MouseEvent& e); // removes input source from the array
         static void updateFingers(const MouseInputSource& mis, int index); // update finger coordinates
-        static Point<float> getFingerPosition(int index); // returns input source by its index
+        static Point<float> getFingerPosition(int index);
+        static Path getPath(int index);
         static int getNumFingers(); // returns the number of fingers
 
         static void setResetPos(bool reset);
