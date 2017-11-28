@@ -50,6 +50,7 @@ class Gesture
         static Point<float> getFingerPosition(int index);
         static Path getPath(int index);
         static int getNumFingers(); // returns the number of fingers
+        static void drawPath(Graphics& g, Path p);
 
         static void setResetPos(bool reset);
         static bool getResetPos();
