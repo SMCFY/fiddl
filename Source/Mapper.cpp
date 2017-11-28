@@ -23,35 +23,41 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
     
     switch (toggleSpaceID) {
         case 1: // sustain
+            if (numFingers == 0)
+            {
+                //mapFromTo(X_POSITION, PITCH);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                mapFromTo(VELOCITY, BANDPASS_CUTOFF);
+            }
             if (numFingers == 1)
             {
-                mapFromTo(X_POSITION, PITCH);
-                mapFromTo(X_POSITION, BANDPASS);
+                mapFromTo(X_POSITION, LOWPASS_CUTOFF);
+                mapFromTo(Y_POSITION, LOWPASS_Q);
             }
             else if (numFingers >= 2)
             {
                 mapFromTo(Y_POSITION, PITCH);
-                mapFromTo(X_POSITION, HIGHPASS);
+                mapFromTo(X_POSITION, HIGHPASS_Q);
             }
             
             if (isInPitchBar)
             {
                 mapFromTo(X_POSITION, DISCRETE_PITCH);
-                mapFromTo(Y_POSITION, LOWPASS);
+                mapFromTo(Y_POSITION, LOWPASS_CUTOFF);
             }
             break;
         case 2: // impulse
             if (numFingers == 1)
             {
                 mapFromTo(ABS_DIST, PITCH);
-                mapFromTo(ABS_DIST, BANDPASS);
+                mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
                 mapFromTo(ABS_DIST, RELEASE);
                 
             }
             else if (numFingers >= 2)
             {
                 mapFromTo(ABS_DIST, PITCH);
-                mapFromTo(ABS_DIST, HIGHPASS);
+                mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
                 mapFromTo(ABS_DIST, RELEASE);
                 
             }
@@ -83,19 +89,35 @@ void Mapper::mapToTempo(float val)
     AudioProcessorBundler::timeStretch->tempoUpdated = true;
 }
 
-void Mapper::mapToLowPass(float val)
+void Mapper::mapToLowPassCutoff(float val)
 {
     *AudioProcessorBundler::lowPassFilterFreqParam = 20.0f + val*3000.0f;
 }
 
-void Mapper::mapToHighPass(float val)
+void Mapper::mapToLowPassQ(float val)
 {
-    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*3000.0f;
+    *AudioProcessorBundler::lowPassFilterQParam = 0.1f + val*2.9f;
 }
 
-void Mapper::mapToBandPass(float val)
+void Mapper::mapToHighPassCutoff(float val)
+{
+    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*3000.0f;
+    
+}
+
+void Mapper::mapToHighPassQ(float val)
+{
+    *AudioProcessorBundler::highPassFilterQParam = 0.1f + val*2.9f;
+}
+
+void Mapper::mapToBandPassCutoff(float val)
 {
     *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
+}
+
+void Mapper::mapToBandPassQ(float val)
+{
+    *AudioProcessorBundler::bandPassFilterQParam = 0.1f + val*2.9f;
 }
 
 void Mapper::mapToRelease(float val)
@@ -155,16 +177,28 @@ void Mapper::updateParameters()
                         mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(TEMPO_ON);
                         break;
-                    case LOWPASS:
-                        mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                    case LOWPASS_CUTOFF:
+                        mapToLowPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
                         break;
-                    case HIGHPASS:
-                        mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                    case LOWPASS_Q:
+                        mapToLowPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        mapToHighPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
                         break;
-                    case BANDPASS:
-                        mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                    case HIGHPASS_Q:
+                        mapToHighPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case BANDPASS_CUTOFF:
+                        mapToBandPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case BANDPASS_Q:
+                        mapToBandPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
                         break;
                     case RELEASE:
@@ -190,16 +224,28 @@ void Mapper::updateParameters()
                         mapToTempo(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(TEMPO_ON);
                         break;
-                    case LOWPASS:
-                        mapToLowPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                    case LOWPASS_CUTOFF:
+                        mapToLowPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
                         break;
-                    case HIGHPASS:
-                        mapToHighPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                    case LOWPASS_Q:
+                        mapToLowPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        mapToHighPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
                         break;
-                    case BANDPASS:
-                        mapToBandPass(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                    case HIGHPASS_Q:
+                        mapToHighPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case BANDPASS_CUTOFF:
+                        mapToBandPassCutoff(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case BANDPASS_Q:
+                        mapToBandPassQ(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
                         break;
                     case RELEASE:
@@ -225,20 +271,75 @@ void Mapper::updateParameters()
                         mapToTempo(Gesture::getAbsDistFromOrigin());
                         AudioProcessorBundler::turnOnProcessor(TEMPO_ON);
                         break;
-                    case LOWPASS:
-                        mapToLowPass(Gesture::getAbsDistFromOrigin());
+                    case LOWPASS_CUTOFF:
+                        mapToLowPassCutoff(Gesture::getAbsDistFromOrigin());
                         AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
                         break;
-                    case HIGHPASS:
-                        mapToHighPass(Gesture::getAbsDistFromOrigin());
+                    case LOWPASS_Q:
+                        mapToLowPassQ(Gesture::getAbsDistFromOrigin());
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        mapToHighPassCutoff(Gesture::getAbsDistFromOrigin());
                         AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
                         break;
-                    case BANDPASS:
-                        mapToHighPass(Gesture::getAbsDistFromOrigin());
+                    case HIGHPASS_Q:
+                        mapToHighPassQ(Gesture::getAbsDistFromOrigin());
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case BANDPASS_CUTOFF:
+                        mapToBandPassCutoff(Gesture::getAbsDistFromOrigin());
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case BANDPASS_Q:
+                        mapToBandPassQ(Gesture::getAbsDistFromOrigin());
                         AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
                         break;
                     case RELEASE:
                         mapToRelease(Gesture::getAbsDistFromOrigin());
+                        break;
+                }
+                break;
+            case VELOCITY:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getVelocity());
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getVelocity());
+                        break;
+                    case DISCRETE_PITCH:
+                        /* VELOCITY currently not mapped to DISCRETE_PITCH */
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getVelocity());
+                        break;
+                    case LOWPASS_CUTOFF:
+                        mapToLowPassCutoff(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case LOWPASS_Q:
+                        mapToLowPassQ(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        mapToHighPassCutoff(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case HIGHPASS_Q:
+                        mapToHighPassQ(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case BANDPASS_CUTOFF:
+                        mapToBandPassCutoff(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case BANDPASS_Q:
+                        mapToBandPassQ(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getVelocity());
                         break;
                 }
                 break;

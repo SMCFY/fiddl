@@ -48,8 +48,11 @@ class AudioProcessorBundler
         static AudioParameterFloat *pitch;
         static AudioParameterFloat *tempo;
         static AudioParameterFloat *lowPassFilterFreqParam;
+        static AudioParameterFloat *lowPassFilterQParam;
         static AudioParameterFloat *highPassFilterFreqParam;
+        static AudioParameterFloat *highPassFilterQParam;
         static AudioParameterFloat *bandPassFilterFreqParam;
+        static AudioParameterFloat *bandPassFilterQParam;
     
         // DSP processor switches
         static bool gainIsEnabled;

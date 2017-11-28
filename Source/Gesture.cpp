@@ -137,6 +137,11 @@ void Gesture::setVelocity(float x, float y)
     yTemp = yNew;
 }
 
+void Gesture::setVelocity(float vel)
+{
+    dist = vel;
+}
+
 void Gesture::setDirection(float p [directionBuffSize][2])
 {
     absDirectionDeltaX = std::sqrt(std::pow(p[0][0]-p[directionBuffSize-1][0],2));
@@ -218,7 +223,7 @@ float Gesture::getDiscretePitch()
 
 float Gesture::getVelocity()
 {
-    return std::pow(dist+1,4) ;
+    return dist*2;//std::pow(dist+1,4) ;
 }
 
 float Gesture::getVelocityX()

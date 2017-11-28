@@ -28,6 +28,7 @@ class Gesture
                                 } Position;
     
 		static void setVelocity(float x, float y);
+        static void setVelocity(float vel);
 		static void setDirection(float p [][2]);
         static String getDirection();
         static void setTap (float p [2][2]);
