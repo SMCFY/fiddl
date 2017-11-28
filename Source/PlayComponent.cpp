@@ -74,7 +74,7 @@ void PlayComponent::paint (Graphics& g)
             for (int i = 0; i < Gesture::getNumFingers(); i++)
             {
                 g.setOpacity(1.0f);
-                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 25), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 25), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
+                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 3);
             }
         }
     }
@@ -130,8 +130,9 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
-    //stopTimer();
-    startRipple();
+    stopTimer();
+    if(toggleSpaceID == 2)
+        startRipple();
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -164,6 +165,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
+    if(toggleSpaceID == 1)
+        startRolloff();
+    
     Gesture::rmFinger(e);
 
     if(Gesture::getNumFingers() == 0) // note off (initiate release) 
@@ -219,27 +223,54 @@ int PlayComponent::getToggleSpaceID()
 
 void PlayComponent::timerCallback()
 {
-    circleAlpha = AudioProcessorBundler::ar.getAmplitude();
-    
-    for(int i = 0; i < 3; i++)
+    if(toggleSpaceID == 1)
     {
-        circleSize[i] *= circleRippleSpeed[i];
-    }
+        //Velocity rolloff
+        velocityRolloff *= 0.9;
+        Gesture::setVelocity(velocityRolloff);
         
-    
-    if(circleAlpha <= 0.1)
-    {
-        circleAlpha = 0.0f;
-        stopTimer();
-        repaint();
+        if(velocityRolloff <= 0.03)
+        {
+            stopTimer();
+        }
     }
     
+    else
+    {
+        circleAlpha = AudioProcessorBundler::ar.getAmplitude();
+        
+        for(int i = 0; i < 3; i++)
+        {
+            circleSize[i] *= circleRippleSpeed[i];
+        }
+        
+        
+        if(circleAlpha <= 0.1)
+        {
+            circleAlpha = 0.0f;
+            stopTimer();
+            repaint();
+        }
+    }
+    //std::cout << Gesture::getVelocity() << "\n";
+    
+    //NEED TO UPDATE PARAMETERS HERE FOR THE ROLLOFF TO AFFECT THE MAPPING
+    //HOWEVER! If updateParameters() is called in a state where VELOCITY is not mapped to anything, the app will crash.
+    Mapper::routeParameters(0,false);
+    Mapper::updateParameters();
     repaint();
 }
 
 void PlayComponent::startRipple()
 {
     startTimerHz(30);
+}
+
+void PlayComponent::startRolloff()
+{
+    velocityRolloff = Gesture::getVelocity();
+    startTimer(30);
+    
 }
 
 void PlayComponent::fillCoordinates()

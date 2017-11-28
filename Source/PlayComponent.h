@@ -55,6 +55,10 @@ public:
     int getToggleSpace();
     void setToggleSpace(int id);
     
+    //velocity rolloff
+    float velocityRolloff;
+    void startRolloff();
+    
 private:
     //Detect tap and/or direction of swipe
     float tapDetectCoords [2][2];

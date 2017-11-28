@@ -15,7 +15,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-enum GestureParameter {X_POSITION, Y_POSITION, ABS_DIST};
+enum GestureParameter {X_POSITION, Y_POSITION, ABS_DIST, VELOCITY};
 enum AudioParameter {GAIN, PITCH, DISCRETE_PITCH, TEMPO, HIGHPASS, LOWPASS, BANDPASS, RELEASE};
 
 class Mapper

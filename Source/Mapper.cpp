@@ -23,6 +23,13 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
     
     switch (toggleSpaceID) {
         case 1: // sustain
+            if (numFingers == 0)
+            {
+                //mapFromTo(X_POSITION, PITCH);
+                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                mapFromTo(VELOCITY, BANDPASS);
+                AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+            }
             if (numFingers == 1)
             {
                 //mapFromTo(X_POSITION, PITCH);
@@ -40,8 +47,8 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             
             if (isInPitchBar)
             {
-                //mapFromTo(X_POSITION, DISCRETE_PITCH);
-                //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                mapFromTo(X_POSITION, DISCRETE_PITCH);
+                AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                 //mapFromTo(Y_POSITION, LOWPASS);
             }
             break;
@@ -220,10 +227,38 @@ void Mapper::updateParameters()
                         mapToHighPass(Gesture::getAbsDistFromOrigin());
                         break;
                     case BANDPASS:
-                        mapToHighPass(Gesture::getAbsDistFromOrigin());
+                        mapToBandPass(Gesture::getAbsDistFromOrigin());
                         break;
                     case RELEASE:
                         mapToRelease(Gesture::getAbsDistFromOrigin());
+                        break;
+                }
+                break;
+            case VELOCITY:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getVelocity());
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getVelocity());
+                        break;
+                    case DISCRETE_PITCH:
+                        /* VELOCITY currently not mapped to DISCRETE_PITCH */
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getVelocity());
+                        break;
+                    case LOWPASS:
+                        mapToLowPass(Gesture::getVelocity());
+                        break;
+                    case HIGHPASS:
+                        mapToHighPass(Gesture::getVelocity());
+                        break;
+                    case BANDPASS:
+                        mapToBandPass(Gesture::getVelocity());
+                        break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getVelocity());
                         break;
                 }
                 break;
