@@ -27,7 +27,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 //mapFromTo(X_POSITION, PITCH);
                 //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
-                mapFromTo(VELOCITY, BANDPASS_CUTOFF);
+                //mapFromTo(VELOCITY_MAX, SUSTAINED_RELEASE);
             }
             if (numFingers == 1)
             {
@@ -43,7 +43,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             if (isInPitchBar)
             {
                 mapFromTo(X_POSITION, DISCRETE_PITCH);
-                mapFromTo(Y_POSITION, LOWPASS_CUTOFF);
+                //mapFromTo(Y_POSITION, LOWPASS_CUTOFF);
             }
             break;
         case 2: // impulse
@@ -129,8 +129,8 @@ void Mapper::mapToRelease(float val)
 
 void Mapper::mapToSustainedRelease(float val)
 {
-    //int time = (int)(1/(val+0.1)*800);
-    int time = (int)(abs(val - 0.75)*1800)+1000;
+    //int time = (int)(1/(val+0.1)*800); //GERIIII
+    int time = (int)(abs(val)*1800)+1000;
     AudioProcessorBundler::adsr.setReleaseTime(time);
 }
 
@@ -262,7 +262,6 @@ void Mapper::updateParameters()
                         mapToRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         break;
                     case SUSTAINED_RELEASE:
-                        mapToSustainedRelease(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         break;
                 }
                 break;
@@ -312,7 +311,6 @@ void Mapper::updateParameters()
                         mapToRelease(Gesture::getAbsDistFromOrigin());
                         break;
                     case SUSTAINED_RELEASE:
-                        mapToSustainedRelease(Gesture::getAbsDistFromOrigin());
                         break;
                 }
                 break;
@@ -358,7 +356,35 @@ void Mapper::updateParameters()
                         mapToRelease(Gesture::getVelocity());
                         break;
                     case SUSTAINED_RELEASE:
-                        mapToSustainedRelease(Gesture::getVelocity());
+                        break;
+                }
+                break;
+            case VELOCITY_MAX:
+                switch (audioParameter) {
+                    case GAIN:
+                        break;
+                    case PITCH:
+                        break;
+                    case DISCRETE_PITCH:
+                        break;
+                    case TEMPO:
+                        break;
+                    case LOWPASS_CUTOFF:
+                        break;
+                    case LOWPASS_Q:
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        break;
+                    case HIGHPASS_Q:
+                        break;
+                    case BANDPASS_CUTOFF:
+                        break;
+                    case BANDPASS_Q:
+                        break;
+                    case RELEASE:
+                        break;
+                    case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getVelocityMax());
                         break;
                 }
                 break;

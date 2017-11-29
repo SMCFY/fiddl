@@ -67,7 +67,6 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        /*
         drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
@@ -76,16 +75,6 @@ void PlayComponent::paint (Graphics& g)
             {
                 g.setOpacity(1.0f);
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 3);
-            }
-         */
-        drawPitchBar(g); //draws Pitchbar
-        
-        if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
-        {
-            for (int i = 0; i < Gesture::getNumFingers(); i++)
-            {
-                g.setOpacity(1.0f);
-                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - 25), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - 25), 50*Gesture::getVelocity(), 50*Gesture::getVelocity(), 2);
 
                 Gesture::drawPath(g, Gesture::getPath(i));
             }
@@ -178,6 +167,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
+    Gesture::setVelocityMax(Gesture::getVelocity());
     if(toggleSpaceID == 1)
         startRolloff();
     
@@ -236,6 +226,7 @@ int PlayComponent::getToggleSpaceID()
 
 void PlayComponent::timerCallback()
 {
+    //std::cout << AudioProcessorBundler::adsr.getAmplitude() << "\n";
     if(toggleSpaceID == 1)
     {
         //Velocity rolloff

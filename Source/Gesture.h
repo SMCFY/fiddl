@@ -36,6 +36,8 @@ class Gesture
         static float getVelocityX();
         static float getVelocityY();
         static float getVelocity();
+        static void setVelocityMax(float vel);
+        static float getVelocityMax();
     
         static void fillDirBuff(float x, float y);
         
@@ -80,6 +82,7 @@ class Gesture
     
         static float dist;
         static float absDistFromOrigin;
+        static float velMax;
     
         static float discretePitchVal;
     

@@ -22,6 +22,7 @@ float Gesture::yDelta;
 
 float Gesture::dist;
 float Gesture::absDistFromOrigin;
+float Gesture::velMax;
 
 float Gesture::directionDeltaX;
 float Gesture::directionDeltaY;
@@ -234,6 +235,16 @@ float Gesture::getVelocityX()
 float Gesture::getVelocityY()
 {
     return std::pow(yDelta+1,4);
+}
+
+void Gesture::setVelocityMax(float vel)
+{
+    velMax = vel;
+}
+
+float Gesture::getVelocityMax()
+{
+    return velMax;
 }
 
 bool Gesture::getResetPos()
