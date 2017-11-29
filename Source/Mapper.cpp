@@ -33,7 +33,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 mapFromTo(X_POSITION, LOWPASS_CUTOFF);
                 mapFromTo(Y_POSITION, LOWPASS_Q);
-                //mapFromTo(X_POSITION, PITCH);
+                mapFromTo(VELOCITY, SUSTAINED_RELEASE);
             }
             else if (numFingers >= 2)
             {
@@ -132,8 +132,9 @@ void Mapper::mapToRelease(float val)
 void Mapper::mapToSustainedRelease(float val)
 {
     //int time = (int)(1/(val+0.1)*800); //GERIIII
-    int time = (int)(abs(val)*1800)+1000;
-    AudioProcessorBundler::adsr.setReleaseTime(time);
+    int time = (int)(abs(val)*3000)+500;
+    //std::cout << time << "\n";
+    AudioProcessorBundler::adsr.setReleaseTime(2000);
 }
 
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
@@ -323,6 +324,7 @@ void Mapper::updateParameters()
                         break;
                     case PITCH:
                         mapToPitch(Gesture::getVelocity());
+                        AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
                         /* VELOCITY currently not mapped to DISCRETE_PITCH */
@@ -358,6 +360,7 @@ void Mapper::updateParameters()
                         mapToRelease(Gesture::getVelocity());
                         break;
                     case SUSTAINED_RELEASE:
+                        mapToSustainedRelease(Gesture::getVelocity());
                         break;
                 }
                 break;
@@ -366,6 +369,8 @@ void Mapper::updateParameters()
                     case GAIN:
                         break;
                     case PITCH:
+                        mapToPitch (Gesture::getVelocityMax());
+                        AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
                         break;
