@@ -76,8 +76,9 @@ void PlayComponent::paint (Graphics& g)
                 g.setOpacity(1.0f);
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
                 
-                g.setOpacity(0.5);
+                g.setOpacity(pathAlpha);
                 Gesture::drawPath(g, Gesture::getPath(i));
+                pathAlpha *= 0.96;
             }
         }
     }
@@ -133,6 +134,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
+    pathAlpha = 1.0f;
     stopTimer();
     if(toggleSpaceID == 2)
         startRipple();
@@ -168,8 +170,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
-    
     Gesture::setVelocityMax(Gesture::getVelocity());
+    
     if(toggleSpaceID == 1)
         startRolloff();
     
@@ -258,7 +260,7 @@ void PlayComponent::timerCallback()
             repaint();
         }
     }
-    //std::cout << Gesture::getVelocity() << "\n";
+    //std::cout << Gesture::getVelocityMax() << "\n";
     
     //NEED TO UPDATE PARAMETERS HERE FOR THE ROLLOFF TO AFFECT THE MAPPING
     //HOWEVER! If updateParameters() is called in a state where VELOCITY is not mapped to anything, the app will crash.

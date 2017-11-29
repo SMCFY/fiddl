@@ -123,7 +123,10 @@ void Gesture::drawPath(Graphics& g, Path p) // reconstruct the stored path for e
         pathRender.startNewSubPath(prevPos);
         pathRender.lineTo(nextPos);
         
-        PathStrokeType(segmentNr/3, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
+        if(segmentNr/3 < 40)
+            PathStrokeType(segmentNr/3, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
+        else
+            PathStrokeType(40, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
 
         p.addPath(pathRender); // add segment to reconstructed path
         

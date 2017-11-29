@@ -184,7 +184,7 @@ void Envelope::process(AudioBuffer<float> buffer)
 	        break;
                     
             case ADSR:
-	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
+	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, releaseTime); // APDSR
 	        break;
             };
 	    }
