@@ -17,7 +17,7 @@
 class Gesture 
 {
 	public:
-        typedef struct Position { Point<float> pos; Point<float> prevPos; const MouseInputSource* mis; int sourceIndex; Path path;
+        typedef struct Position { Point<float> pos; Point<float> prevPos; const MouseInputSource* mis; int sourceIndex; Path path; int totalPathLength;
                                     Position(const MouseInputSource& mouseInput, Point<float> point)
                                     {
                                         this->mis = &mouseInput;
@@ -53,7 +53,7 @@ class Gesture
         static Point<float> getFingerPosition(int index);
         static Path getPath(int index);
         static int getNumFingers(); // returns the number of fingers
-        static void drawPath(Graphics& g, Path p);
+        static void drawPath(Graphics& g, Path p, int i);
 
         static void setResetPos(bool reset);
         static bool getResetPos();

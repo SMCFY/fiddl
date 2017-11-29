@@ -20,7 +20,7 @@
 
 //==============================================================================
 PlayComponent::PlayComponent()
-: img(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)) // Load an image from the Resources directory
+//: img(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)) // Load an image from the Resources directory
 {
 
     isPlaying = false;
@@ -81,7 +81,7 @@ void PlayComponent::paint (Graphics& g)
                 g.setOpacity(pathAlpha);
                 
                 if(pathAlpha > 0.01)
-                    Gesture::drawPath(g, Gesture::getPath(i));
+                    Gesture::drawPath(g, Gesture::getPath(i), i);
                 
                 pathAlpha *= 0.96;
             }

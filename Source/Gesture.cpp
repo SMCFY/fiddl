@@ -55,6 +55,7 @@ void Gesture::addFinger(const MouseEvent& e)
     Gesture::Position* f = new Gesture::Position(e.source, e.position);
     fingers.add(f);
     f->path.startNewSubPath(f->pos);
+    f->totalPathLength = 0;
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
@@ -92,6 +93,7 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
                 newSegment.lineTo(mis.getScreenPosition()); // end of new segment
 
                 fingers[i]->path.addPath(newSegment);
+                fingers[i]->totalPathLength++;
             }
         }
 }
@@ -101,7 +103,7 @@ int Gesture::getNumFingers()
     return fingers.size();
 }
 
-void Gesture::drawPath(Graphics& g, Path p) // reconstruct the stored path for each finger with updated appearance
+void Gesture::drawPath(Graphics& g, Path p, int i) // reconstruct the stored path for each finger with updated appearance
 {
     Path trail = p; // copy stored path
     p.clear(); // clear stored path
@@ -123,10 +125,7 @@ void Gesture::drawPath(Graphics& g, Path p) // reconstruct the stored path for e
         pathRender.startNewSubPath(prevPos);
         pathRender.lineTo(nextPos);
         
-        if(segmentNr/3 < 40)
-            PathStrokeType(segmentNr/3, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
-        else
-            PathStrokeType(40, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
+            PathStrokeType(segmentNr+1 - fingers[i]->totalPathLength, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
 
         p.addPath(pathRender); // add segment to reconstructed path
         
