@@ -85,7 +85,6 @@ private:
     float circleSize [3] = {20,20,20};
     float circleRippleSpeed [3] = {1.15,1.2,1.25};
     float rippleCoords [10][2];
-    float pathAlpha = 1.0f;
     
     //Background image
     Image img;

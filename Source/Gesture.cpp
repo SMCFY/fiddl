@@ -56,6 +56,7 @@ void Gesture::addFinger(const MouseEvent& e)
     fingers.add(f);
     f->path.startNewSubPath(f->pos);
     f->totalPathLength = 0;
+    f->pathAlpha = 1.0f;
 }
 
 void Gesture::rmFinger(const MouseEvent& e)
@@ -94,6 +95,7 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
 
                 fingers[i]->path.addPath(newSegment);
                 fingers[i]->totalPathLength++;
+                fingers[i]->pathAlpha *= 0.95;
             }
         }
 }
@@ -131,6 +133,7 @@ void Gesture::drawPath(Graphics& g, Path p, int i) // reconstruct the stored pat
         
         segmentNr++;
     }
+    g.setOpacity(fingers[i]->pathAlpha);
     g.fillPath(p);
         
 }

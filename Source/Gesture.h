@@ -17,7 +17,7 @@
 class Gesture 
 {
 	public:
-        typedef struct Position { Point<float> pos; Point<float> prevPos; const MouseInputSource* mis; int sourceIndex; Path path; int totalPathLength;
+        typedef struct Position { Point<float> pos; Point<float> prevPos; const MouseInputSource* mis; int sourceIndex; Path path; int totalPathLength; float pathAlpha;
                                     Position(const MouseInputSource& mouseInput, Point<float> point)
                                     {
                                         this->mis = &mouseInput;

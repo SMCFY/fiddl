@@ -78,12 +78,7 @@ void PlayComponent::paint (Graphics& g)
                 g.setOpacity(1.0f);
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
                 
-                g.setOpacity(pathAlpha);
-                
-                if(pathAlpha > 0.01)
-                    Gesture::drawPath(g, Gesture::getPath(i), i);
-                
-                pathAlpha *= 0.96;
+                Gesture::drawPath(g, Gesture::getPath(i), i);
             }
         }
     }
@@ -139,7 +134,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
-    pathAlpha = 1.0f;
     stopTimer();
     if(toggleSpaceID == 2)
         startRipple();
