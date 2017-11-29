@@ -77,7 +77,10 @@ void PlayComponent::paint (Graphics& g)
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
                 
                 g.setOpacity(pathAlpha);
-                Gesture::drawPath(g, Gesture::getPath(i));
+                
+                if(pathAlpha > 0.01)
+                    Gesture::drawPath(g, Gesture::getPath(i));
+                
                 pathAlpha *= 0.96;
             }
         }
@@ -371,8 +374,8 @@ void PlayComponent::drawPitchBar(Graphics& g)
     {
         if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6)
         {
-            g.setColour (Colours::darkgrey);
-            g.setOpacity(1.0);
+            g.setColour (Colours::lightgrey);
+            g.setOpacity(0.8);
             g.fillRect(rectList.getRectangle(rectNum));
             g.setColour (Colours::white);
             g.drawRect(rectList.getRectangle(rectNum));
