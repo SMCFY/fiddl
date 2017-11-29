@@ -86,5 +86,8 @@ private:
     float circleRippleSpeed [3] = {1.15,1.2,1.25};
     float rippleCoords [10][2];
     
+    //Background image
+    Image img;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

@@ -20,7 +20,9 @@
 
 //==============================================================================
 PlayComponent::PlayComponent()
+: img(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)) // Load an image from the Resources directory
 {
+
     isPlaying = false;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
@@ -51,8 +53,9 @@ void PlayComponent::paint (Graphics& g)
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);
     g.setColour (Colours::white);
+    g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit);
     g.setFont (14.0f);
-    
+
     if (isPlaying)
     {
       g.drawText ("Playing", getLocalBounds(),
@@ -63,7 +66,6 @@ void PlayComponent::paint (Graphics& g)
       g.drawText ("Stopped", getLocalBounds(),
                 Justification::centred, true);
     }
-    
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
