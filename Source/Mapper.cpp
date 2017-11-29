@@ -19,7 +19,7 @@ int Mapper::toggleSpaceID;
 void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mapping are defined here, and the values updated for AudioParameters
 {
     mapping.clear();
-    //AudioProcessorBundler::turnOffProcessors();
+    AudioProcessorBundler::turnOffProcessors();
     
     switch (toggleSpaceID) {
         case 1: // sustain
@@ -52,6 +52,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 mapFromTo(ABS_DIST, PITCH);
                 mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
+                mapFromTo(ABS_DIST, BANDPASS_Q);
                 mapFromTo(ABS_DIST, RELEASE);
                 
             }
@@ -159,7 +160,7 @@ void Mapper::updateParameters()
 {
     GestureParameter gestureParameter;
     AudioParameter audioParameter;
-    //AudioProcessorBundler::turnOffProcessors();
+    AudioProcessorBundler::turnOffProcessors();
     //iterate through the mapping string pairs to map a "gestureParameter" to "audioParameter"
     for (std::vector<std::pair<GestureParameter, AudioParameter>>::iterator it = mapping.begin() ; it != mapping.end(); ++it)
     {
@@ -301,7 +302,7 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
                         break;
                     case BANDPASS_CUTOFF:
-                        mapToBandPassCutoff(Gesture::getAbsDistFromOrigin());
+                        mapToBandPassCutoff(2*Gesture::getAbsDistFromOrigin());
                         AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
                         break;
                     case BANDPASS_Q:
