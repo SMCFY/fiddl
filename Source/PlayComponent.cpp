@@ -168,6 +168,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
 void PlayComponent::mouseUp (const MouseEvent& e)
 {
+    
     Gesture::setVelocityMax(Gesture::getVelocity());
     if(toggleSpaceID == 1)
         startRolloff();
@@ -261,8 +262,8 @@ void PlayComponent::timerCallback()
     
     //NEED TO UPDATE PARAMETERS HERE FOR THE ROLLOFF TO AFFECT THE MAPPING
     //HOWEVER! If updateParameters() is called in a state where VELOCITY is not mapped to anything, the app will crash.
-    Mapper::routeParameters(0,false);
-    Mapper::updateParameters();
+    //Mapper::routeParameters(0,false);
+    //Mapper::updateParameters();
     repaint();
 }
 
