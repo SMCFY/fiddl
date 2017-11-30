@@ -12,6 +12,7 @@
 
 #include "AudioRecorder.h"
 #include "Envelope.h"
+#include <numeric>
 
 AudioRecorder::AudioRecorder (float bufferLengthInSeconds)
     : writeIndex (0), activeWriter (false)
@@ -59,6 +60,17 @@ void AudioRecorder::stop()
 
         truncate(recBuff, 0.08f);
         sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
+        specBuff = new float[sampLength];
+
+        int j = 0;
+        for (int i = sampStart; i < sampStart+sampLength; ++i)
+        {
+            specBuff[j] = recBuff[0][i]; // copy the truncated recording to the spectrum buffer
+            j++; 
+        }
+
+        centroid = spectralCentroid(specBuff);
+        std::cout << "centroid: " << centroid << std::endl;
     }
 }
 
@@ -162,6 +174,33 @@ void AudioRecorder::truncate (float** recording, float threshold)
     {
         recording[0][i] *= Envelope::ramp[j];
         j++;
-    }
+    }  
+}
+
+float AudioRecorder::spectralCentroid(float* buff)
+{
+    dsp::FFT f(floor(log2(sampLength)));
+    int FFTsize = pow(2, floor(log2(sampLength)));
     
+    float* window = new float[FFTsize]; // windowing the truncated segment
+
+    for (int i = 0; i < FFTsize; ++i)
+    {
+        window[i] = buff[i];
+    }
+
+    float binHz = sampleRate/FFTsize; // bins in Hz
+
+    f.performFrequencyOnlyForwardTransform(window);
+    
+    // spectral centroid calculation
+    float sc = 0;
+    for (int i = 0; i < FFTsize/2; ++i)
+    {
+        sc += window[i]*(i*binHz);
+    }
+
+    sc /= std::accumulate(window, window+FFTsize, 0);
+    
+    return sc;
 }

@@ -40,19 +40,20 @@ class AudioRecorder : public AudioIODeviceCallback
         AudioBuffer<float> getSampBuff();
         int getBufferLengthInSamples();
         int getWriteIndex();
-        
 
-
+        float centroid;
     private:
         /* audio is truncated according to a threshold which sets the
            buffer read index to start reading above the threshold and
            to stop reading when audio goes below the threshold at the 
            end of the recording */
-        void truncate (float** recording, float threshold);
+        void truncate(float** recording, float threshold);
+        float spectralCentroid(float* buff);
 
         AudioBuffer<float> sampBuff;
         int numChannels;
         float **recBuff; // sample buffer, where the recordings are stored
+        float *specBuff; // copy of the truncated recording for FFT
         float bufferLengthInSeconds;
         int bufferLengthInSamples;
         double sampleRate;
