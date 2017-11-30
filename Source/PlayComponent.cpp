@@ -68,6 +68,7 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
+        g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for sustained space
         drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
@@ -77,18 +78,13 @@ void PlayComponent::paint (Graphics& g)
                 g.setOpacity(1.0f);
                 g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
                 
-                g.setOpacity(pathAlpha);
-                
-                if(pathAlpha > 0.01)
-                    Gesture::drawPath(g, Gesture::getPath(i));
-                
-                pathAlpha *= 0.96;
+                Gesture::drawPath(g, Gesture::getPath(i), i);
             }
         }
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
-        g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize);
+        g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
         drawRipples(g);
     }
 }
@@ -139,7 +135,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         circleSize[i] = 20;// + 10 *i;
     }
     circleAlpha = 1.0f;
-    pathAlpha = 1.0f;
     stopTimer();
     if(toggleSpaceID == 2)
         startRipple();
