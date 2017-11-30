@@ -179,14 +179,21 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
 float AudioRecorder::spectralCentroid(float* buff)
 {
-    dsp::FFT f(floor(log2(sampLength)));
-    int FFTsize = pow(2, floor(log2(sampLength)));
+    int order = log2(sampLength);
+    dsp::FFT f(order);
+    int FFTsize = pow(2, order + 1);
     
     float* window = new float[FFTsize]; // windowing the truncated segment
 
-    for (int i = 0; i < FFTsize; ++i)
+    for (int i = 0; i < sampLength; ++i)
     {
         window[i] = buff[i];
+    }
+    
+    // zero-padding the rest of the window
+    for (int i = sampLength; i < FFTsize; ++i)
+    {
+        window[i] = 0.0f;
     }
 
     float binHz = sampleRate/FFTsize; // bins in Hz
