@@ -71,8 +71,8 @@ private:
     int rectNum = 12;
     
     //Togglespace buttons
-    TextButton toggleSustain;
-    TextButton toggleImpulse;
+    ImageButton toggleSustain;
+    ImageButton toggleImpulse;
     int toggleSpaceID = 1;
     
     //GUI effects
@@ -87,7 +87,10 @@ private:
     float rippleCoords [10][2];
     
     //Background image
-    Image img;
+    Image sustainBackgroundImage;
+    Image sustainButtonIconImage;
+    Image impulseBackgroundImage;
+    Image impulseButtonIconImage;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

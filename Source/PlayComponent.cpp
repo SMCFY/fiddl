@@ -20,7 +20,12 @@
 
 //==============================================================================
 PlayComponent::PlayComponent()
-//: img(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)) // Load an image from the Resources directory
+  // load background images
+: impulseBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
+  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)),
+  // load button icon images
+  impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
+  sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize))
 {
 
     isPlaying = false;
@@ -29,13 +34,20 @@ PlayComponent::PlayComponent()
     
     //ToggleSpace buttons
     addAndMakeVisible (toggleSustain);
-    toggleSustain.setButtonText ("Sustain");
-    toggleSustain.setClickingTogglesState(true);
+    //toggleSustain.setButtonText ("Sustain");
+    toggleSustain.setImages(true, true, true,
+                            sustainButtonIconImage, 0.5f, Colours::transparentBlack,
+                            sustainButtonIconImage, 0.8f, Colours::transparentBlack,
+                            sustainButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleSustain.setToggleState(true, dontSendNotification);
     toggleSustain.addListener (this);
     
     addAndMakeVisible (toggleImpulse);
-    toggleImpulse.setButtonText ("Impulse");
+    //toggleImpulse.setButtonText ("Impulse");
+    toggleImpulse.setImages(true, true, true,
+                            impulseButtonIconImage, 0.5f, Colours::transparentBlack,
+                            impulseButtonIconImage, 0.8f, Colours::transparentBlack,
+                            impulseButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleImpulse.setClickingTogglesState(true);
     toggleImpulse.addListener (this);
 
@@ -53,7 +65,6 @@ void PlayComponent::paint (Graphics& g)
     g.setColour (Colours::grey);
     g.drawRect (getLocalBounds(), 1);
     g.setColour (Colours::white);
-    g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit);
     g.setFont (14.0f);
 
     if (isPlaying)
@@ -69,6 +80,7 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
+        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for sustained space
         drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
@@ -84,6 +96,7 @@ void PlayComponent::paint (Graphics& g)
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
+        g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
         drawRipples(g);
     }
 }
@@ -94,8 +107,8 @@ void PlayComponent::resized()
     std::cout << getHeight();
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    toggleSustain.setBounds(getWidth()-82, 5, 80,30);
-    toggleImpulse.setBounds(getWidth()-82, 35, 80,30);
+    toggleSustain.setBounds(getWidth()-72, 5, 70, 70);
+    toggleImpulse.setBounds(getWidth()-112, 45, 150, 150);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -262,7 +275,7 @@ void PlayComponent::timerCallback()
     //std::cout << Gesture::getVelocityMax() << "\n";
     
     //NEED TO UPDATE PARAMETERS HERE FOR THE ROLLOFF TO AFFECT THE MAPPING
-    //HOWEVER! If updateParameters() is called in a state where VELOCITY is not mapped to anything, the app will crash.
+    //HOWEVER! If updateParameters() is called in a state where POSITION is mapped to something - CRASH
     //Mapper::routeParameters(0,false);
     //Mapper::updateParameters();
     repaint();
