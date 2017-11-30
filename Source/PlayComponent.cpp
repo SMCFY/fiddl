@@ -22,7 +22,10 @@
 PlayComponent::PlayComponent()
   // load background images
 : impulseBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
-  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize))
+  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)),
+  // load button icon images
+  impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
+  sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize))
 {
 
     isPlaying = false;
@@ -31,13 +34,20 @@ PlayComponent::PlayComponent()
     
     //ToggleSpace buttons
     addAndMakeVisible (toggleSustain);
-    toggleSustain.setButtonText ("Sustain");
-    toggleSustain.setClickingTogglesState(true);
+    //toggleSustain.setButtonText ("Sustain");
+    toggleSustain.setImages(true, true, true,
+                            sustainButtonIconImage, 0.5f, Colours::transparentBlack,
+                            sustainButtonIconImage, 0.8f, Colours::transparentBlack,
+                            sustainButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleSustain.setToggleState(true, dontSendNotification);
     toggleSustain.addListener (this);
     
     addAndMakeVisible (toggleImpulse);
-    toggleImpulse.setButtonText ("Impulse");
+    //toggleImpulse.setButtonText ("Impulse");
+    toggleImpulse.setImages(true, true, true,
+                            impulseButtonIconImage, 0.5f, Colours::transparentBlack,
+                            impulseButtonIconImage, 0.8f, Colours::transparentBlack,
+                            impulseButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleImpulse.setClickingTogglesState(true);
     toggleImpulse.addListener (this);
 
@@ -97,8 +107,8 @@ void PlayComponent::resized()
     std::cout << getHeight();
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    toggleSustain.setBounds(getWidth()-82, 5, 80,30);
-    toggleImpulse.setBounds(getWidth()-82, 35, 80,30);
+    toggleSustain.setBounds(getWidth()-72, 5, 70, 70);
+    toggleImpulse.setBounds(getWidth()-112, 45, 150, 150);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
