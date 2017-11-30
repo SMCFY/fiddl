@@ -27,13 +27,15 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 //mapFromTo(X_POSITION, PITCH);
                 //AudioProcessorBundler::turnOnProcessor(PITCH_ON);
-                //mapFromTo(VELOCITY_MAX, SUSTAINED_RELEASE);
+                //mapFromTo(VELOCITY, PITCH);
             }
             if (numFingers == 1)
             {
-                mapFromTo(X_POSITION, LOWPASS_CUTOFF);
-                mapFromTo(Y_POSITION, LOWPASS_Q);
-                mapFromTo(VELOCITY, SUSTAINED_RELEASE);
+                //mapFromTo(X_POSITION, LOWPASS_CUTOFF);
+                //mapFromTo(Y_POSITION, LOWPASS_Q);
+                mapFromTo(VELOCITY, PITCH);
+                mapFromTo(X_POSITION, BANDPASS_CUTOFF);
+                mapFromTo(Y_POSITION, BANDPASS_Q);
             }
             else if (numFingers >= 2)
             {
@@ -131,10 +133,9 @@ void Mapper::mapToRelease(float val)
 
 void Mapper::mapToSustainedRelease(float val)
 {
-    //int time = (int)(1/(val+0.1)*800); //GERIIII
-    int time = (int)(abs(val)*3000)+500;
+    int time = (int)(abs(val)*3000)+1000;
     //std::cout << time << "\n";
-    AudioProcessorBundler::adsr.setReleaseTime(2000);
+    AudioProcessorBundler::adsr.setReleaseTime(time);
 }
 
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
