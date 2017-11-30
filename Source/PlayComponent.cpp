@@ -20,7 +20,9 @@
 
 //==============================================================================
 PlayComponent::PlayComponent()
-: img(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)) // Load an image from the Resources directory
+  // load background images
+: impulseBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
+  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize))
 {
 
     isPlaying = false;
@@ -68,7 +70,7 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for sustained space
+        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for sustained space
         drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
@@ -84,7 +86,7 @@ void PlayComponent::paint (Graphics& g)
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
-        g.drawImageWithin(img, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
+        g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
         drawRipples(g);
     }
 }
