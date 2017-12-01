@@ -46,6 +46,21 @@ class Mapper
         static void mapToRelease(float val);
         static void mapToSustainedRelease(float val);
     
+        static float pitchRange [2];
+        static void setPitchRange(float min, float max);
+        static float LowPassCutoffRange [2];
+        static void setLowPassCutoffRange(float min, float max);
+        static float HighPassCutoffRange [2];
+        static void setHighPassCutoffRange(float min, float max);
+        static float BandPassCutoffRange [2];
+        static void setBandPassCutoffRange(float min, float max);
+        static float LowPassQRange [2];
+        static void setLowPassQRange(float min, float max);
+        static float HighPassQRange [2];
+        static void setHighPassQRange(float min, float max);
+        static float BandPassQRange [2];
+        static void setBandPassQRange(float min, float max);
+
         // this method takes a string pair to map a "gestureParameter" to an "audioParameter"
         static void mapFromTo(GestureParameter gestureParameter, AudioParameter audioParameter);
     

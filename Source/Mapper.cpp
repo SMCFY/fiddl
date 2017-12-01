@@ -16,6 +16,15 @@ float Mapper::inMax;
 float Mapper::inMin;
 int Mapper::toggleSpaceID;
 
+//Set default mapping ranges here.
+float Mapper::pitchRange[2] = {12.0f, 24.0f};
+float Mapper::LowPassQRange[2] = {0.1f, 2.9f};
+float Mapper::LowPassCutoffRange[2] = {20.0f, 3000.0f};
+float Mapper::HighPassQRange[2] = {0.1f, 2.9f};
+float Mapper::HighPassCutoffRange[2] = {20.0f, 3000.0f};
+float Mapper::BandPassQRange[2] = {0.1f, 2.9f};
+float Mapper::BandPassCutoffRange[2] = {20.0f, 3000.0f};
+
 void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mapping are defined here, and the values updated for AudioParameters
 {
     mapping.clear();
@@ -33,7 +42,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             {
                 //mapFromTo(X_POSITION, LOWPASS_CUTOFF);
                 //mapFromTo(Y_POSITION, LOWPASS_Q);
-                mapFromTo(VELOCITY, PITCH);
+                mapFromTo(X_POSITION, PITCH);
                 mapFromTo(X_POSITION, BANDPASS_CUTOFF);
                 mapFromTo(Y_POSITION, BANDPASS_Q);
             }
@@ -50,6 +59,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             }
             break;
         case 2: // impulse
+            setPitchRange(-4.0f, 12.0f);
             if (numFingers == 1)
             {
                 mapFromTo(ABS_DIST, PITCH);
@@ -77,13 +87,13 @@ void Mapper::mapToGain(float val)
 
 void Mapper::mapToPitch(float val)
 {
-    *AudioProcessorBundler::pitch = -12.0f + val*24.0f;
+    *AudioProcessorBundler::pitch = pitchRange[0] + val*pitchRange[1];
     AudioProcessorBundler::timeStretch->pitchUpdated = true;
 }
 
 void Mapper::mapToDiscretePitch(float val)
 {
-    *AudioProcessorBundler::pitch = val;
+    *AudioProcessorBundler::pitch = 2 * floor ((val * pitchRange[1]/2) + pitchRange[0]/2);
     AudioProcessorBundler::timeStretch->pitchUpdated = true;
 }
 
@@ -95,33 +105,33 @@ void Mapper::mapToTempo(float val)
 
 void Mapper::mapToLowPassCutoff(float val)
 {
-    *AudioProcessorBundler::lowPassFilterFreqParam = 20.0f + val*3000.0f;
+    *AudioProcessorBundler::lowPassFilterFreqParam = LowPassCutoffRange[0] + val*LowPassCutoffRange[1] ;
 }
 
 void Mapper::mapToLowPassQ(float val)
 {
-    *AudioProcessorBundler::lowPassFilterQParam = 0.1f + val*2.9f;
+    *AudioProcessorBundler::lowPassFilterQParam = LowPassQRange[0] + val*LowPassQRange[1];
 }
 
 void Mapper::mapToHighPassCutoff(float val)
 {
-    *AudioProcessorBundler::highPassFilterFreqParam = 20.0f + val*3000.0f;
+    *AudioProcessorBundler::highPassFilterFreqParam = HighPassCutoffRange[0]  + val*HighPassCutoffRange[1] ;
     
 }
 
 void Mapper::mapToHighPassQ(float val)
 {
-    *AudioProcessorBundler::highPassFilterQParam = 0.1f + val*2.9f;
+    *AudioProcessorBundler::highPassFilterQParam = HighPassQRange[0] + val*HighPassQRange[1];
 }
 
 void Mapper::mapToBandPassCutoff(float val)
 {
-    *AudioProcessorBundler::bandPassFilterFreqParam = 20.0f + val*3000.0f;
+    *AudioProcessorBundler::bandPassFilterFreqParam = BandPassCutoffRange[0]  + val*BandPassCutoffRange[1] ;
 }
 
 void Mapper::mapToBandPassQ(float val)
 {
-    *AudioProcessorBundler::bandPassFilterQParam = 0.1f + val*2.9f;
+    *AudioProcessorBundler::bandPassFilterQParam = BandPassQRange[0] + val*BandPassQRange[1];
 }
 
 void Mapper::mapToRelease(float val)
@@ -177,11 +187,13 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(GAIN_ON);
                         break;
                     case PITCH:
+                        setPitchRange(-12.0f, 24.0f);
                         mapToPitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
-                        mapToDiscretePitch(Gesture::getDiscretePitch());
+                        setPitchRange(-24.0f, 48.0f);
+                        mapToDiscretePitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case TEMPO:
@@ -408,6 +420,12 @@ void Mapper::setToggleSpace(int id)
 int Mapper::getToggleSpaceID()
 {
     return toggleSpaceID;
+}
+
+void Mapper::setPitchRange(float min, float max)
+{
+    pitchRange[0] = min;
+    pitchRange[1] = max;
 }
 
 std::vector< std::pair <GestureParameter,AudioParameter> > Mapper::mapping;
