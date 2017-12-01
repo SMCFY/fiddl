@@ -13,11 +13,11 @@
 Component* createMainContentComponent();
 
 //==============================================================================
-class FiguraTKApplication  : public JUCEApplication
+class fiddl  : public JUCEApplication
 {
 public:
     //==============================================================================
-    FiguraTKApplication() {}
+    fiddl() {}
 
     const String getApplicationName() override       { return ProjectInfo::projectName; }
     const String getApplicationVersion() override    { return ProjectInfo::versionString; }
@@ -99,4 +99,4 @@ private:
 
 //==============================================================================
 // This macro generates the main() routine that launches the app.
-START_JUCE_APPLICATION (FiguraTKApplication)
+START_JUCE_APPLICATION (fiddl)
