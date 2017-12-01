@@ -181,33 +181,34 @@ float AudioRecorder::spectralCentroid(float* buff)
 {
     int order = log2(sampLength);
     dsp::FFT f(order);
-    int FFTsize = pow(2, order + 1);
+    int FFTsize = pow(2, order);
     
-    float* window = new float[FFTsize]; // windowing the truncated segment
+    int windowSize = FFTsize*2;
+    float* window = new float[windowSize]; // window must be twice as long as the fft size
 
-    for (int i = 0; i < sampLength; ++i)
+    for (int i = 0; i < sampLength; ++i) // windowing the truncated segment 
     {
         window[i] = buff[i];
     }
     
-    // zero-padding the rest of the window
-    for (int i = sampLength; i < FFTsize; ++i)
+    for (int i = sampLength; i < windowSize; ++i) // zero-padding the rest of the window
     {
         window[i] = 0.0f;
     }
 
-    float binHz = sampleRate/FFTsize; // bins in Hz
+    float binHz = sampleRate/windowSize; // bins in Hz
 
     f.performFrequencyOnlyForwardTransform(window);
     
-    // spectral centroid calculation
-    float sc = 0;
+    // spectral centroid calculation up to nyquist
+    float sc = 0; float sum = 0;
     for (int i = 0; i < FFTsize/2; ++i)
     {
         sc += window[i]*(i*binHz);
+        sum += window[i];
     }
 
-    sc /= std::accumulate(window, window+FFTsize, 0);
+    sc /= sum;
     
     return sc;
 }
