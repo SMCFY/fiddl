@@ -106,10 +106,11 @@ void PlayComponent::resized()
 {
     std::cout << getWidth() << "    ";
     std::cout << getHeight();
+    int f = 7;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    toggleSustain.setBounds(getWidth()-55, 5, 50, 50);
-    toggleImpulse.setBounds(getWidth()-55, 55, 50, 50);
+    toggleSustain.setBounds(getWidth()-(getWidth()/f + 5), 5, getWidth()/f, getWidth()/f);
+    toggleImpulse.setBounds(getWidth()-(getWidth()/f + 5), getWidth()/f + 5, getWidth()/f, getWidth()/f);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)

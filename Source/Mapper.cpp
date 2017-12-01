@@ -438,6 +438,7 @@ void Mapper::selectPresetSustained(int index, int numFingers)
         case 1:
             if (numFingers == 1)
             {
+                setPitchRange(-12.0f, 24.0f);
                 mapFromTo(X_POSITION, PITCH);
                 mapFromTo(X_POSITION, BANDPASS_CUTOFF);
                 mapFromTo(Y_POSITION, BANDPASS_Q);
@@ -449,6 +450,18 @@ void Mapper::selectPresetSustained(int index, int numFingers)
             }
             break;
         case 2:
+            if (numFingers == 1)
+            {
+                setPitchRange(-6.0f, 12.0f);
+                mapFromTo(X_POSITION, PITCH);
+                mapFromTo(X_POSITION, LOWPASS_CUTOFF);
+                mapFromTo(Y_POSITION, LOWPASS_Q);
+            }
+            else if (numFingers >= 2)
+            {
+                mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(X_POSITION, HIGHPASS_Q);
+            }
             break;
     }
 }
