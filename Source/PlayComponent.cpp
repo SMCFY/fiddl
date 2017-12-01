@@ -22,7 +22,7 @@
 PlayComponent::PlayComponent()
   // load background images
 : impulseBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
-  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
+  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::sustainedbackdrop_png, (size_t) BinaryData::sustainedbackdrop_pngSize)),
   // load button icon images
   impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
   sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize))
@@ -80,7 +80,7 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for sustained space
+        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit); //set backdrop for sustained space
         drawPitchBar(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
