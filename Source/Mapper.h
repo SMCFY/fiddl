@@ -23,7 +23,10 @@ class Mapper
 	public:
 		static void routeParameters(int numFingers, bool isInPitchBar); // wrapper mapping functions
 		static void updateParameters(); // update mappings when gesture values are updated
-		
+	
+        static void selectPresetSustained(int index, int numFingers);
+        static void selectPresetImpulse(int index, int numFingers);
+    
         static float inMax;
         static float inMin;
     

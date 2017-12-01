@@ -32,6 +32,8 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
     
     switch (toggleSpaceID) {
         case 1: // sustain
+            selectPresetSustained(1, numFingers);
+            /*
             if (numFingers == 0)
             {
                 //mapFromTo(X_POSITION, PITCH);
@@ -51,14 +53,17 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS_Q);
             }
+            */
             
             if (isInPitchBar)
             {
+                setPitchRange(-24.0f, 48.0f);
                 mapFromTo(X_POSITION, DISCRETE_PITCH);
-                //mapFromTo(Y_POSITION, LOWPASS_CUTOFF);
             }
             break;
         case 2: // impulse
+            selectPresetImpulse(1,numFingers);
+            /*
             setPitchRange(-4.0f, 12.0f);
             if (numFingers == 1)
             {
@@ -74,7 +79,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
                 mapFromTo(ABS_DIST, RELEASE);
                 
-            }
+            }*/
         default:
             break;
     }
@@ -192,7 +197,6 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
-                        setPitchRange(-24.0f, 48.0f);
                         mapToDiscretePitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
@@ -426,6 +430,71 @@ void Mapper::setPitchRange(float min, float max)
 {
     pitchRange[0] = min;
     pitchRange[1] = max;
+}
+
+void Mapper::selectPresetSustained(int index, int numFingers)
+{
+    switch(index){
+        case 1:
+            if (numFingers == 1)
+            {
+                mapFromTo(X_POSITION, PITCH);
+                mapFromTo(X_POSITION, BANDPASS_CUTOFF);
+                mapFromTo(Y_POSITION, BANDPASS_Q);
+            }
+            else if (numFingers >= 2)
+            {
+                mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(X_POSITION, HIGHPASS_Q);
+            }
+            break;
+        case 2:
+            break;
+    }
+}
+
+void Mapper::selectPresetImpulse(int index, int numFingers)
+{
+    switch(index){
+        case 1:
+            setPitchRange(-4.0f, 12.0f);
+            if (numFingers == 1)
+            {
+                mapFromTo(ABS_DIST, PITCH);
+                mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
+                mapFromTo(ABS_DIST, BANDPASS_Q);
+                mapFromTo(ABS_DIST, RELEASE);
+                
+            }
+            else if (numFingers >= 2)
+            {
+                mapFromTo(ABS_DIST, PITCH);
+                mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
+                mapFromTo(ABS_DIST, RELEASE);
+            }
+            break;
+        case 2:
+            setPitchRange(-4.0f, 12.0f);
+            mapFromTo(ABS_DIST, PITCH);
+            mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
+            mapFromTo(ABS_DIST, BANDPASS_Q);
+            mapFromTo(ABS_DIST, RELEASE);
+            break;
+        case 3:
+            setPitchRange(-12.0f, 24.0f);
+            mapFromTo(ABS_DIST, PITCH);
+            mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
+            mapFromTo(ABS_DIST, BANDPASS_Q);
+            mapFromTo(ABS_DIST, RELEASE);
+            break;
+        case 4:
+            setPitchRange(-4.0f, 12.0f);
+            mapFromTo(ABS_DIST, PITCH);
+            mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
+            mapFromTo(ABS_DIST, HIGHPASS_Q);
+            mapFromTo(ABS_DIST, RELEASE);
+            break;
+    }
 }
 
 std::vector< std::pair <GestureParameter,AudioParameter> > Mapper::mapping;

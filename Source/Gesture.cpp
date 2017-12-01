@@ -89,13 +89,15 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
                 fingers[i]->prevPos = fingers[i]->pos;
                 fingers[i]->pos = mis.getScreenPosition();
 
-                Path newSegment;
-                newSegment.startNewSubPath(fingers[i]->prevPos); // start of new segment
-                newSegment.lineTo(mis.getScreenPosition()); // end of new segment
+                //if (fingers[i]->totalPathLength < 100) {
+                    Path newSegment;
+                    newSegment.startNewSubPath(fingers[i]->prevPos); // start of new segment
+                    newSegment.lineTo(mis.getScreenPosition()); // end of new segment
 
-                fingers[i]->path.addPath(newSegment);
-                fingers[i]->totalPathLength++;
-                fingers[i]->pathAlpha *= 0.95;
+                    fingers[i]->path.addPath(newSegment);
+                    fingers[i]->totalPathLength++;
+                    fingers[i]->pathAlpha *= 0.95;
+               // }
             }
         }
 }
@@ -123,15 +125,17 @@ void Gesture::drawPath(Graphics& g, Path p, int i) // reconstruct the stored pat
         prevPos = nextPos;
         nextPos = Point<float>(it.x1, it.y1);
 
-        Path pathRender; // create a new segment connecting the extracted positions
-        pathRender.startNewSubPath(prevPos);
-        pathRender.lineTo(nextPos);
-        
-            PathStrokeType(segmentNr+1 - fingers[i]->totalPathLength, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
+        if (fingers[i]->totalPathLength < 100) { 
+            Path pathRender; // create a new segment connecting the extracted positions
+            pathRender.startNewSubPath(prevPos);
+            pathRender.lineTo(nextPos);
+            
+                PathStrokeType(segmentNr+1 - fingers[i]->totalPathLength, PathStrokeType::beveled, PathStrokeType::rounded).createStrokedPath(pathRender, pathRender);
 
-        p.addPath(pathRender); // add segment to reconstructed path
-        
-        segmentNr++;
+            p.addPath(pathRender); // add segment to reconstructed path
+            
+            segmentNr++;
+        }
     }
     g.setOpacity(fingers[i]->pathAlpha);
     g.fillPath(p);
