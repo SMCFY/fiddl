@@ -22,7 +22,7 @@
 PlayComponent::PlayComponent()
   // load background images
 : impulseBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
-  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::kid_jpg, (size_t) BinaryData::kid_jpgSize)),
+  sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::drumbackdrop_png, (size_t) BinaryData::drumbackdrop_pngSize)),
   // load button icon images
   impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
   sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize))
@@ -107,8 +107,8 @@ void PlayComponent::resized()
     std::cout << getHeight();
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
-    toggleSustain.setBounds(getWidth()-72, 5, 70, 70);
-    toggleImpulse.setBounds(getWidth()-112, 45, 150, 150);
+    toggleSustain.setBounds(getWidth()-55, 5, 50, 50);
+    toggleImpulse.setBounds(getWidth()-55, 55, 50, 50);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
