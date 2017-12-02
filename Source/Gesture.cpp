@@ -40,6 +40,7 @@ float Gesture::tapDist;
 bool Gesture::isTap = false;
 
 float Gesture::discretePitchVal;
+float Gesture::spectralCentroid;
 
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
@@ -289,4 +290,14 @@ void Gesture::setCompWidth(float w)
 void Gesture::setCompHeight(float h)
 {
     Gesture::compHeight = h;
+}
+
+void Gesture::setCentroid(float C)
+{
+    spectralCentroid = C;
+}
+
+float Gesture::getCentroid()
+{
+    return spectralCentroid;
 }

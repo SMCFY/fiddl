@@ -12,6 +12,7 @@
 
 #include "AudioRecorder.h"
 #include "Envelope.h"
+#include "Gesture.h"
 #include <numeric>
 
 AudioRecorder::AudioRecorder (float bufferLengthInSeconds)
@@ -70,6 +71,7 @@ void AudioRecorder::stop()
         }
 
         centroid = spectralCentroid(specBuff);
+        Gesture::setCentroid(centroid);
         std::cout << "centroid: " << centroid << std::endl;
     }
 }

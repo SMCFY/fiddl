@@ -38,6 +38,9 @@ class Gesture
         static float getVelocity();
         static void setVelocityMax(float vel);
         static float getVelocityMax();
+        static void setCentroid(float C);
+        static float getCentroid();
+        static float spectralCentroid;
     
         static void fillDirBuff(float x, float y);
         
