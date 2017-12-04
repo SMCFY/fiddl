@@ -89,7 +89,7 @@ void PlayComponent::paint (Graphics& g)
             {
                 /*
                 g.setOpacity(1.0f);
-                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (50*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 50*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
+                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (40*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (40*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 40*(std::pow(Gesture::getVelocity()/2+1,4)), 40*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
                 */
                 Gesture::drawPath(g, Gesture::getPath(i), i);
             }
