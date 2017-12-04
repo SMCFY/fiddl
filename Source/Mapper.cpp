@@ -57,7 +57,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             
             if (isInPitchBar)   //NO need for preset for the pitchbar. Change the range if needed
             {
-                mapFromTo(X_POSITION, DISCRETE_PITCH);
+                mapFromTo(Y_POSITION, DISCRETE_PITCH);
                 setPitchRange(-12.0f, 24.0f);
             }
             break;
@@ -252,7 +252,7 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
-                        /* Y_POSITION currently not mapped to DISCRETE_PITCH */
+                        mapToDiscretePitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case TEMPO:

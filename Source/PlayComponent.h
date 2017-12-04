@@ -66,15 +66,15 @@ private:
     int coordIndex = 0;
     bool swipeEnd = false;
     
-    //Rectangle array for the discrete pitch bar
-    RectangleList<float> rectList;
-    int rectNum = 12;
-    
     //Togglespace buttons
     ImageButton toggleSustain;
     ImageButton toggleImpulse;
+    ImageButton toggleDiscrete;
     int toggleSpaceID = 1;
     
+    //Rectangle array for the discrete pitch bar
+    RectangleList<float> rectList;
+    int rectNum = 12;
     //GUI effects
     void drawPitchBar(Graphics& g);
     void timerCallback() override;
@@ -86,11 +86,17 @@ private:
     float circleRippleSpeed [3] = {1.15,1.2,1.25};
     float rippleCoords [10][2];
     
+    //Background Discrete Pitch GUI
+    bool discretePitchToggled = false;
+    void drawPitchBackDrop(Graphics& g);
+    RectangleList<float> rectListBackDrop;
+    
     //Background image
     Image sustainBackgroundImage;
     Image sustainButtonIconImage;
     Image impulseBackgroundImage;
     Image impulseButtonIconImage;
+    Image discreteButtonIconImage;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

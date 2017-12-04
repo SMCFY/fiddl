@@ -25,7 +25,8 @@ PlayComponent::PlayComponent()
   sustainBackgroundImage(ImageFileFormat::loadFrom(BinaryData::sustainedbackdrop_png, (size_t) BinaryData::sustainedbackdrop_pngSize)),
   // load button icon images
   impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
-  sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize))
+  sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize)),
+  discreteButtonIconImage(ImageFileFormat::loadFrom(BinaryData::discretetoggle_png, (size_t) BinaryData::discretetoggle_pngSize))
 {
 
     isPlaying = false;
@@ -50,7 +51,17 @@ PlayComponent::PlayComponent()
                             impulseButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleImpulse.setClickingTogglesState(true);
     toggleImpulse.addListener (this);
-
+    
+    //Discrete toggle button
+    addAndMakeVisible (toggleDiscrete);
+    //toggleImpulse.setButtonText ("Impulse");
+    toggleDiscrete.setImages(true, true, true,
+                            discreteButtonIconImage, 0.5f, Colours::transparentBlack,
+                            discreteButtonIconImage, 0.8f, Colours::transparentBlack,
+                            discreteButtonIconImage, 1.0f, Colours::transparentBlack);    toggleDiscrete.setClickingTogglesState(true);
+    toggleDiscrete.setClickingTogglesState(true);
+    toggleDiscrete.addListener (this);
+    
     AudioProcessorBundler::ar.isTriggered = &isPlaying;
     AudioProcessorBundler::adsr.isTriggered = &isPlaying;
 }
@@ -81,7 +92,8 @@ void PlayComponent::paint (Graphics& g)
     if(toggleSpaceID == 1) //graphics for sustained space
     {
         g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit); //set backdrop for sustained space
-        drawPitchBar(g); //draws Pitchbar
+        if(discretePitchToggled)
+            drawPitchBackDrop(g); //draws Pitchbar
         
         if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
         {
@@ -99,6 +111,8 @@ void PlayComponent::paint (Graphics& g)
     {
         g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
         drawRipples(g);
+        toggleDiscrete.setToggleState(false, dontSendNotification);
+        discretePitchToggled = false;
     }
 }
 
@@ -111,6 +125,7 @@ void PlayComponent::resized()
     Gesture::setCompHeight(getHeight());
     toggleSustain.setBounds(getWidth()-(getWidth()/f + 5), 5, getWidth()/f, getWidth()/f);
     toggleImpulse.setBounds(getWidth()-(getWidth()/f + 5), getWidth()/f + 5, getWidth()/f, getWidth()/f);
+    toggleDiscrete.setBounds(3,5,getWidth()/8,getWidth()/8);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -162,7 +177,8 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
-    if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6 && toggleSpaceID == 1)
+    //if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6 && toggleSpaceID == 1)
+    if(discretePitchToggled && toggleSpaceID == 1)
     {
         Mapper::routeParameters(Gesture::getNumFingers(),true);
         Mapper::updateParameters();
@@ -232,6 +248,18 @@ void PlayComponent::buttonClicked (Button* button)
         {
             toggleImpulse.setToggleState(false, dontSendNotification);
             toggleSpaceID = 1;
+        }
+    }
+    
+    if(button == &toggleDiscrete)
+    {
+        if(toggleDiscrete.getToggleState()==0)
+        {
+            discretePitchToggled = false;
+        }
+        else
+        {
+            discretePitchToggled = true;
         }
     }
     repaint();
@@ -390,6 +418,46 @@ void PlayComponent::drawPitchBar(Graphics& g)
             g.fillRect(rectList.getRectangle(rectNum));
             g.setColour (Colours::white);
             g.drawRect(rectList.getRectangle(rectNum));
+        }
+    }
+}
+
+void PlayComponent::drawPitchBackDrop(Graphics& g)
+{
+    for (int i = 0; i < 12; i++)
+    {
+        rectListBackDrop.add(Rectangle<float>(-5,(getHeight()/12+0.5)*i,getWidth()+5,getHeight()/12+0.5));
+    }
+    
+    for (int i = 0; i < 12; i++)
+    {
+        if(i%2 == 0)
+        {
+            g.setColour (Colours::darkgrey);
+            g.setOpacity(0.1);
+            g.fillRect(rectListBackDrop.getRectangle(i));
+        }
+        else
+        {
+            g.setColour (Colours::darkgrey);
+            g.setOpacity(0.1);
+            g.fillRect(rectListBackDrop.getRectangle(i));
+        }
+        
+        g.setColour (Colours::white);
+        g.setOpacity(0.1);
+        g.drawRect(rectListBackDrop.getRectangle(i));
+    }
+    
+    if(Gesture::getNumFingers() != 0)
+    {
+        if(discretePitchToggled)
+        {
+            g.setColour (Colours::lightgrey);
+            g.setOpacity(0.5);
+            g.fillRect(rectListBackDrop.getRectangle(11-rectNum));
+            g.setColour (Colours::white);
+            g.drawRect(rectListBackDrop.getRectangle(11-rectNum));
         }
     }
 }

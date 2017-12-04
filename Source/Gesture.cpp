@@ -244,7 +244,7 @@ float Gesture::getAbsDistFromOrigin()
 
 float Gesture::getDiscretePitch()
 {
-    return 2 * floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).x * 12) - 6);
+    return 2 * floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).y * 12) - 6);
 }
 
 float Gesture::getVelocity()
