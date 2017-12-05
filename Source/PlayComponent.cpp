@@ -318,7 +318,7 @@ void PlayComponent::fillCoordinates()
         coordIndex++;
     }
 }
-
+/*
 void PlayComponent::drawPitchBar(Graphics& g)
 {
     for (int i = 0; i < 12; i++)
@@ -358,7 +358,7 @@ void PlayComponent::drawPitchBar(Graphics& g)
         }
     }
 }
-
+*/
 void PlayComponent::drawPitchBackDrop(Graphics& g)
 {
     for (int i = 0; i < 12; i++)
