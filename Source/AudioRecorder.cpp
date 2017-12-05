@@ -167,7 +167,7 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
     int rollOffLength = 5000;
     if(rollOffLength > sampLength)
-        rollOffLength = sampLength;
+        rollOffLength = sampLength-1;
 
     Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
     
@@ -209,8 +209,12 @@ float AudioRecorder::spectralCentroid(float* buff)
         sc += window[i]*(i*binHz);
         sum += window[i];
     }
-
-    sc /= sum;
     
-    return sc;
+    if(sum > 0)
+    {
+        sc /= sum;
+        return sc;
+    }
+    else
+        return 100;
 }

@@ -49,7 +49,7 @@ void RecComponent::buttonStateChanged (Button* button)
         startRecording();
         recDone = true;
     }
-    else if (recordButton.isOver() && recDone)
+    else if (!recordButton.isDown() && recDone) //ƒiddl
     {
         stopRecording();
         recDone = false;
@@ -72,3 +72,4 @@ void RecComponent::stopRecording()
     recorder->stop();
     recordButton.setButtonText ("Hold to Record");
 }
+
