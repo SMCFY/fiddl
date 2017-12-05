@@ -277,8 +277,6 @@ void PlayComponent::timerCallback()
     //Mapper::routeParameters(0,false);
     //Mapper::updateParameters();
 
-    std::cout << ripples.size() << " ";
-
     repaint();
 }
 
@@ -410,7 +408,6 @@ void PlayComponent::addRipple()
 void PlayComponent::rmRipple(int i)
 {
     ripples.removeObject(ripples[i]);
-    std::cout << ripples.size() << " ";
 }
 
 void PlayComponent::drawRipples(Graphics& g)
