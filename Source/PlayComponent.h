@@ -19,12 +19,9 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-//#include "ToggleSpaceComponent.h"
 #include "Envelope.h"
 
 //==============================================================================
-/*
-*/
 class PlayComponent    : public Component,
 public Button::Listener,
 private Timer
@@ -46,8 +43,6 @@ public:
     
     bool isPlaying; // true if recorded audio is playing
     bool initRead; // resets readIndex in MCC
-    Envelope env;
-  //  ToggleSpaceComponent togSpaceComp;
     
     //for ToggleSpace buttons
     int getToggleSpaceID();
@@ -58,7 +53,26 @@ public:
     //velocity rolloff
     float velocityRolloff;
     void startRolloff();
-    
+
+    typedef struct Ripple
+    {
+        Point<float> pos;
+        int index;
+        float alpha;
+        float circleSize;
+        float line;
+        int acc;
+        Ripple(Point<float> p, int i)
+        {
+            this->pos = p;
+            this->index = i;
+            this->alpha = 1.0f;
+            this->circleSize = 1.0f;
+            this->line = 3.0f;
+            this->acc = 15;
+        }
+    }Ripple;
+
 private:
     //Detect tap and/or direction of swipe
     float tapDetectCoords [2][2];
@@ -80,12 +94,18 @@ private:
     void timerCallback() override;
     void startRipple();
     void fillRippleCoords();
-    void drawRipples(Graphics& g);
     float circleAlpha = 0.0f;
     float circleSize [3] = {20,20,20};
     float circleRippleSpeed [3] = {1.15,1.2,1.25};
     float rippleCoords [10][2];
     
+    //ripple
+    void addRipple();
+    void rmRipple(int i);
+    void drawRipples(Graphics& g);
+
+    OwnedArray<Ripple> ripples;
+
     //Background Discrete Pitch GUI
     bool discretePitchToggled = false;
     void drawPitchBackDrop(Graphics& g);

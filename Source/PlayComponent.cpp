@@ -35,7 +35,6 @@ PlayComponent::PlayComponent()
     
     //ToggleSpace buttons
     addAndMakeVisible (toggleSustain);
-    //toggleSustain.setButtonText ("Sustain");
     toggleSustain.setImages(true, true, true,
                             sustainButtonIconImage, 0.5f, Colours::transparentBlack,
                             sustainButtonIconImage, 0.8f, Colours::transparentBlack,
@@ -44,7 +43,6 @@ PlayComponent::PlayComponent()
     toggleSustain.addListener (this);
     
     addAndMakeVisible (toggleImpulse);
-    //toggleImpulse.setButtonText ("Impulse");
     toggleImpulse.setImages(true, true, true,
                             impulseButtonIconImage, 0.5f, Colours::transparentBlack,
                             impulseButtonIconImage, 0.8f, Colours::transparentBlack,
@@ -54,7 +52,6 @@ PlayComponent::PlayComponent()
     
     //Discrete toggle button
     addAndMakeVisible (toggleDiscrete);
-    //toggleImpulse.setButtonText ("Impulse");
     toggleDiscrete.setImages(true, true, true,
                             discreteButtonIconImage, 0.5f, Colours::transparentBlack,
                             discreteButtonIconImage, 0.8f, Colours::transparentBlack,
@@ -99,10 +96,6 @@ void PlayComponent::paint (Graphics& g)
         {
             for (int i = 0; i < Gesture::getNumFingers(); i++)
             {
-                /*
-                g.setOpacity(1.0f);
-                g.drawEllipse(int (Gesture::getFingerPosition(i).x * getWidth() - (40*(std::pow(Gesture::getVelocity()/2+1,4)))/2), int (getHeight() - (Gesture::getFingerPosition(i).y * getHeight()) - (40*(std::pow(Gesture::getVelocity()/2+1,4)))/2), 40*(std::pow(Gesture::getVelocity()/2+1,4)), 40*(std::pow(Gesture::getVelocity()/2+1,4)), 2);
-                */
                 Gesture::drawPath(g, Gesture::getPath(i), i);
             }
         }
@@ -110,16 +103,15 @@ void PlayComponent::paint (Graphics& g)
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
         g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
-        drawRipples(g);
         toggleDiscrete.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
+
+        drawRipples(g);
     }
 }
 
 void PlayComponent::resized()
 {
-    std::cout << getWidth() << "    ";
-    std::cout << getHeight();
     int f = 7;
     Gesture::setCompWidth(getWidth());
     Gesture::setCompHeight(getHeight());
@@ -131,12 +123,17 @@ void PlayComponent::resized()
 void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
-    mouseDrag (e);
+    mouseDrag(e);
 
     if(getToggleSpaceID() == 1) // note on
+    {
         AudioProcessorBundler::adsr.trigger(1);
+    }
     if(getToggleSpaceID() == 2)
+    {
         AudioProcessorBundler::ar.trigger(1);
+        addRipple();
+    }
 
     initRead = true; // reset readIndex
     isPlaying = true;
@@ -144,29 +141,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
     
-    fillRippleCoords();
-    
     Mapper::setToggleSpace(toggleSpaceID);
-    
-    
-    //Reset ripple values
-    if(Gesture::getNumFingers() == 1)
-    {
-        for (int i = 1; i < 8; i++)
-        {
-            rippleCoords[i][0] = 0;
-            rippleCoords[i][1] = 0;
-        }
-    }
-    
-    for(int i = 0; i < 3; i++)
-    {
-        circleSize[i] = 20;// + 10 *i;
-    }
-    circleAlpha = 1.0f;
-    stopTimer();
-    if(toggleSpaceID == 2)
-        startRipple();
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -177,7 +152,6 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
 
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
-    //if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6 && toggleSpaceID == 1)
     if(discretePitchToggled && toggleSpaceID == 1)
     {
         Mapper::routeParameters(Gesture::getNumFingers(),true);
@@ -272,10 +246,8 @@ int PlayComponent::getToggleSpaceID()
 
 void PlayComponent::timerCallback()
 {
-    //std::cout << AudioProcessorBundler::adsr.getAmplitude() << "\n";
-    if(toggleSpaceID == 1)
+    if(toggleSpaceID == 1) // sustain
     {
-        //Velocity rolloff
         velocityRolloff *= 0.9;
         Gesture::setVelocity(velocityRolloff);
         
@@ -284,36 +256,30 @@ void PlayComponent::timerCallback()
             stopTimer();
         }
     }
-    
-    else
+    else // impulse
     {
-        circleAlpha = AudioProcessorBundler::ar.getAmplitude();
-        
-        for(int i = 0; i < 3; i++)
+        if(ripples.size() != 0)
         {
-            circleSize[i] *= circleRippleSpeed[i];
+            for (int i = 0; i < ripples.size(); ++i)
+            {
+                if (ripples[i]->alpha < 0.1)
+                    rmRipple(i);
+            }
         }
-        
-        
-        if(circleAlpha <= 0.1)
+        else
         {
-            circleAlpha = 0.0f;
             stopTimer();
-            repaint();
         }
     }
-    //std::cout << Gesture::getVelocityMax() << "\n";
     
     //NEED TO UPDATE PARAMETERS HERE FOR THE ROLLOFF TO AFFECT THE MAPPING
     //HOWEVER! If updateParameters() is called in a state where POSITION is mapped to something - CRASH
     //Mapper::routeParameters(0,false);
     //Mapper::updateParameters();
-    repaint();
-}
 
-void PlayComponent::startRipple()
-{
-    startTimerHz(30);
+    std::cout << ripples.size() << " ";
+
+    repaint();
 }
 
 void PlayComponent::startRolloff()
@@ -350,35 +316,6 @@ void PlayComponent::fillCoordinates()
         coordinates[coordIndex][0] = Gesture::getFingerPosition(0).x;
         coordinates[coordIndex][1] = Gesture::getFingerPosition(0).y;
         coordIndex++;
-    }
-}
-
-void PlayComponent::fillRippleCoords()
-{
-    
-    //Fill coordinates array for administrating the ripple effects
-    for (int i = 0; i < Gesture::getNumFingers(); i++)
-    {
-        rippleCoords[i][0] = Gesture::getFingerPosition(i).x;
-        rippleCoords[i][1] = Gesture::getFingerPosition(i).y;
-    }
-}
-
-void PlayComponent::drawRipples(Graphics& g)
-{
-    g.setOpacity(circleAlpha); //draw ripples on users finger position
-    for(int k = 0; k < 8; k++)
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            if(rippleCoords[k][0] == 0)
-                g.setOpacity(0.0);
-            else
-            {
-                g.setOpacity(circleAlpha);
-                g.drawEllipse(int (rippleCoords[k][0] * getWidth() - circleSize[i]/2), int (getHeight() - (rippleCoords[k][1] * getHeight()) - circleSize[i]/2), circleSize[i], circleSize[i], 2);
-            }
-        }
     }
 }
 
@@ -458,6 +395,39 @@ void PlayComponent::drawPitchBackDrop(Graphics& g)
             g.fillRect(rectListBackDrop.getRectangle(11-rectNum));
             g.setColour (Colours::white);
             g.drawRect(rectListBackDrop.getRectangle(11-rectNum));
+        }
+    }
+}
+
+void PlayComponent::addRipple()
+{
+    int lastFingerIndex = Gesture::getNumFingers()-1;
+    PlayComponent::Ripple* rip = new PlayComponent::Ripple(Gesture::getFingerPositionScreen(lastFingerIndex), ripples.size());
+    ripples.add(rip);
+    startTimerHz(60);
+}
+
+void PlayComponent::rmRipple(int i)
+{
+    ripples.removeObject(ripples[i]);
+    std::cout << ripples.size() << " ";
+}
+
+void PlayComponent::drawRipples(Graphics& g)
+{
+    if(ripples.size() != 0)
+    {
+        for (int i = 0; i < ripples.size(); ++i) // fingers
+        {
+            g.setOpacity(ripples[i]->alpha);
+            g.drawEllipse(ripples[i]->pos.x-ripples[i]->circleSize/2, ripples[i]->pos.y-ripples[i]->circleSize/2, ripples[i]->circleSize, ripples[i]->circleSize, ripples[i]->line);
+    
+            ripples[i]->circleSize += ripples[i]->acc*=0.98; // increase circle radii
+            ripples[i]->alpha -= 0.05; // 0.05 + AudioProcessorBundler::ar.getAmplitude()*0.9; // decrease opacity
+            if(ripples[i]->line > 0.2)
+                ripples[i]->line -= 0.4; // decrease line thickness
+            else
+                ripples[i]->line = 0;  
         }
     }
 }

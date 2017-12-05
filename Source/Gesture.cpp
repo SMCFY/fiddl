@@ -40,7 +40,7 @@ float Gesture::tapDist;
 bool Gesture::isTap = false;
 
 float Gesture::discretePitchVal;
-float Gesture::spectralCentroid;
+float Gesture::spectralCentroid = 1000;
 
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
@@ -76,6 +76,11 @@ Point<float> Gesture::getFingerPosition(int index)
     return normalizeCoordinates(fingers[index]->pos);
 }
 
+Point<float> Gesture::getFingerPositionScreen(int index)
+{
+    return fingers[index]->pos;
+}
+
 Path Gesture::getPath(int index)
 {
     return fingers[index]->path;
@@ -106,6 +111,11 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
 int Gesture::getNumFingers()
 {
     return fingers.size();
+}
+
+int Gesture::getSourceIndex(int index)
+{
+    return fingers[index]->sourceIndex;
 }
 
 void Gesture::drawPath(Graphics& g, Path p, int i) // reconstruct the stored path for each finger with updated appearance

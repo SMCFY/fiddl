@@ -54,6 +54,8 @@ class Gesture
         static void rmFinger(const MouseEvent& e); // removes input source from the array
         static void updateFingers(const MouseInputSource& mis, int index); // update finger coordinates
         static Point<float> getFingerPosition(int index);
+        static Point<float> getFingerPositionScreen(int index);
+        static int getSourceIndex(int index);
         static Path getPath(int index);
         static int getNumFingers(); // returns the number of fingers
         static void drawPath(Graphics& g, Path p, int i);
