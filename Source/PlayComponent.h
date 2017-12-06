@@ -38,11 +38,11 @@ public:
     
     void fillCoordinates();
 
-    void stopPlaying(); // stop audio playback
-    void startPlaying(); // start audio playback
+    static void stopPlaying(); // stop audio playback
+    static void startPlaying(); // start audio playback
     
-    bool isPlaying; // true if recorded audio is playing
-    bool initRead; // resets readIndex in MCC
+    static bool isPlaying; // true if recorded audio is playing
+    static bool initRead; // resets readIndex in MCC
     
     //for ToggleSpace buttons
     int getToggleSpaceID();

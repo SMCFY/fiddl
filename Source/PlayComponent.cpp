@@ -59,12 +59,8 @@ PlayComponent::PlayComponent()
     toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.addListener (this);
 
-    //Envelope setup
     ar = Envelope(44100, Envelope::AR);
     adsr = Envelope(44100, Envelope::ADSR);
-
-    ar.isTriggered = &isPlaying;
-    adsr.isTriggered = &isPlaying;
 }
 
 PlayComponent::~PlayComponent()
@@ -138,9 +134,6 @@ void PlayComponent::mouseDown (const MouseEvent& e)
         ar.trigger(1);
         addRipple();
     }
-
-    initRead = true; // reset readIndex
-    isPlaying = true;
       
     tapDetectCoords[0][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
@@ -397,4 +390,19 @@ void PlayComponent::drawRipples(Graphics& g)
                 ripples[i]->line = 0;  
         }
     }
+}
+
+bool PlayComponent::isPlaying;
+bool PlayComponent::initRead;
+
+void PlayComponent::startPlaying()
+{
+    initRead = true; // reset readIndex
+    isPlaying = true;
+}
+
+void PlayComponent::stopPlaying()
+{
+    initRead = true; // reset readIndex
+    isPlaying = false;
 }

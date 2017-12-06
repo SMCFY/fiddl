@@ -102,7 +102,7 @@ public:
                 writeIndex += samplesToProcess;
             }
         }
-        else if (playComp.isPlaying)
+        else if (playComp.isPlaying) // if recording ends
         {
             // Component call isn't being called in a message thread,
             // make sure it is thread-safe by temporarily suspending the message thread

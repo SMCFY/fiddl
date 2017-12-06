@@ -26,8 +26,6 @@ class Envelope
 		void process(AudioBuffer<float> buffer); // processses an audio buffer based on the envelope type
 		void setReleaseTime(int &time);
 		void setSamplingRate(int sr);
-
-		bool* isTriggered; // takes the address of isPlaying
     
         float getAmplitude();
     

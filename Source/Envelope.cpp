@@ -10,6 +10,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Envelope.h"
 #include "Mapper.h"
+#include "PlayComponent.h"
 
 Envelope::Envelope()
 : aMin(0.001f)
@@ -39,7 +40,10 @@ void Envelope::trigger(bool trig)
 	this->trig = trig;
  	
  	if(trig) // note on
+ 	{
 		amplitude = 0;
+		PlayComponent::startPlaying();
+ 	}
 
 	if(!trig) // note off
 		noteOn = 0;
@@ -81,7 +85,7 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 		{
 			amplitude = 0;
 			release = 0;
-			isTriggered = 0; // set isPlaying false and resets readIndex
+			PlayComponent::stopPlaying(); // set isPlaying false and resets readIndex
 			return 0.0f;
 		}
 	}
@@ -136,7 +140,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		{
 			amplitude = 0;
 			release = 0;
-			isTriggered = 0; // set isPlaying false and resets readIndex			
+			PlayComponent::stopPlaying(); // set isPlaying false and resets readIndex			
 		}
 		return amplitude;
 	}
