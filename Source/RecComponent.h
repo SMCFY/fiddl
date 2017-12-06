@@ -24,7 +24,8 @@
 /*
 */
 class RecComponent    : public Component,
-                        public Button::Listener
+                        public Button::Listener,
+                        public ChangeListener
 {
 public:
     RecComponent();
@@ -39,11 +40,24 @@ public:
     void setRecorder (AudioRecorder *recorder);
     void startRecording();
     void stopRecording();
+    
+    void mouseDown(const MouseEvent& event) override;
+    void mouseUp(const MouseEvent& event) override;
 
     bool isRecording;
-    bool recDone; 
+    bool recDone;
+    
+    AudioThumbnail& getAudioThumbnail();
 private:
+    AudioFormatManager formatManager;
+    AudioThumbnailCache thumbnailCache;
+    AudioThumbnail thumbnail;
+    bool displayFullThumb;
+    
     TextButton recordButton;
     AudioRecorder *recorder;
+    
+    void changeListenerCallback (ChangeBroadcaster* source) override;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RecComponent)
 };

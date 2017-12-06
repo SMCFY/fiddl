@@ -22,7 +22,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        AudioRecorder (float bufferLengthInSeconds);
+        AudioRecorder (float bufferLengthInSeconds, AudioThumbnail& thumbnailToUpdate);
         ~AudioRecorder();
         
         void startRecording(); 
@@ -40,6 +40,7 @@ class AudioRecorder : public AudioIODeviceCallback
         AudioBuffer<float> getSampBuff();
         int getBufferLengthInSamples();
         int getWriteIndex();
+        int getSampLength();
 
         float centroid;
     private:
@@ -62,6 +63,8 @@ class AudioRecorder : public AudioIODeviceCallback
         Boolean activeWriter; // true when the buffer is being written to
         int sampStart; // start index of truncated sample
         int sampLength; // length of truncated sample
+    
+        AudioThumbnail& thumbnail;
     
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioRecorder);
 };

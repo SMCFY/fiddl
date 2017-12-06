@@ -36,7 +36,7 @@ public:
         setSize(400, 400);
         setAudioChannels (1, 2);
 
-        recorder = new AudioRecorder(3.f);
+        recorder = new AudioRecorder(3.f, recComp.getAudioThumbnail());
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
         // setup the recorder to receive input from the microphone

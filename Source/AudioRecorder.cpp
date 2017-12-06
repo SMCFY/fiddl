@@ -15,8 +15,8 @@
 #include "Gesture.h"
 #include <numeric>
 
-AudioRecorder::AudioRecorder (float bufferLengthInSeconds)
-    : writeIndex (0), activeWriter (false)
+AudioRecorder::AudioRecorder (float bufferLengthInSeconds, AudioThumbnail& thumbnailToUpdate)
+    : writeIndex (0), activeWriter (false), thumbnail(thumbnailToUpdate)
 {
     this->bufferLengthInSeconds = bufferLengthInSeconds;
     numChannels = 1;
@@ -40,6 +40,7 @@ void AudioRecorder::startRecording()
     {
         const ScopedLock sl (writerLock);
         activeWriter = true;
+        thumbnail.reset(1, 44100);
     }
 }
 
@@ -62,6 +63,9 @@ void AudioRecorder::stop()
         truncate(recBuff, 0.08f);
         sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
         specBuff = new float[sampLength];
+        
+        //set the recording waveform to the truncated segment
+        thumbnail.addBlock(0, sampBuff, 0, sampLength);
 
         int j = 0;
         for (int i = sampStart; i < sampStart+sampLength; ++i)
@@ -117,6 +121,11 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
                 recBuff[ch][sample+destStartSample] = inputChannelData[ch][sample];
             }
         }
+        
+        // write to thumbnail
+        const AudioSampleBuffer buffer (const_cast<float**> (inputChannelData), 1, 44100);
+        thumbnail.addBlock(writeIndex, buffer, 0, numSamples);
+        
         writeIndex += numSamples;
     }
 }
@@ -144,6 +153,11 @@ int AudioRecorder::getBufferLengthInSamples()
 int AudioRecorder::getWriteIndex()
 {
     return writeIndex;
+}
+
+int AudioRecorder::getSampLength()
+{
+    return sampLength;
 }
 
 void AudioRecorder::truncate (float** recording, float threshold)
