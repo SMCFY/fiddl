@@ -180,8 +180,8 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::setVelocityMax(Gesture::getVelocity());
     
-    if(toggleSpaceID == 1)
-        startRolloff();
+    //if(toggleSpaceID == 1)
+      //  startRolloff();
     
     Gesture::rmFinger(e);
 
@@ -366,7 +366,7 @@ void PlayComponent::addRipple()
     int lastFingerIndex = Gesture::getNumFingers()-1;
     PlayComponent::Ripple* rip = new PlayComponent::Ripple(Gesture::getFingerPositionScreen(lastFingerIndex), ripples.size());
     ripples.add(rip);
-    startTimerHz(60);
+    startTimerHz(25);
 }
 
 void PlayComponent::rmRipple(int i)
@@ -380,8 +380,14 @@ void PlayComponent::drawRipples(Graphics& g)
     {
         for (int i = 0; i < ripples.size(); ++i) // fingers
         {
+            if(ripples[i]->alpha < 0) //make sure that the alpha value never goes below 0
+            {
+                ripples[i]->alpha = 0.05;
+            }
+            
             g.setOpacity(ripples[i]->alpha);
             g.drawEllipse(ripples[i]->pos.x-ripples[i]->circleSize/2, ripples[i]->pos.y-ripples[i]->circleSize/2, ripples[i]->circleSize, ripples[i]->circleSize, ripples[i]->line);
+            ripples[i]->acc = 30 * (1-Gesture::getAbsDistFromOrigin());
     
             ripples[i]->circleSize += ripples[i]->acc*=0.98; // increase circle radii
             ripples[i]->alpha -= 0.05; // 0.05 + ar.getAmplitude()*0.9; // decrease opacity

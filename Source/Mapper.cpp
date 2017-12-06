@@ -471,7 +471,9 @@ void Mapper::setPitchRange(float min, float max)
 void Mapper::selectPresetSustained(int index, int numFingers)
 {
     switch(index){
-        case 1:
+        case 1:/*
+                setPitchRange(0.0f, 4.00f);
+                mapFromTo(VELOCITY, PITCH);*/
                 mapFromTo(X_POSITION, BANDPASS_CUTOFF);
                 mapFromTo(Y_POSITION, BANDPASS_Q);
                 mapFromTo(VELOCITY, SUSTAINED_RELEASE);
@@ -559,7 +561,7 @@ void Mapper::selectPresetImpulse(int index, int numFingers)
             mapFromTo(ABS_DIST, RELEASE);
             break;
         case 6:
-            setPitchRange(-12.0f, 24.0f);
+            setPitchRange(-4.0f, 12.0f);
             mapFromTo(ABS_DIST, PITCH);
             mapFromTo(CENTROID, BANDPASS_CUTOFF);
             mapFromTo(ABS_DIST, BANDPASS_Q);
