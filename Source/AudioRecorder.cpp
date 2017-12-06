@@ -181,40 +181,43 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
 float AudioRecorder::spectralCentroid(float* buff)
 {
-    int order = log2(sampLength);
-    dsp::FFT f(order);
-    int FFTsize = pow(2, order);
-    
-    int windowSize = FFTsize*2;
-    float* window = new float[windowSize]; // window must be twice as long as the fft size
+    if(sampLength > 0) //if the truncated buffer is empty return 0, else return spectral centroid
+    {
+        int order = log2(sampLength);
+        
+        dsp::FFT f(order);
+        int FFTsize = pow(2, order);
+        
+        int windowSize = FFTsize*2;
+        float* window = new float[windowSize]; // window must be twice as long as the fft size
 
-    for (int i = 0; i < sampLength; ++i) // windowing the truncated segment 
-    {
-        window[i] = buff[i];
-    }
-    
-    for (int i = sampLength; i < windowSize; ++i) // zero-padding the rest of the window
-    {
-        window[i] = 0.0f;
-    }
+        for (int i = 0; i < sampLength; ++i) // windowing the truncated segment
+        {
+            window[i] = buff[i];
+        }
+        
+        for (int i = sampLength; i < windowSize; ++i) // zero-padding the rest of the window
+        {
+            window[i] = 0.0f;
+        }
 
-    float binHz = sampleRate/windowSize; // bins in Hz
+        float binHz = sampleRate/windowSize; // bins in Hz
 
-    f.performFrequencyOnlyForwardTransform(window);
-    
-    // spectral centroid calculation up to nyquist
-    float sc = 0; float sum = 0;
-    for (int i = 0; i < FFTsize/2; ++i)
-    {
-        sc += window[i]*(i*binHz);
-        sum += window[i];
-    }
-    
-    if(sum > 0)
-    {
+        f.performFrequencyOnlyForwardTransform(window);
+        
+        // spectral centroid calculation up to nyquist
+        float sc = 0; float sum = 0;
+        for (int i = 0; i < FFTsize/2; ++i)
+        {
+            sc += window[i]*(i*binHz);
+            sum += window[i];
+        }
+        
         sc /= sum;
         return sc;
     }
     else
-        return 100;
+    {
+        return 0;
+    }
 }
