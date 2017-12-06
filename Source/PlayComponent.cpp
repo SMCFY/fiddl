@@ -416,6 +416,11 @@ void PlayComponent::drawRipples(Graphics& g)
     {
         for (int i = 0; i < ripples.size(); ++i) // fingers
         {
+            if(ripples[i]->alpha < 0) //make sure that the alpha value never goes below 0
+            {
+                ripples[i]->alpha = 0.05;
+            }
+            
             g.setOpacity(ripples[i]->alpha);
             g.drawEllipse(ripples[i]->pos.x-ripples[i]->circleSize/2, ripples[i]->pos.y-ripples[i]->circleSize/2, ripples[i]->circleSize, ripples[i]->circleSize, ripples[i]->line);
             ripples[i]->acc = 30 * (1-Gesture::getAbsDistFromOrigin());
