@@ -58,9 +58,13 @@ PlayComponent::PlayComponent()
                             discreteButtonIconImage, 1.0f, Colours::transparentBlack);    toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.addListener (this);
-    
-    AudioProcessorBundler::ar.isTriggered = &isPlaying;
-    AudioProcessorBundler::adsr.isTriggered = &isPlaying;
+
+    //Envelope setup
+    ar = Envelope(44100, Envelope::AR);
+    adsr = Envelope(44100, Envelope::ADSR);
+
+    ar.isTriggered = &isPlaying;
+    adsr.isTriggered = &isPlaying;
 }
 
 PlayComponent::~PlayComponent()
@@ -127,11 +131,11 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 
     if(getToggleSpaceID() == 1) // note on
     {
-        AudioProcessorBundler::adsr.trigger(1);
+        adsr.trigger(1);
     }
     if(getToggleSpaceID() == 2)
     {
-        AudioProcessorBundler::ar.trigger(1);
+        ar.trigger(1);
         addRipple();
     }
 
@@ -183,8 +187,8 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 
     if(Gesture::getNumFingers() == 0) // note off (initiate release) 
     {
-        AudioProcessorBundler::ar.trigger(0);
-        AudioProcessorBundler::adsr.trigger(0);
+        ar.trigger(0);
+        adsr.trigger(0);
     }
     
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
@@ -316,47 +320,7 @@ void PlayComponent::fillCoordinates()
         coordIndex++;
     }
 }
-/*
-void PlayComponent::drawPitchBar(Graphics& g)
-{
-    for (int i = 0; i < 12; i++)
-    {
-        rectList.add(Rectangle<float>((getWidth()/12+0.5)*i,getHeight()-getHeight()/6,getWidth()/12+0.5,getHeight()/6));
-    }
-    
-    for (int i = 0; i < 12; i++)
-    {
-        if(i%2 == 0)
-        {
-            g.setColour (Colours::darkgrey);
-            g.setOpacity(0.3);
-            g.fillRect(rectList.getRectangle(i));
-        }
-        else
-        {
-            g.setColour (Colours::darkgrey);
-            g.setOpacity(0.3);
-            g.fillRect(rectList.getRectangle(i));
-        }
-        
-        g.setColour (Colours::white);
-        g.setOpacity(0.3);
-        g.drawRect(rectList.getRectangle(i));
-    }
-    
-    if(Gesture::getNumFingers() != 0)
-    {
-        if(Gesture::getFingerPosition(0).y >= getHeight()*Gesture::getFingerPosition(0).y - getHeight()/6)
-        {
-            g.setColour (Colours::lightgrey);
-            g.setOpacity(0.8);
-            g.fillRect(rectList.getRectangle(rectNum));
-            g.setColour (Colours::white);
-            g.drawRect(rectList.getRectangle(rectNum));
-        }
-    }
-}
-*/
+
 void PlayComponent::drawPitchBackDrop(Graphics& g)
 {
     for (int i = 0; i < 12; i++)
@@ -420,7 +384,7 @@ void PlayComponent::drawRipples(Graphics& g)
             g.drawEllipse(ripples[i]->pos.x-ripples[i]->circleSize/2, ripples[i]->pos.y-ripples[i]->circleSize/2, ripples[i]->circleSize, ripples[i]->circleSize, ripples[i]->line);
     
             ripples[i]->circleSize += ripples[i]->acc*=0.98; // increase circle radii
-            ripples[i]->alpha -= 0.05; // 0.05 + AudioProcessorBundler::ar.getAmplitude()*0.9; // decrease opacity
+            ripples[i]->alpha -= 0.05; // 0.05 + ar.getAmplitude()*0.9; // decrease opacity
             if(ripples[i]->line > 0.2)
                 ripples[i]->line -= 0.4; // decrease line thickness
             else

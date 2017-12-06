@@ -11,6 +11,7 @@
 #include "Mapper.h"
 #include "Gesture.h"
 #include "AudioProcessorBundler.h"
+#include "PlayComponent.h"
 
 float Mapper::inMax;
 float Mapper::inMin;
@@ -24,6 +25,8 @@ float Mapper::HighPassQRange[2] = {0.1f, 2.9f};
 float Mapper::HighPassCutoffRange[2] = {20.0f, 3000.0f};
 float Mapper::BandPassQRange[2] = {0.1f, 2.9f};
 float Mapper::BandPassCutoffRange[2] = {20.0f, 3000.0f};
+
+int Mapper::releaseT = 1500;
 
 void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mapping are defined here, and the values updated for AudioParameters
 {
@@ -146,16 +149,12 @@ void Mapper::mapToBandPassQ(float val)
 
 void Mapper::mapToRelease(float val)
 {
-    //int time = (int)(1/(val+0.1)*800);
-    int time = (int)(abs(val - 0.75)*1800)+1000;
-    AudioProcessorBundler::ar.setReleaseTime(time);
+    releaseT = (int)(abs(val - 0.75)*1800)+1000;
 }
 
 void Mapper::mapToSustainedRelease(float val)
 {
-    int time = (int)(abs(val)*3000)+1000;
-    //std::cout << time << "\n";
-    AudioProcessorBundler::adsr.setReleaseTime(time);
+    releaseT = (int)(abs(val)*3000)+1000;
 }
 
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)

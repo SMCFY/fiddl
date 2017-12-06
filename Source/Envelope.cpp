@@ -9,6 +9,8 @@
 */
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Envelope.h"
+#include "Mapper.h"
+
 Envelope::Envelope()
 : aMin(0.001f)
 {
@@ -24,7 +26,7 @@ Envelope::Envelope(int sr, Envelope::env type)
 	this->amplitude = 0;
 	this->noteOn = 0;
 	this->envelopeType = type;
-	this->releaseTime = 1500;
+    this->releaseTime = &Mapper::releaseT;
 }
 
 Envelope::~Envelope()
@@ -35,7 +37,7 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
- 
+ 	
  	if(trig) // note on
 		amplitude = 0;
 
@@ -95,7 +97,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		decay = 1;
     	release = 1;
     	noteOn = 1;
-	
+	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
     	relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
@@ -180,11 +182,11 @@ void Envelope::process(AudioBuffer<float> buffer)
 	    	switch (envelopeType)
 	    	{
             case AR:
-	    	outputFrame[ch][samp] *= envelope(500, 0.95, releaseTime); // APR
+	    	outputFrame[ch][samp] *= envelope(500, 0.95, *releaseTime); // APR
 	        break;
                     
             case ADSR:
-	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, releaseTime); // APDSR
+	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, *releaseTime); // APDSR
 	        break;
             };
 	    }
@@ -192,9 +194,14 @@ void Envelope::process(AudioBuffer<float> buffer)
 	
 }
 
-void Envelope::setReleaseTime(int time)
+void Envelope::setReleaseTime(int &time)
 {
-	this->releaseTime = time;
+	this->releaseTime = &time;
+}
+
+void Envelope::setSamplingRate(int sr)
+{
+	this->samplingRate = sr;
 }
 
 float Envelope::getAmplitude()

@@ -54,8 +54,12 @@ public:
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
         //initialize DSP blocks and assign parameters
-        AudioProcessorBundler::initDSPBlocks((int)sampleRate);
+        AudioProcessorBundler::initDSPBlocks();
+        playComp.ar.setSamplingRate(sampleRate);
+        playComp.adsr.setSamplingRate(sampleRate);
         readIndex = 0;
+
+
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
@@ -138,9 +142,9 @@ public:
         
         // Envelopes
         if(playComp.getToggleSpaceID() == 1)
-            AudioProcessorBundler::adsr.process(*bufferToFill.buffer);
+            playComp.adsr.process(*bufferToFill.buffer);
         else if(playComp.getToggleSpaceID() == 2)
-            AudioProcessorBundler::ar.process(*bufferToFill.buffer);
+            playComp.ar.process(*bufferToFill.buffer);
         
     }
 

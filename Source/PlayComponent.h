@@ -73,6 +73,9 @@ public:
         }
     }Ripple;
 
+    Envelope ar;
+    Envelope adsr;
+
 private:
     //Detect tap and/or direction of swipe
     float tapDetectCoords [2][2];
@@ -86,24 +89,14 @@ private:
     ImageButton toggleDiscrete;
     int toggleSpaceID = 1;
     
-    //Rectangle array for the discrete pitch bar
+    //GUI
     RectangleList<float> rectList;
     int rectNum = 12;
-    //GUI effects
     void drawPitchBar(Graphics& g);
     void timerCallback() override;
-    void startRipple();
-    void fillRippleCoords();
-    float circleAlpha = 0.0f;
-    float circleSize [3] = {20,20,20};
-    float circleRippleSpeed [3] = {1.15,1.2,1.25};
-    float rippleCoords [10][2];
-    
-    //ripple
     void addRipple();
     void rmRipple(int i);
     void drawRipples(Graphics& g);
-
     OwnedArray<Ripple> ripples;
 
     //Background Discrete Pitch GUI

@@ -26,7 +26,7 @@ class AudioProcessorBundler
 	public:
 
 		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
-        static void initDSPBlocks(int samplingRate);
+        static void initDSPBlocks();
         static void turnOffProcessors();
         static void turnOnProcessor(ProcessorSwitch processorSwtich);
 
@@ -39,9 +39,6 @@ class AudioProcessorBundler
         static Filter *lopass;
         static Filter *hipass;
         static Filter *bapass;
-
-        static Envelope ar;
-		static Envelope adsr;
 
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;

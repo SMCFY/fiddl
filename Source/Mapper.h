@@ -32,6 +32,8 @@ class Mapper
     
         static void setToggleSpace(int id);
         static int getToggleSpaceID();
+
+        static int releaseT; // release time
 		
     private:		
 		static std::vector< std::pair <GestureParameter, AudioParameter> > mapping;
