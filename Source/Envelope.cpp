@@ -35,9 +35,11 @@ Envelope::~Envelope()
 void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
- 
- 	if(trig) // note on
-		amplitude = 0;
+ 	
+ 	//if(trig) // note on
+ 	//{
+	//	amplitude = 0;
+ 	//}
 
 	if(!trig) // note off
 		noteOn = 0;
@@ -46,19 +48,38 @@ void Envelope::trigger(bool trig)
 float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 {
 
-    if(trig && !noteOn) // init on trigger/re-trigger
+    if(trig) // init on trigger/re-trigger
 	{
  		attack = 1;
     	release = 1;
 
     	trig = 0;
+
+    	if(amplitude >= aMin) // rampdown on re-trigger (discontinuity glitch)
+    		rampDown = 1;
+    	else
+    		PlayComponent::startPlaying();
 	
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
    	}
 
-    
-	if(attack) // attack phase
+
+   	if(rampDown)
+   	{
+   		if(amplitude >= aMin)
+   		{
+   			amplitude *= 0.999;
+   		}
+   		else
+   		{
+   			rampDown = 0;
+   			PlayComponent::startPlaying();
+   		}
+   		std::cout << "thats ramp phase baby!! ";
+   		return amplitude;
+   	}
+    else if(attack) // attack phase
 	{
         amplitude += attDelta;
         if(amplitude >= peak)
@@ -80,7 +101,7 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 		{
 			amplitude = 0;
 			release = 0;
-			isTriggered = 0; // set isPlaying false and resets readIndex
+			PlayComponent::stopPlaying();
 			return 0.0f;
 		}
 	}
@@ -94,9 +115,13 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	{
 		attack = 1;
 		decay = 1;
+		noteOn = 1; // sustain
     	release = 1;
-    	noteOn = 1;
-	
+
+    	trig = 0;
+
+    	PlayComponent::startPlaying();
+	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
     	relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
@@ -135,7 +160,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		{
 			amplitude = 0;
 			release = 0;
-			isTriggered = 0; // set isPlaying false and resets readIndex			
+			PlayComponent::stopPlaying();			
 		}
 		return amplitude;
 	}
@@ -155,11 +180,11 @@ void Envelope::process(AudioBuffer<float> buffer)
 	    	switch (envelopeType)
 	    	{
             case AR:
-	    	outputFrame[ch][samp] *= envelope(500, 0.95, releaseTime); // APR
+	    	outputFrame[ch][samp] *= envelope(500, 0.90, *releaseTime); // APR
 	        break;
                     
             case ADSR:
-	        outputFrame[ch][samp] *= envelope(1000, 0.95, 500, 0.8, 2000); // APDSR
+	        outputFrame[ch][samp] *= envelope(1000, 0.9, 500, 0.8, *releaseTime); // APDSR
 	        break;
             };
 	    }

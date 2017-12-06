@@ -24,6 +24,14 @@ class Envelope
 		float envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime); // ADSR envelope
 		void process(AudioBuffer<float> buffer); // processses an audio buffer based on the envelope type
 
+		void setReleaseTime(int &time);
+		void setSamplingRate(int sr);
+    
+        float getAmplitude();
+    
+        static void generateRamp(float start, float end, int lengthInSamples, String type);
+    	static float ramp[96000]; // preallocted memory storing the generated ramp
+
 		void setReleaseTime(int time);
 
 		bool* isTriggered; // takes the address of isPlaying
@@ -42,6 +50,7 @@ class Envelope
 		bool attack;
     	bool decay;
     	bool release;
+    	bool rampDown;
 		
 		// amplitude increment/decrement
     	float attDelta;
