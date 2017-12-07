@@ -53,6 +53,7 @@ void Envelope::trigger(bool trig)
 
 float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 {
+    relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
 
     if(trig && !noteOn) // init on trigger/re-trigger
 	{
@@ -67,7 +68,6 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
     		PlayComponent::startPlaying();
 
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
-    	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
    	}
 
     if (rampDown)
@@ -112,6 +112,8 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 
 float Envelope::envelope(int attackTime, float peak, int decayTime, float sustainLevel, int releaseTime) // ADSR
 {
+    relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
+
 	if(trig && !noteOn) // init on trigger/re-trigger
 	{
 		attack = 1;
@@ -123,7 +125,6 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));
-    	relDelta = pow(aMin, sustainLevel / std::round(samplingRate * (releaseTime/1000)));
    	}
 
     
@@ -195,7 +196,7 @@ void Envelope::generateRamp(float start, float end, int lengthInSamples, String 
 
 void Envelope::process(AudioBuffer<float> buffer)
 {
-
+    
 	float **outputFrame = buffer.getArrayOfWritePointers();
 
 	for (int samp = 0; samp < buffer.getNumSamples(); ++samp)
