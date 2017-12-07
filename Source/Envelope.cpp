@@ -18,6 +18,7 @@ Envelope::Envelope()
     this->samplingRate = 44100;
     this->amplitude = 0;
     this->noteOn = 0;
+    this->rampDown = 0;
 }
 
 Envelope::Envelope(int sr, Envelope::env type)
@@ -26,6 +27,7 @@ Envelope::Envelope(int sr, Envelope::env type)
 	this->samplingRate = sr;
 	this->amplitude = 0;
 	this->noteOn = 0;
+	this->rampDown = 0;
 	this->envelopeType = type;
     this->releaseTime = &Mapper::releaseT;
 }
@@ -39,11 +41,11 @@ void Envelope::trigger(bool trig)
 {
 	this->trig = trig;
  	
- 	if(trig) // note on
- 	{
-		amplitude = 0;
-		PlayComponent::startPlaying();
- 	}
+ 	//if(trig) // note on
+ 	//{
+	//	amplitude = 0;
+	//	PlayComponent::startPlaying();
+ 	//}
 
 	if(!trig) // note off
 		noteOn = 0;
@@ -59,12 +61,27 @@ float Envelope::envelope(int attackTime, float peak, int releaseTime) // AR
 
     	trig = 0;
 	
+    	if(amplitude >= aMin) // ramp down envelope on re-trigger
+    		rampDown = 1;
+    	else
+    		PlayComponent::startPlaying();
+
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	relDelta = pow(aMin, peak / std::round(samplingRate * (releaseTime/1000)));
    	}
 
-    
-	if(attack) // attack phase
+    if (rampDown)
+    {
+    	amplitude *= 0.999;
+    	if (amplitude <= aMin)
+    	{
+    		amplitude = 0;
+    		rampDown = 0;
+    		PlayComponent::startPlaying(); // reset read index and initialize playback
+        }
+    	return amplitude;
+    }
+	else if(attack) // attack phase
 	{
         amplitude += attDelta;
         if(amplitude >= peak)
@@ -99,8 +116,10 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 	{
 		attack = 1;
 		decay = 1;
+		noteOn = 1; // sustain
     	release = 1;
-    	noteOn = 1;
+
+    	PlayComponent::startPlaying();
 	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));

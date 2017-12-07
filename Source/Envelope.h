@@ -46,6 +46,7 @@ class Envelope
 		bool attack;
     	bool decay;
     	bool release;
+    	bool rampDown;
 		
 		// amplitude increment/decrement
     	float attDelta;
