@@ -42,6 +42,10 @@ class Gesture
         static float getCentroid();
         static float spectralCentroid;
     
+        static void setDistBetweenFingers(int i);
+        static void resetDistBetweenFingers();
+        static float getDistBetweenFingers();
+    
         static void fillDirBuff(float x, float y);
         
         static void setAbsDistFromOrigin(float x, float y);
@@ -96,6 +100,10 @@ class Gesture
         static float absDirectionDeltaX;
         static float absDirectionDeltaY;
         static String direction;
+    
+        static float distBetweenFingers;
+        static Point<float> pinchP1;
+        static Point<float> pinchP2;
     
         static float tapDist;
         static bool isTap;

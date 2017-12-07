@@ -51,7 +51,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             }
             else if (numFingers >= 2)
             {
-                selectPresetSustained(2, numFingers);   // SET PRESET HERE
+                selectPresetSustained(8, numFingers);   // SET PRESET HERE
                 /*
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS_Q);
@@ -338,6 +338,55 @@ void Mapper::updateParameters()
                         break;
                 }
                 break;
+            case PINCH_DIST:
+                switch (audioParameter) {
+                    case GAIN:
+                        mapToGain(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(GAIN_ON);
+                        break;
+                    case PITCH:
+                        mapToPitch(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                        break;
+                    case DISCRETE_PITCH:
+                        /* ABS_DIST currently not mapped to DISCRETE_PITCH */
+                        AudioProcessorBundler::turnOnProcessor(PITCH_ON);
+                        break;
+                    case TEMPO:
+                        mapToTempo(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(TEMPO_ON);
+                        break;
+                    case LOWPASS_CUTOFF:
+                        mapToLowPassCutoff(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case LOWPASS_Q:
+                        mapToLowPassQ(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(LOWPASS_ON);
+                        break;
+                    case HIGHPASS_CUTOFF:
+                        mapToHighPassCutoff(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case HIGHPASS_Q:
+                        mapToHighPassQ(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(HIGHPASS_ON);
+                        break;
+                    case BANDPASS_CUTOFF:
+                        mapToBandPassCutoff(2*Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case BANDPASS_Q:
+                        mapToBandPassQ(Gesture::getDistBetweenFingers());
+                        AudioProcessorBundler::turnOnProcessor(BANDPASS_ON);
+                        break;
+                    case RELEASE:
+                        mapToRelease(Gesture::getDistBetweenFingers());
+                        break;
+                    case SUSTAINED_RELEASE:
+                        break;
+                }
+                break;
             case VELOCITY:
                 switch (audioParameter) {
                     case GAIN:
@@ -515,6 +564,13 @@ void Mapper::selectPresetSustained(int index, int numFingers)
         case 7:
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS_Q);
+            break;
+        case 8:
+            setPitchRange(0.0f, 36.0f);
+            //mapFromTo(PINCH_DIST, PITCH);
+            mapFromTo(PINCH_DIST, BANDPASS_CUTOFF);
+            mapFromTo(Y_POSITION, BANDPASS_Q);
+            mapFromTo(VELOCITY, SUSTAINED_RELEASE);
             break;
     }
 }

@@ -43,6 +43,10 @@ float Gesture::discretePitchVal;
 
 float Gesture::spectralCentroid = 1000;
 
+float Gesture::distBetweenFingers;
+Point<float> Gesture::pinchP1;
+Point<float> Gesture::pinchP2;
+
 Point<float> Gesture::normalizeCoordinates(Point<float> p)
 {
     p.x = p.x / compWidth;
@@ -311,4 +315,22 @@ void Gesture::setCentroid(float C)
 float Gesture::getCentroid()
 {
     return spectralCentroid;
+}
+
+void Gesture::setDistBetweenFingers(int i)
+{
+    pinchP1 = normalizeCoordinates(fingers[0]->pos);
+    pinchP2 = normalizeCoordinates(fingers[i]->pos);
+    
+    distBetweenFingers = (std::sqrt(std::pow(pinchP2.x-pinchP1.x,2)+std::pow(pinchP2.y-pinchP1.y,2)))-0.1;
+}
+
+void Gesture::resetDistBetweenFingers()
+{
+    distBetweenFingers = 0.0f;
+}
+
+float Gesture::getDistBetweenFingers()
+{
+    return distBetweenFingers;
 }
