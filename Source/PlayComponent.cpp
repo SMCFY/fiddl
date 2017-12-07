@@ -152,15 +152,9 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     Gesture::setVelocity(Gesture::getFingerPosition(0).x, Gesture::getFingerPosition(0).y);
     
     if(Gesture::getNumFingers() > 1 )
-    {
         Gesture::setDistBetweenFingers(Gesture::getNumFingers()-1);
-        std::cout << Gesture::getDistBetweenFingers() << "\n";
-    }
     else
-    {
         Gesture::resetDistBetweenFingers();
-        std::cout << Gesture::getDistBetweenFingers() << "\n";
-    }
         
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     

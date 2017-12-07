@@ -570,7 +570,7 @@ void Mapper::selectPresetSustained(int index, int numFingers)
                 setPitchRange(-12.0f, 24.0f);
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(PINCH_DIST, LOWPASS_CUTOFF);
-                //mapFromTo(Y_POSITION, BANDPASS_Q);
+                mapFromTo(PINCH_DIST, LOWPASS_Q);
                 mapFromTo(VELOCITY, SUSTAINED_RELEASE);
             break;
     }
