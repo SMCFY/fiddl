@@ -561,16 +561,17 @@ void Mapper::selectPresetSustained(int index, int numFingers)
                 mapFromTo(CENTROID, BANDPASS_CUTOFF);
                 mapFromTo(VELOCITY, BANDPASS_Q);
                 mapFromTo(VELOCITY, SUSTAINED_RELEASE);
+            break;
         case 7:
                 mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(X_POSITION, HIGHPASS_Q);
             break;
         case 8:
-            setPitchRange(0.0f, 36.0f);
-            //mapFromTo(PINCH_DIST, PITCH);
-            mapFromTo(PINCH_DIST, BANDPASS_CUTOFF);
-            mapFromTo(Y_POSITION, BANDPASS_Q);
-            mapFromTo(VELOCITY, SUSTAINED_RELEASE);
+                setPitchRange(-12.0f, 24.0f);
+                mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(PINCH_DIST, LOWPASS_CUTOFF);
+                //mapFromTo(Y_POSITION, BANDPASS_Q);
+                mapFromTo(VELOCITY, SUSTAINED_RELEASE);
             break;
     }
 }

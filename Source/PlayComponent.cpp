@@ -91,13 +91,17 @@ void PlayComponent::paint (Graphics& g)
         g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit); //set backdrop for sustained space
         if(discretePitchToggled)
             drawPitchBackDrop(g); //draws Pitchbar
-        
-        if(Gesture::getNumFingers() != 0) //draw ellipse on the users finger positions
-        {
+
+        if(Gesture::getNumFingers() == 1) // draw path
+        {           
             for (int i = 0; i < Gesture::getNumFingers(); i++)
             {
                 Gesture::drawPath(g, Gesture::getPath(i), i);
-            }
+            }     
+        }
+        else if(Gesture::getNumFingers() >= 2) // draw pinch indicator
+        {
+            drawPinchIndicator(g);
         }
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
@@ -404,6 +408,28 @@ void PlayComponent::drawRipples(Graphics& g)
                 ripples[i]->line = 0;  
         }
     }
+}
+
+void PlayComponent::drawPinchIndicator(Graphics& g)
+{
+
+    Point<float> f1(Gesture::getFingerPositionScreen(0).x, Gesture::getFingerPositionScreen(0).y);
+    Point<float> f2(Gesture::getFingerPositionScreen(Gesture::getNumFingers()-1).x, Gesture::getFingerPositionScreen(Gesture::getNumFingers()-1).y);
+
+    // touch indicators
+    g.setOpacity(1.0f);
+    g.drawEllipse(f1.x-(tipSize/2), f1.y-(tipSize/2), tipSize, tipSize, tipThickness);
+    g.drawEllipse(f2.x-(tipSize/2), f2.y-(tipSize/2), tipSize, tipSize, tipThickness);
+
+    // diameter
+
+    // pinch circle
+    g.setOpacity(0.5f);
+    pinchSize = std::sqrt(std::pow(f2.x-f1.x, 2)+std::pow(f2.y-f1.y, 2));
+    Point<float> centerPosition(jmin(f1.x, f2.x) + (jmax(f1.x, f2.x)-jmin(f1.x, f2.x))/2, jmin(f1.y, f2.y) + (jmax(f1.y, f2.y)-jmin(f1.y, f2.y))/2);
+
+    g.drawEllipse(centerPosition.x-(pinchSize/2), centerPosition.y-(pinchSize/2), pinchSize, pinchSize, pinchThickness);
+
 }
 
 bool PlayComponent::isPlaying;

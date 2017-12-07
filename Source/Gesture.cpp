@@ -322,7 +322,7 @@ void Gesture::setDistBetweenFingers(int i)
     pinchP1 = normalizeCoordinates(fingers[0]->pos);
     pinchP2 = normalizeCoordinates(fingers[i]->pos);
     
-    distBetweenFingers = (std::sqrt(std::pow(pinchP2.x-pinchP1.x,2)+std::pow(pinchP2.y-pinchP1.y,2)))-0.1;
+    distBetweenFingers = (std::sqrt(std::pow(pinchP2.x-pinchP1.x,2)+std::pow(pinchP2.y-pinchP1.y,2)));//;-0.1;
 }
 
 void Gesture::resetDistBetweenFingers()

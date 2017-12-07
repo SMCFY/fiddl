@@ -90,14 +90,20 @@ private:
     int toggleSpaceID = 1;
     
     //GUI
-    RectangleList<float> rectList;
+    float tipSize = 50;
+    float tipThickness = 3;
+    float pinchSize;
+    float pinchThickness = 1;
+    float lineThickness = 2;
     int rectNum = 12;
     void drawPitchBar(Graphics& g);
     void timerCallback() override;
     void addRipple();
     void rmRipple(int i);
     void drawRipples(Graphics& g);
+    void drawPinchIndicator(Graphics &g);
     OwnedArray<Ripple> ripples;
+    RectangleList<float> rectList;
 
     //Background Discrete Pitch GUI
     bool discretePitchToggled = false;
