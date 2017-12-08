@@ -88,9 +88,14 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::stretchToFit); //set backdrop for sustained space
+        g.setOpacity(0.5f);
+        g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred); //set backdrop for sustained space
         if(discretePitchToggled)
+        {
+            g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
+            g.drawRect (getLocalBounds(), 1);
             drawPitchBackDrop(g); //draws Pitchbar
+        }
 
         if(Gesture::getNumFingers() == 1) // draw path
         {           
@@ -106,7 +111,8 @@ void PlayComponent::paint (Graphics& g)
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
-        g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::onlyReduceInSize); //set backdrop for impulse space
+        g.setOpacity(0.5f);
+        g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred); //set backdrop for impulse space
         toggleDiscrete.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
 
