@@ -5,10 +5,10 @@
 </a>
 
 ### Synopsis
-The app revolves around the real-time manipulation of recordings with touch gestures. The user is able sample sounds via the built-in microphone and play them back in an expressive manner. The interface is divided into three different parameter spaces, each supporting various interactions and providing different audioparameters.
+This app revolves around the real-time manipulation of recordings with touch gestures. The user is able to sample sounds via the built-in microphone and play them back in an expressive manner. The interface is divided into three different parameter spaces, each supporting various interactions and providing different audioparameters.
 
 ### Motivation
-fiddl has been developed as part of a semester project in Sound and Music Computing, at Aalborg University, Copenhagen. The design is based on a collaboration with local music workshop,  aiming at children with limited musical nowledge.
+fiddl has been developed as part of a semester project in Sound and Music Computing at Aalborg University, Copenhagen. The design is based on a collaboration with [Small Composers](https://www.figura.dk/en/small-composers/), a local music workshop developed by [FIGURA Ensemble](http://www.figura.dk/en/#), which is aimed at children with limited musical knowledge.
 
 ### Getting Started
 Try out fiddl on the [App Store](https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4) if you would like to run the latest stable version on iPhone or iPad.
@@ -23,7 +23,7 @@ The following software must be installed prior to building fiddl:
 
 ```
 * JUCE (5.2.0)
-* Xcode (11.2)
+* Xcode (9.2)
 ```
 
 ### Installing
@@ -47,7 +47,7 @@ The following instructions will guide you in setting up the development environm
 
 * macOS (version 10.12 and above)
 * [JUCE](https://juce.com) (version 5.2)
-* [Xcode](https://developer.apple.com/xcode/) (version 11.2)
+* [Xcode](https://developer.apple.com/xcode/) (version 9.2)
 * [SoundTouch Audio Processing Library](https://www.surina.net/soundtouch/) (version 1.9.2)
 
 ## Authors
