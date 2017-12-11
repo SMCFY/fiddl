@@ -1,20 +1,16 @@
 # fiddl
 
-Description: [fiddl](https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4) is love, fiddl is life
-
 <a href="https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4">
 <img src="https://github.com/SMCFY/fiddl/blob/develop/Resources/Images/fiddl.png?raw=true" width="250" href="https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4">
 </a>
 
 ### Synopsis
-
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+The app revolves around the real-time manipulation of recordings with touch gestures. The user is able sample sounds via the built-in microphone and play them back in an expressive manner. The interface is divided into three different parameter spaces, each supporting various interactions and providing different audioparameters.
 
 ### Motivation
+fiddl has been developed as part of a semester project in Sound and Music Computing, at Aalborg University, Copenhagen. The design is based on a collaboration with local music workshop,  aiming at children with limited musical nowledge.
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
-
-## Getting Started
+### Getting Started
 Try out fiddl on the [App Store](https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4) if you would like to run the latest stable version on iPhone or iPad.
 
 The following installation guide will help you to get this project running on your local macOS computer for development and testing purposes. 
