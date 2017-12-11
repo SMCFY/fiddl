@@ -1,4 +1,4 @@
-#fiddl
+# fiddl
 
 Description: [fiddl](https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4) is love, fiddl is life
 
@@ -32,7 +32,7 @@ The following software must be installed prior to building fiddl:
 
 ### Installing
 
-The following instructions will guide you in setting up the development environment. It assumes that you are familiar with JUCE and know how to use the Projucer. you know how to use the JUCE Projuce
+The following instructions will guide you in setting up the development environment. It assumes that you are familiar with JUCE and know how to use the Projucer. If you are not familiar with JUCE, check out their [tutorials for getting started](https://juce.com/tutorials).
 
 #### Instructions
 
@@ -59,13 +59,3 @@ The following instructions will guide you in setting up the development environm
 * **Jonas Holfelt** - *Initial work* - [jholfelt](https://github.com/jholfelt)
 * **Geri Csapo** - *Initial work* - [gericsapo](https://github.com/gericsapo)
 * **Michael Castanieto** - *Initial work* - [umnum](https://github.com/umnum)
-
-## License
-
-This project is licensed under the **BSD License** - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
