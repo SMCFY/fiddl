@@ -73,8 +73,8 @@ void PlayComponent::paint (Graphics& g)
 
     if(toggleSpaceID == 1) //graphics for sustained space
     {
-        g.setOpacity(0.05f);
-        g.drawImageWithin(sustainBackgroundImage, -100, 0, getWidth()+200, getHeight()+200, RectanglePlacement::centred); //set backdrop for sustained space
+        //g.setOpacity(0.05f);
+        //g.drawImageWithin(sustainBackgroundImage, -100, 0, getWidth()+200, getHeight()+200, RectanglePlacement::centred); //set backdrop for sustained space
         g.setColour(Colour().fromRGB(120, 206, 214)); // render color
 
         if(pathEnabled && Gesture::getNumFingers() == 1) // draw path
@@ -96,8 +96,8 @@ void PlayComponent::paint (Graphics& g)
     }
     else if (toggleSpaceID == 2) //graphics for impulse space
     {
-        g.setOpacity(0.05f);
-        g.drawImageWithin(impulseBackgroundImage, -200, -200, getWidth()+400, getHeight()+400, RectanglePlacement::centred); //set backdrop for impulse space
+        //g.setOpacity(0.05f);
+        //g.drawImageWithin(impulseBackgroundImage, -200, -200, getWidth()+400, getHeight()+400, RectanglePlacement::centred); //set backdrop for impulse space
         toggleDiscrete.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
         
@@ -168,7 +168,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     
     rectNum = int(Gesture::getDiscretePitch()/2+6);
     
-    repaint();
+    //repaint();
 }
 
 void PlayComponent::mouseUp (const MouseEvent& e)
