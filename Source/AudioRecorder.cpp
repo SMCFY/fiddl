@@ -181,7 +181,7 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
     int rollOffLength = 5000;
     if(rollOffLength > sampLength)
-        rollOffLength = sampLength-1;
+        rollOffLength = sampLength;
 
     Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
     

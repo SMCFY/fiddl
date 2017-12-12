@@ -70,19 +70,7 @@ PlayComponent::~PlayComponent()
 void PlayComponent::paint (Graphics& g)
 {
     g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
-    /*
-    g.setFont (14.0f);
-    if (isPlaying)
-    {
-      g.drawText ("Playing", getLocalBounds(),
-                Justification::centred, true);
-    }
-    else
-    {
-      g.drawText ("Stopped", getLocalBounds(),
-                Justification::centred, true);
-    }
-    */
+
     if(toggleSpaceID == 1) //graphics for sustained space
     {
         g.setOpacity(0.05f);
@@ -187,27 +175,27 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 {
     Gesture::setVelocityMax(Gesture::getVelocity());
     
-    if(Gesture::getNumFingers() == 1)
-    {
-        Gesture::resetDistBetweenFingers();
-        std::cout << Gesture::getDistBetweenFingers() << "\n";
-    }
-    
     Gesture::rmFinger(e);
 
-    if(Gesture::getNumFingers() == 0) // note off (initiate release) 
-    {
-        pathEnabled = false;
-        ar.trigger(0);
-        adsr.trigger(0);
-    }
-    
-    swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
     Gesture::setResetPos(swipeEnd);
     
     Gesture::setTap(tapDetectCoords);
 
     rectNum = 12;
+    swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
+
+
+    if(Gesture::getNumFingers() == 1)
+    {
+        Gesture::resetDistBetweenFingers();
+    }
+
+    if(toggleSpaceID == 1 && Gesture::getNumFingers() == 0) // note off (initiate release) 
+    {
+        pathEnabled = false;
+        stopTimer();
+        adsr.trigger(0);
+    }
     
     repaint();
 }
