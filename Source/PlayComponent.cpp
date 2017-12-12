@@ -213,6 +213,7 @@ void PlayComponent::buttonClicked (Button* button)
             toggleSustain.setToggleState(false, dontSendNotification);
             toggleSpaceID = 2;
         }
+        toggleDiscrete.setVisible(false);
     }
     
     if(button == &toggleSustain)
@@ -226,6 +227,7 @@ void PlayComponent::buttonClicked (Button* button)
             toggleImpulse.setToggleState(false, dontSendNotification);
             toggleSpaceID = 1;
         }
+        toggleDiscrete.setVisible(true);
     }
     
     if(button == &toggleDiscrete)
