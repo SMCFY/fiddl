@@ -105,6 +105,8 @@ private:
     OwnedArray<Ripple> ripples;
     RectangleList<float> rectList;
 
+    bool pathEnabled;
+
     //Background Discrete Pitch GUI
     bool discretePitchToggled = false;
     void drawPitchBackDrop(Graphics& g);

@@ -206,7 +206,7 @@ void Envelope::process(AudioBuffer<float> buffer)
 	    	switch (envelopeType)
 	    	{
             case AR:
-	    	outputFrame[ch][samp] *= envelope(500, 0.95, *releaseTime); // APR
+	    	outputFrame[ch][samp] *= envelope(50, 0.90, *releaseTime); // APR
 	        break;
                     
             case ADSR:

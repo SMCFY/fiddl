@@ -35,7 +35,7 @@ RecComponent::~RecComponent()
 
 void RecComponent::paint (Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+    g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
     g.setColour(Colours::lightgrey);
     
     if (thumbnail.getTotalLength() > 0.0)
@@ -43,13 +43,13 @@ void RecComponent::paint (Graphics& g)
         Rectangle<int> thumbArea (getLocalBounds());
         if (recDone)
         {
-            g.fillAll (Colours::red);
+            g.fillAll (Colours::orangered);
             thumbnail.drawChannels(g, thumbArea.reduced(1), 0.0f, 3.0f, 1.0f);
            
         }
         else
         {
-            g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+            g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
             thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, recorder->getSampLength()/44100.f, 1.0f);
         }
     }
@@ -58,6 +58,8 @@ void RecComponent::paint (Graphics& g)
         g.setFont(14.0f);
         g.drawFittedText("Hold to Record", getLocalBounds(), Justification::centred, 2);
     }
+    g.setColour (Colours::darkgrey); // border color
+    g.drawLine(0, 0, getWidth(), 0, 1);
 }
 
 void RecComponent::resized()

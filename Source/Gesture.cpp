@@ -107,7 +107,7 @@ void Gesture::updateFingers(const MouseInputSource& mis, int index)
 
                     fingers[i]->path.addPath(newSegment);
                     fingers[i]->totalPathLength++;
-                    fingers[i]->pathAlpha *= 0.95;
+                    fingers[i]->pathAlpha *= 0.9;
                // }
             }
         }

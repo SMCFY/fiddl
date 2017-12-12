@@ -69,12 +69,9 @@ PlayComponent::~PlayComponent()
 
 void PlayComponent::paint (Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-    g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);
-    g.setColour (Colours::white);
+    g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
+    /*
     g.setFont (14.0f);
-
     if (isPlaying)
     {
       g.drawText ("Playing", getLocalBounds(),
@@ -85,24 +82,24 @@ void PlayComponent::paint (Graphics& g)
       g.drawText ("Stopped", getLocalBounds(),
                 Justification::centred, true);
     }
-
+    */
     if(toggleSpaceID == 1) //graphics for sustained space
     {
         g.setOpacity(0.05f);
         g.drawImageWithin(sustainBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred); //set backdrop for sustained space
-        if(discretePitchToggled)
-        {
-            g.fillAll (getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
-            g.drawRect (getLocalBounds(), 1);
-            drawPitchBackDrop(g); //draws Pitchbar
+        g.setColour(Colour().fromRGB(120, 206, 214)); // render color
+
+        if(pathEnabled && Gesture::getNumFingers() == 1) // draw path
+        {           
+            //for (int i = 0; i < Gesture::getNumFingers(); i++)
+            //{
+            Gesture::drawPath(g, Gesture::getPath(Gesture::getNumFingers()-1), Gesture::getNumFingers()-1);
+            //}     
         }
 
-        if(Gesture::getNumFingers() == 1) // draw path
-        {           
-            for (int i = 0; i < Gesture::getNumFingers(); i++)
-            {
-                Gesture::drawPath(g, Gesture::getPath(i), i);
-            }     
+        if(discretePitchToggled)
+        {
+            drawPitchBackDrop(g); //draws Pitchbar
         }
         else if(Gesture::getNumFingers() >= 2) // draw pinch indicator
         {
@@ -115,7 +112,8 @@ void PlayComponent::paint (Graphics& g)
         g.drawImageWithin(impulseBackgroundImage, 0, 0, getWidth(), getHeight(), RectanglePlacement::centred); //set backdrop for impulse space
         toggleDiscrete.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
-
+        
+        g.setColour(Colour().fromRGB(120, 206, 214)); // render color
         drawRipples(g);
     }
 }
@@ -134,6 +132,7 @@ void PlayComponent::mouseDown (const MouseEvent& e)
 {
     Gesture::addFinger(e);
     mouseDrag(e);
+    startTimer(60);
 
     if(getToggleSpaceID() == 1) // note on
     {
@@ -198,6 +197,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 
     if(Gesture::getNumFingers() == 0) // note off (initiate release) 
     {
+        pathEnabled = false;
         ar.trigger(0);
         adsr.trigger(0);
     }
@@ -263,6 +263,7 @@ void PlayComponent::timerCallback()
 {
     if(toggleSpaceID == 1) // sustain
     {
+        /*
         velocityRolloff *= 0.9;
         Gesture::setVelocity(velocityRolloff);
         
@@ -270,6 +271,9 @@ void PlayComponent::timerCallback()
         {
             stopTimer();
         }
+        */
+        if(Gesture::getNumFingers() == 1)
+            pathEnabled = true;
     }
     else // impulse
     {
