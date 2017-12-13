@@ -46,6 +46,7 @@ class DSP : public AudioProcessor
 		void changeProgramName(int index, const String& newName) override;
 		void getStateInformation (juce::MemoryBlock& destData) override;
 		void setStateInformation (const void *data, int sizeInBytes) override;
+        bool supportsDoublePrecisionProcessing() const override;
 		/* =========================================================================== */
 		/* pure virtual function, the DSP class that inherits
 		   this must implement this function to process a signal */

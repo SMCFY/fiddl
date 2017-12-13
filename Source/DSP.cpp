@@ -116,3 +116,8 @@ void DSP::getStateInformation (juce::MemoryBlock& destData)
 void DSP::setStateInformation(const void *data, int sizeInBytes)
 {
 }
+
+bool DSP::supportsDoublePrecisionProcessing() const
+{
+    return false;
+}

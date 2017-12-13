@@ -132,6 +132,32 @@ void Mapper::mapToSustainedRelease(float val)
     releaseT = (int)(abs(val)*3000)+1000;
 }
 
+void Mapper::mapToReverb(float val, ReverbParameter parameter)
+{
+    switch (parameter)
+    {
+        case ROOMSIZE:
+            *AudioProcessorBundler::roomSize = val;
+            break;
+        case DAMPING:
+            *AudioProcessorBundler::damping = val;
+            break;
+        case WET_LEVEL:
+            *AudioProcessorBundler::wetLevel = val;
+            break;
+        case DRY_LEVEL:
+            *AudioProcessorBundler::dryLevel = val;
+            break;
+        case WIDTH:
+            *AudioProcessorBundler::width = val;
+            break;
+        case FREEZEMODE:
+            *AudioProcessorBundler::freezeMode = val;
+            break;
+    }
+    AudioProcessorBundler::reverb->updateParameters();
+}
+
 void Mapper::mapFromTo(const GestureParameter gestureParameter, const AudioParameter audioParameter)
 {
     mapping.push_back(std::make_pair(gestureParameter,audioParameter));
@@ -262,6 +288,10 @@ void Mapper::updateParameters()
                         break;
                     case SUSTAINED_RELEASE:
                         break;
+                    case REVERB:
+                        mapToReverb(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y, DAMPING);
+                        AudioProcessorBundler::turnOnProcessor(REVERB_ON);
+                        break;
                 }
                 break;
             case ABS_DIST:
@@ -312,6 +342,7 @@ void Mapper::updateParameters()
                     case SUSTAINED_RELEASE:
                         break;
                     case REVERB:
+                        mapToReverb(Gesture::getAbsDistFromOrigin(), DAMPING);
                         AudioProcessorBundler::turnOnProcessor(REVERB_ON);
                         break;
                 }
@@ -546,10 +577,11 @@ void Mapper::selectPresetSustained(int index, int numFingers)
             break;
         case 8:
                 setPitchRange(-12.0f, 24.0f);
-                mapFromTo(Y_POSITION, PITCH);
+                //mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(PINCH_DIST, LOWPASS_CUTOFF);
                 mapFromTo(PINCH_DIST, LOWPASS_Q);
                 mapFromTo(VELOCITY, SUSTAINED_RELEASE);
+            mapFromTo(Y_POSITION, REVERB);
             break;
     }
 }
