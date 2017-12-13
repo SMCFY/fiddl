@@ -336,6 +336,9 @@ void Mapper::updateParameters()
                         break;
                     case SUSTAINED_RELEASE:
                         break;
+                    case REVERB:
+                        AudioProcessorBundler::turnOnProcessor(REVERB_ON);
+                        break;
                 }
                 break;
             case PINCH_DIST:
@@ -623,6 +626,7 @@ void Mapper::selectPresetImpulse(int index, int numFingers)
             mapFromTo(CENTROID, BANDPASS_CUTOFF);
             mapFromTo(ABS_DIST, BANDPASS_Q);
             mapFromTo(ABS_DIST, RELEASE);
+            mapFromTo(ABS_DIST, REVERB);
             break;
     }
 }
