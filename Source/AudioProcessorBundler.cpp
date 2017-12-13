@@ -29,6 +29,12 @@ void AudioProcessorBundler::initDSPBlocks()
     highPassFilterQParam = new AudioParameterFloat("HPQ", "Highpass Q", { 0.1f, 100.0f, 0.f, 1.f }, 50.0f, "Q");
     bandPassFilterFreqParam  = new AudioParameterFloat ("BPFREQ", "Pre Bandpass Freq.", { 20.f, 3000.f, 0.f, 0.5f }, 3000.f, "Hz");
     bandPassFilterQParam = new AudioParameterFloat("BPQ", "Bandpass Q", { 0.1f, 100.0f, 0.f, 1.f }, 50.0f, "Q");
+    roomSize = new AudioParameterFloat("roomSize", "Room Size", 0.0f, 1.0f, 0.5f);
+    damping = new AudioParameterFloat("damping", "Damping", 0.0f, 1.0f, 0.4f);
+    wetLevel = new AudioParameterFloat("wetLevel", "Wet Level", 0.0f, 1.0f, 0.7f);
+    dryLevel = new AudioParameterFloat("dryLevel", "Dry Level", 0.0f, 1.0f, 0.3f);
+    width = new AudioParameterFloat("width", "Width", 0.0f, 1.0f, 0.4f);
+    freezeMode = new AudioParameterFloat("freezeMode", "Freeze Mode", 0.0f, 1.0f, 0.4f);
     
     // dsp blocks
     gain = new Gain(gainLevel);
@@ -36,7 +42,7 @@ void AudioProcessorBundler::initDSPBlocks()
     lopass = new Filter(lowPassFilterFreqParam, lowPassFilterQParam, "lowpass");
     hipass = new Filter(highPassFilterFreqParam, highPassFilterQParam, "highpass");
     bapass = new Filter(bandPassFilterFreqParam, bandPassFilterQParam, "bandpass");
-    reverb = new Reverberation(44100); reverb->updateParameters(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
+    reverb = new Reverberation(roomSize, damping, wetLevel, dryLevel, width, freezeMode, 44100.0);
 
     // add parameter        - all AudioParameterFloat objects must be connected to a DSP processor
     gain->addParameter(gainLevel);
@@ -48,6 +54,12 @@ void AudioProcessorBundler::initDSPBlocks()
     hipass->addParameter(highPassFilterQParam);
     bapass->addParameter(bandPassFilterFreqParam);
     bapass->addParameter(bandPassFilterQParam);
+    reverb->addParameter(roomSize);
+    reverb->addParameter(damping);
+    reverb->addParameter(wetLevel);
+    reverb->addParameter(dryLevel);
+    reverb->addParameter(width);
+    reverb->addParameter(freezeMode);
     
     // set process switches
     gainIsEnabled = false;
@@ -109,6 +121,12 @@ AudioParameterFloat *AudioProcessorBundler::highPassFilterFreqParam;
 AudioParameterFloat *AudioProcessorBundler::highPassFilterQParam;
 AudioParameterFloat *AudioProcessorBundler::bandPassFilterFreqParam;
 AudioParameterFloat *AudioProcessorBundler::bandPassFilterQParam;
+AudioParameterFloat *AudioProcessorBundler::roomSize;
+AudioParameterFloat *AudioProcessorBundler::damping;
+AudioParameterFloat *AudioProcessorBundler::wetLevel;
+AudioParameterFloat *AudioProcessorBundler::dryLevel;
+AudioParameterFloat *AudioProcessorBundler::width;
+AudioParameterFloat *AudioProcessorBundler::freezeMode;
 
 // DSP processors:
 Gain *AudioProcessorBundler::gain;

@@ -52,6 +52,12 @@ class AudioProcessorBundler
         static AudioParameterFloat *highPassFilterQParam;
         static AudioParameterFloat *bandPassFilterFreqParam;
         static AudioParameterFloat *bandPassFilterQParam;
+        static AudioParameterFloat* roomSize;
+        static AudioParameterFloat* damping;
+        static AudioParameterFloat* wetLevel;
+        static AudioParameterFloat* dryLevel;
+        static AudioParameterFloat* width;
+        static AudioParameterFloat* freezeMode;
     
         // DSP processor switches
         static bool gainIsEnabled;

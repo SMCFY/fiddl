@@ -17,6 +17,7 @@
 
 enum GestureParameter {X_POSITION, Y_POSITION, ABS_DIST, PINCH_DIST, VELOCITY,CENTROID, VELOCITY_MAX};
 enum AudioParameter {GAIN, PITCH, DISCRETE_PITCH, TEMPO, HIGHPASS_CUTOFF, HIGHPASS_Q, LOWPASS_CUTOFF, LOWPASS_Q, BANDPASS_CUTOFF, BANDPASS_Q, RELEASE, SUSTAINED_RELEASE, REVERB};
+enum ReverbParameter {ROOMSIZE, DAMPING, WET_LEVEL, DRY_LEVEL, WIDTH, FREEZEMODE};
 
 class Mapper
 {
@@ -50,6 +51,7 @@ class Mapper
         static void mapToDiscretePitch(float val);
         static void mapToRelease(float val);
         static void mapToSustainedRelease(float val);
+        static void mapToReverb(float val, ReverbParameter parameter);
         static void mapCentroidToBandPassCutoff(float val);
     
         static float pitchRange [2];
