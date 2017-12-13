@@ -577,11 +577,10 @@ void Mapper::selectPresetSustained(int index, int numFingers)
             break;
         case 8:
                 setPitchRange(-12.0f, 24.0f);
-                //mapFromTo(Y_POSITION, PITCH);
+                mapFromTo(Y_POSITION, PITCH);
                 mapFromTo(PINCH_DIST, LOWPASS_CUTOFF);
                 mapFromTo(PINCH_DIST, LOWPASS_Q);
                 mapFromTo(VELOCITY, SUSTAINED_RELEASE);
-            mapFromTo(Y_POSITION, REVERB);
             break;
     }
 }
