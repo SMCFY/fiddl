@@ -103,6 +103,7 @@ private:
     void rmRipple(int i);
     void drawRipples(Graphics& g);
     void drawPinchIndicator(Graphics &g);
+    void drawImpulseBackdrop(Graphics& g);
     OwnedArray<Ripple> ripples;
     RectangleList<float> rectList;
 

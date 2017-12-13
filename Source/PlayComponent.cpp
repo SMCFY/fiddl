@@ -98,6 +98,7 @@ void PlayComponent::paint (Graphics& g)
     {
         //g.setOpacity(0.05f);
         //g.drawImageWithin(impulseBackgroundImage, -200, -200, getWidth()+400, getHeight()+400, RectanglePlacement::centred); //set backdrop for impulse space
+        drawImpulseBackdrop(g);
         toggleDiscrete.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
         
@@ -337,14 +338,17 @@ void PlayComponent::drawPitchBackDrop(Graphics& g)
     {
         if(i%2 == 0)
         {
-            g.setColour (Colours::darkgrey);
-            g.setOpacity(0.1);
+            //g.setColour (Colours::darkgrey);
+            //g.setOpacity(0.1);
+            
+            g.setColour(Colour().fromRGB(18+1, 21+1, 36+1));
             g.fillRect(rectListBackDrop.getRectangle(i));
         }
         else
         {
-            g.setColour (Colours::darkgrey);
-            g.setOpacity(0.1);
+            //g.setColour (Colours::darkgrey);
+            //g.setOpacity(0.1);
+            g.setColour(Colour().fromRGB(18+1, 21+1, 36+1));
             g.fillRect(rectListBackDrop.getRectangle(i));
         }
         
@@ -357,10 +361,12 @@ void PlayComponent::drawPitchBackDrop(Graphics& g)
     {
         if(discretePitchToggled)
         {
-            g.setColour (Colours::lightgrey);
+            //g.setColour (Colours::lightgrey);
+            g.setColour(Colour().fromRGB(120, 206, 214));
             g.setOpacity(0.5);
             g.fillRect(rectListBackDrop.getRectangle(rectListSize-1-rectNum));
             g.setColour (Colours::white);
+            g.setOpacity(0.5);
             g.drawRect(rectListBackDrop.getRectangle(rectListSize-1-rectNum));
         }
     }
@@ -439,4 +445,18 @@ void PlayComponent::stopPlaying()
 {
     initRead = true; // reset readIndex
     isPlaying = false;
+}
+
+void PlayComponent::drawImpulseBackdrop(Graphics& g)
+{
+    for (int i = 4; i > 0; i--)
+    {
+        g.setColour(Colour().fromRGB(18+i, 21+i, 36+i));
+        g.fillEllipse(getWidth()/2 - (i*getHeight()/4)/2, getHeight()/2-(i*getHeight()/4)/2, i*getHeight()/4,i*getHeight()/4);
+        
+        //Add stroke
+        //g.setColour(Colours::white);
+        //g.setOpacity(0.02);
+        //g.drawEllipse(getWidth()/2 - (i*getHeight()/4)/2, getHeight()/2-(i*getHeight()/4)/2, i*getHeight()/4,i*getHeight()/4,3);
+    }
 }
