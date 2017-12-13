@@ -43,19 +43,10 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             if (numFingers == 1)
             {
                 selectPresetSustained(1, numFingers);   // SET PRESET HERE
-                /*
-                mapFromTo(X_POSITION, PITCH);
-                mapFromTo(X_POSITION, BANDPASS_CUTOFF);
-                mapFromTo(Y_POSITION, BANDPASS_Q);
-                */
             }
             else if (numFingers >= 2)
             {
                 selectPresetSustained(8, numFingers);   // SET PRESET HERE
-                /*
-                mapFromTo(Y_POSITION, PITCH);
-                mapFromTo(X_POSITION, HIGHPASS_Q);
-                 */
             }
             
             if (isInPitchBar)   //NO need for preset for the pitchbar. Change the range if needed
@@ -65,24 +56,8 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             }
             break;
         case 2: // impulse
-            selectPresetImpulse(6,numFingers);   //SET PRESET HERE
-            /*
-            setPitchRange(-4.0f, 12.0f);
-            if (numFingers == 1)
-            {
-                mapFromTo(ABS_DIST, PITCH);
-                mapFromTo(ABS_DIST, BANDPASS_CUTOFF);
-                mapFromTo(ABS_DIST, BANDPASS_Q);
-                mapFromTo(ABS_DIST, RELEASE);
-                
-            }
-            else if (numFingers >= 2)
-            {
-                mapFromTo(ABS_DIST, PITCH);
-                mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
-                mapFromTo(ABS_DIST, RELEASE);
-                
-            }*/
+            selectPresetImpulse(5,numFingers);   //SET PRESET HERE
+            
         default:
             break;
     }
@@ -614,11 +589,12 @@ void Mapper::selectPresetImpulse(int index, int numFingers)
             mapFromTo(ABS_DIST, RELEASE);
             break;
         case 5:
-            setPitchRange(-12.0f, 24.0f);
+            setPitchRange(-2.0f, 4.0f);
             mapFromTo(ABS_DIST, PITCH);
             mapFromTo(ABS_DIST, HIGHPASS_CUTOFF);
             mapFromTo(ABS_DIST, HIGHPASS_Q);
             mapFromTo(ABS_DIST, RELEASE);
+            mapFromTo(ABS_DIST, REVERB);
             break;
         case 6:
             setPitchRange(-4.0f, 12.0f);
