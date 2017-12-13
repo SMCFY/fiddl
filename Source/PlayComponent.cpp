@@ -36,7 +36,7 @@ PlayComponent::PlayComponent()
     //ToggleSpace buttons
     addAndMakeVisible (toggleSustain);
     toggleSustain.setImages(true, true, true,
-                            sustainButtonIconImage, 0.5f, Colours::transparentBlack,
+                            sustainButtonIconImage, 0.2f, Colours::transparentBlack,
                             sustainButtonIconImage, 0.8f, Colours::transparentBlack,
                             sustainButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleSustain.setToggleState(true, dontSendNotification);
@@ -44,7 +44,7 @@ PlayComponent::PlayComponent()
     
     addAndMakeVisible (toggleImpulse);
     toggleImpulse.setImages(true, true, true,
-                            impulseButtonIconImage, 0.5f, Colours::transparentBlack,
+                            impulseButtonIconImage, 0.2f, Colours::transparentBlack,
                             impulseButtonIconImage, 0.8f, Colours::transparentBlack,
                             impulseButtonIconImage, 1.0f, Colours::transparentBlack);    toggleSustain.setClickingTogglesState(true);
     toggleImpulse.setClickingTogglesState(true);
@@ -53,7 +53,7 @@ PlayComponent::PlayComponent()
     //Discrete toggle button
     addAndMakeVisible (toggleDiscrete);
     toggleDiscrete.setImages(true, true, true,
-                            discreteButtonIconImage, 0.5f, Colours::transparentBlack,
+                            discreteButtonIconImage, 0.2f, Colours::transparentBlack,
                             discreteButtonIconImage, 0.8f, Colours::transparentBlack,
                             discreteButtonIconImage, 1.0f, Colours::transparentBlack);    toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.setClickingTogglesState(true);
