@@ -13,6 +13,7 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
+#include <array>
 
 class Gesture 
 {
@@ -52,6 +53,7 @@ class Gesture
         static float getAbsDistFromOrigin();
     
         static float getDiscretePitch();
+        static int getPitchIndex();
 
         // multi touch
         static void addFinger(const MouseEvent& e); // adds new input source to the array
@@ -93,7 +95,16 @@ class Gesture
         static float absDistFromOrigin;
         static float velMax;
     
+        
+        static float discretePitchScale [8];
+        static float pentatonic [];
+        static float diatonic [];
+        static float chromatic [];
+        static float minorPenta [];
+        static float phrygian[];
         static float discretePitchVal;
+        static int pitchIndex;
+        static void setScale(int index);
     
         static float directionDeltaX;
         static float directionDeltaY;

@@ -95,7 +95,8 @@ private:
     float pinchSize;
     float pinchThickness = 1;
     float lineThickness = 2;
-    int rectNum = 12;
+    int rectListSize = 8;
+    int rectNum = rectListSize;
     void drawPitchBar(Graphics& g);
     void timerCallback() override;
     void addRipple();

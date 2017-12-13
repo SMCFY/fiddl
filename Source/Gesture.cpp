@@ -39,7 +39,16 @@ float Gesture::compHeight;
 float Gesture::tapDist;
 bool Gesture::isTap = false;
 
+
+float Gesture::diatonic [] = {-5.0f, -3.0f, -2.0f, 0.0f, 2.0f, 4.0f, 6.0f, 7.0f};
+float Gesture::chromatic [] = {-4.0f, -3.0f, -2.0f, -1.0f, 0.0f, 1.0f, 2.0f, 3.0f};
+float Gesture::pentatonic [] = {-7.0f, -5.0f, -3.0f, 0.0f, 2.0f, 5.0f, 7.0f, 9.0f};
+float Gesture::minorPenta [] = {-7.0f, -4.0f, -2.0f, 0.0f, 3.0f, 5.0f, 8.0f, 10.0f};
+float Gesture::phrygian [] = {-6.0f, -5.0f, -2.0f, -1.0f, 1.0f, 2.0f, 5.0f, 6.0f};
+
+float Gesture::discretePitchScale [8]; //array size = 8
 float Gesture::discretePitchVal;
+int Gesture::pitchIndex;
 
 float Gesture::spectralCentroid = 1000;
 
@@ -259,7 +268,19 @@ float Gesture::getAbsDistFromOrigin()
 
 float Gesture::getDiscretePitch()
 {
-    return 2 * floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).y * 12) - 6);
+    //Set scale here: 1 = Diatonic  2 = Pentatonic  3 = Minor Pentatonic  4 = Phrygian  5 = Chromatic
+    setScale(2);
+    
+    pitchIndex = floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).y * 8));
+    
+    discretePitchVal = discretePitchScale[pitchIndex];
+
+    return discretePitchVal;
+}
+
+int Gesture::getPitchIndex()
+{
+    return pitchIndex;
 }
 
 float Gesture::getVelocity()
@@ -333,4 +354,40 @@ void Gesture::resetDistBetweenFingers()
 float Gesture::getDistBetweenFingers()
 {
     return distBetweenFingers;
+}
+
+void Gesture::setScale(int index)
+{
+    switch(index){
+        case 1: //Diatonic scale
+            for(int i = 0; i < 8; i++)
+            {
+                discretePitchScale[i] = diatonic[i];
+            }
+            break;
+        case 2: //Pentatonic scale
+            for(int i = 0; i < 8; i++)
+            {
+                discretePitchScale[i] = pentatonic[i];
+            }
+            break;
+        case 3: //Minor Pentatonic scale
+            for(int i = 0; i < 8; i++)
+            {
+                discretePitchScale[i] = minorPenta[i];
+            }
+            break;
+        case 4: //Phrygian scale
+            for(int i = 0; i < 8; i++)
+            {
+                discretePitchScale[i] = phrygian[i];
+            }
+            break;
+        case 5: //Chromatic scale
+            for(int i = 0; i < 8; i++)
+            {
+                discretePitchScale[i] = chromatic[i];
+            }
+            break;
+    }
 }

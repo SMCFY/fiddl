@@ -166,7 +166,7 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     tapDetectCoords[1][0] = Gesture::getFingerPosition(0).x;
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
     
-    rectNum = int(Gesture::getDiscretePitch()/2+6);
+    rectNum = Gesture::getPitchIndex();
     
     //repaint();
 }
@@ -181,7 +181,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     
     Gesture::setTap(tapDetectCoords);
 
-    rectNum = 12;
+    rectNum = rectListSize;
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
 
 
@@ -328,12 +328,12 @@ void PlayComponent::fillCoordinates()
 
 void PlayComponent::drawPitchBackDrop(Graphics& g)
 {
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < rectListSize; i++)
     {
-        rectListBackDrop.add(Rectangle<float>(-5,(getHeight()/12+0.5)*i,getWidth()+5,getHeight()/12+0.5));
+        rectListBackDrop.add(Rectangle<float>(-5,(getHeight()/rectListSize+0.5)*i,getWidth()+5,getHeight()/rectListSize+0.5));
     }
     
-    for (int i = 0; i < 12; i++)
+    for (int i = 0; i < rectListSize; i++)
     {
         if(i%2 == 0)
         {
@@ -359,9 +359,9 @@ void PlayComponent::drawPitchBackDrop(Graphics& g)
         {
             g.setColour (Colours::lightgrey);
             g.setOpacity(0.5);
-            g.fillRect(rectListBackDrop.getRectangle(11-rectNum));
+            g.fillRect(rectListBackDrop.getRectangle(rectListSize-1-rectNum));
             g.setColour (Colours::white);
-            g.drawRect(rectListBackDrop.getRectangle(11-rectNum));
+            g.drawRect(rectListBackDrop.getRectangle(rectListSize-1-rectNum));
         }
     }
 }
