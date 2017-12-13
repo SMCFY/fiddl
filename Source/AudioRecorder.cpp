@@ -76,7 +76,7 @@ void AudioRecorder::stop()
 
         centroid = spectralCentroid(specBuff);
         Gesture::setCentroid(centroid);
-        std::cout << "centroid: " << centroid << std::endl;
+        //std::cout << "centroid: " << centroid << std::endl;
     }
 }
 

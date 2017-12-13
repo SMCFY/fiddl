@@ -201,7 +201,7 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
-                        mapToDiscretePitch(Gesture::getFingerPosition(0).x);
+                        mapToDiscretePitch(Gesture::getFingerPosition((Gesture::getNumFingers()-1)).x);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case TEMPO:
@@ -251,7 +251,7 @@ void Mapper::updateParameters()
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case DISCRETE_PITCH:
-                        mapToDiscretePitch(Gesture::getFingerPosition(0).y);
+                        mapToDiscretePitch(Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
                         AudioProcessorBundler::turnOnProcessor(PITCH_ON);
                         break;
                     case TEMPO:
