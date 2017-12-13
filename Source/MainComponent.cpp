@@ -138,6 +138,10 @@ public:
         {
             AudioProcessorBundler::bapass->process(*bufferToFill.buffer);
         }
+        if (AudioProcessorBundler::reverbEnabled)
+        {
+            AudioProcessorBundler::reverb->process(*bufferToFill.buffer);
+        }
 
         
         // Envelopes

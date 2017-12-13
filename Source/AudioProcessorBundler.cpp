@@ -36,6 +36,7 @@ void AudioProcessorBundler::initDSPBlocks()
     lopass = new Filter(lowPassFilterFreqParam, lowPassFilterQParam, "lowpass");
     hipass = new Filter(highPassFilterFreqParam, highPassFilterQParam, "highpass");
     bapass = new Filter(bandPassFilterFreqParam, bandPassFilterQParam, "bandpass");
+    reverb = new Reverberation(44100); reverb->updateParameters(0.5, 0.5, 0.5, 0.5, 0.5, 0.5);
 
     // add parameter        - all AudioParameterFloat objects must be connected to a DSP processor
     gain->addParameter(gainLevel);
@@ -55,6 +56,7 @@ void AudioProcessorBundler::initDSPBlocks()
     lowPassISEnabled = false;
     highPassIsEnabled = false;
     bandPassIsEnabled = false;
+    reverbEnabled = false;
 }
 
 void AudioProcessorBundler::turnOffProcessors()
@@ -65,6 +67,7 @@ void AudioProcessorBundler::turnOffProcessors()
     lowPassISEnabled = false;
     highPassIsEnabled = false;
     bandPassIsEnabled = false;
+    reverbEnabled = false;
 }
 
 void AudioProcessorBundler::turnOnProcessor(ProcessorSwitch processorSwitch)
@@ -89,6 +92,9 @@ void AudioProcessorBundler::turnOnProcessor(ProcessorSwitch processorSwitch)
         case BANDPASS_ON:
             bandPassIsEnabled = true;
             break;
+        case REVERB_ON:
+            reverbEnabled = true;
+            break;
     }
 }
 
@@ -110,6 +116,7 @@ TimeStretch *AudioProcessorBundler::timeStretch;
 Filter *AudioProcessorBundler::lopass;
 Filter *AudioProcessorBundler::hipass;
 Filter *AudioProcessorBundler::bapass;
+Reverberation *AudioProcessorBundler::reverb;
 
 // DSP processor switches:
 bool AudioProcessorBundler::gainIsEnabled;
@@ -118,3 +125,4 @@ bool AudioProcessorBundler::tempoIsEnabled;
 bool AudioProcessorBundler::lowPassISEnabled;
 bool AudioProcessorBundler::highPassIsEnabled;
 bool AudioProcessorBundler::bandPassIsEnabled;
+bool AudioProcessorBundler::reverbEnabled;

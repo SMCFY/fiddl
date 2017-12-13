@@ -18,8 +18,9 @@
 #include "TimeStretch.h"
 #include "Filter.h"
 #include "Envelope.h"
+#include "Reverberation.h"
 
-enum ProcessorSwitch {GAIN_ON, PITCH_ON, TEMPO_ON, LOWPASS_ON, HIGHPASS_ON, BANDPASS_ON};
+enum ProcessorSwitch {GAIN_ON, PITCH_ON, TEMPO_ON, LOWPASS_ON, HIGHPASS_ON, BANDPASS_ON, REVERB_ON};
 
 class AudioProcessorBundler
 {
@@ -39,6 +40,7 @@ class AudioProcessorBundler
         static Filter *lopass;
         static Filter *hipass;
         static Filter *bapass;
+        static Reverberation *reverb;
 
 		// DSP parameters
 		static AudioParameterFloat *gainLevel;
@@ -58,5 +60,6 @@ class AudioProcessorBundler
         static bool lowPassISEnabled;
         static bool highPassIsEnabled;
         static bool bandPassIsEnabled;
+        static bool reverbEnabled;
 
 };
