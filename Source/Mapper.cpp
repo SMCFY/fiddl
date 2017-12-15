@@ -51,7 +51,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 {
                     selectPresetSustained(1, numFingers);   // SET PRESET HERE
                 }
-                else if (numFingers >= 2)
+                if (numFingers == 2 && !isInPitchBar)  
                 {
                     selectPresetSustained(8, numFingers);   // SET PRESET HERE
                 }
