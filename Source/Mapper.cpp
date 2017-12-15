@@ -38,7 +38,6 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
             
             if (isInPitchBar && numFingers == 1)   //NO need for preset for the pitchbar. Change the range if needed
             {
-                std::cout << "nug";
                 mapFromTo(Y_POSITION, DISCRETE_PITCH);
                 mapFromTo(X_POSITION, BANDPASS_CUTOFF);
                 setPitchRange(-12.0f, 24.0f);
@@ -50,7 +49,6 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 }
                 if (numFingers == 1)
                 {
-                    std::cout << "nig";
                     selectPresetSustained(1, numFingers);   // SET PRESET HERE
                 }
                 else if (numFingers >= 2)
