@@ -215,6 +215,7 @@ void PlayComponent::buttonClicked (Button* button)
             toggleSpaceID = 2;
         }
         toggleDiscrete.setVisible(false);
+        discretePitchToggled = false;
     }
     
     if(button == &toggleSustain)
@@ -229,6 +230,7 @@ void PlayComponent::buttonClicked (Button* button)
             toggleSpaceID = 1;
         }
         toggleDiscrete.setVisible(true);
+        discretePitchToggled = false;
     }
     
     if(button == &toggleDiscrete)
