@@ -12,16 +12,8 @@
 
 #include "TimeStretch.h"
 
-TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
+TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo, int sampleRate)
 {
-    // initialise the DSP state array, something like this:
-    /*
-    state = new float*[numChannels];
-    for (int ch = 0; ch < numChannels; ch++)
-    {
-        state[ch] = new float[bufferLengthInSamples];
-    }
-    */
     this->pitch = pitch;
     this->tempo = tempo;
     pitchUpdated = false;
@@ -30,7 +22,7 @@ TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
     
     counter = 0;
 
-    soundTouch.setSampleRate(44100);
+    soundTouch.setSampleRate(sampleRate);
     soundTouch.setChannels(1);
     soundTouch.setTempoChange(0.0f);
     soundTouch.setPitchSemiTones(0.0f);
@@ -46,14 +38,7 @@ TimeStretch::TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo)
 
 TimeStretch::~TimeStretch()
 {
-    // delete the state array, something like this:
-    /*
-    for (int i = 0; i < numChannels; i++)
-    {
-        delete state[i];
-    }
-    delete state;
-    */
+
 }
 
 void TimeStretch::process(AudioBuffer<float> buffer)
@@ -80,24 +65,9 @@ void TimeStretch::process(AudioBuffer<float> buffer)
 
 void TimeStretch::process(AudioBuffer<float> inputBuffer, AudioBuffer<float> outputBuffer, int &readIndex)
 {
-    // TODO: The soundTouch parameters need to be changed when the gesture mappings are updated
     if (tempoUpdated)
     {
         soundTouch.setPitchSemiTones(pitch->get());
         soundTouch.setPitchSemiTones(pitch->get());
     }
-    /*
-    float **bufferFrame = buffer.getArrayOfWritePointers();
-    int BUFF_SIZE = 512;
-    float outputSamples[BUFF_SIZE];
-    soundTouch.putSamples(*bufferFrame, buffer.getNumSamples());
-    nSamples = soundTouch.receiveSamples(outputSamples, BUFF_SIZE);
-    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
-    {
-        for (int sample = 0; sample < nSamples; sample++)
-        {
-            outputBufferFrame[ch][sample] = processedSamples[sample];
-        }
-    }
-    timeStretchIndex += INPUT_BUFF_SIZE;*/
 }

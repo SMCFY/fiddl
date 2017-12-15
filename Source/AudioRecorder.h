@@ -34,7 +34,7 @@ class AudioRecorder : public AudioIODeviceCallback
         void audioDeviceIOCallback (const float** inputChannelData, int numInputChannels,
                                     float** outputChannelData, int numOutputChannels,
                                     int numSamples) override;
-        double getSampleRate();
+        int getSampleRate();
         int getNumChannels();
         float** getRecBuff();
         AudioBuffer<float> getSampBuff();

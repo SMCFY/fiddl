@@ -17,7 +17,7 @@ AudioBuffer<float> AudioProcessorBundler::processBuffer(AudioBuffer<float> buff)
     return buff;
 }
 
-void AudioProcessorBundler::initDSPBlocks()
+void AudioProcessorBundler::initDSPBlocks(int sampleRate)
 {
     // dsp parameters
     gainLevel = new AudioParameterFloat("gainLevel", "Gain", 0.0f, 1.0f, 1.0f);
@@ -38,11 +38,11 @@ void AudioProcessorBundler::initDSPBlocks()
     
     // dsp blocks
     gain = new Gain(gainLevel);
-    timeStretch = new TimeStretch(pitch, tempo);
-    lopass = new Filter(lowPassFilterFreqParam, lowPassFilterQParam, "lowpass");
-    hipass = new Filter(highPassFilterFreqParam, highPassFilterQParam, "highpass");
-    bapass = new Filter(bandPassFilterFreqParam, bandPassFilterQParam, "bandpass");
-    reverb = new Reverberation(roomSize, damping, wetLevel, dryLevel, width, freezeMode, 44100.0);
+    timeStretch = new TimeStretch(pitch, tempo, sampleRate); 
+    lopass = new Filter(lowPassFilterFreqParam, lowPassFilterQParam, "lowpass", sampleRate);
+    hipass = new Filter(highPassFilterFreqParam, highPassFilterQParam, "highpass", sampleRate);
+    bapass = new Filter(bandPassFilterFreqParam, bandPassFilterQParam, "bandpass", sampleRate);
+    reverb = new Reverberation(roomSize, damping, wetLevel, dryLevel, width, freezeMode, sampleRate);
 
     // add parameter        - all AudioParameterFloat objects must be connected to a DSP processor
     gain->addParameter(gainLevel);

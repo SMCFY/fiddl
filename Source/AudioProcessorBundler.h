@@ -27,7 +27,7 @@ class AudioProcessorBundler
 	public:
 
 		static AudioBuffer<float> processBuffer(AudioBuffer<float> buff);
-        static void initDSPBlocks();
+        static void initDSPBlocks(int sampleRate);
         static void turnOffProcessors();
         static void turnOnProcessor(ProcessorSwitch processorSwtich);
 

@@ -54,12 +54,11 @@ public:
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
         //initialize DSP blocks and assign parameters
-        AudioProcessorBundler::initDSPBlocks();
+        AudioProcessorBundler::initDSPBlocks(sampleRate);
+
         playComp.ar.setSamplingRate(sampleRate);
         playComp.adsr.setSamplingRate(sampleRate);
         readIndex = 0;
-
-
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override

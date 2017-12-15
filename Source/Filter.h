@@ -14,16 +14,18 @@
 class Filter : public DSP
 {
 public:
-	Filter(AudioParameterFloat* cutoff, AudioParameterFloat* q, const String filterType);
-	~Filter();
-
-	void process(AudioBuffer<float> buffer) override;
+    Filter(AudioParameterFloat* cutoff, AudioParameterFloat* q, const String filterType, int sampleRate);
+    ~Filter();
+    
+    void process(AudioBuffer<float> buffer) override;
 
 private:
-	AudioParameterFloat* cutoff;
+    AudioParameterFloat* cutoff;
     AudioParameterFloat* q;
-	dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter, bandPassFilter;
+    dsp::ProcessorDuplicator<dsp::IIR::Filter<float>, dsp::IIR::Coefficients<float>> lowPassFilter, highPassFilter, bandPassFilter;
+    
     bool isHighPass, isLowPass, isBandPass;
+    int sampleRate;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Filter);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Filter);
 };
