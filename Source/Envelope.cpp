@@ -21,13 +21,14 @@ Envelope::Envelope()
     this->rampDown = 0;
 }
 
-Envelope::Envelope(int sr, Envelope::env type)
+Envelope::Envelope(Envelope::env type)
 : aMin(0.001f)
 {
-	this->samplingRate = sr;
+	this->samplingRate = 44100;
 	this->amplitude = 0;
 	this->noteOn = 0;
 	this->rampDown = 0;
+
 	this->envelopeType = type;
     this->releaseTime = &Mapper::releaseT;
 }

@@ -20,24 +20,23 @@ using namespace soundtouch;
 
 class TimeStretch : public DSP
 {
-	public:
-		TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo);
-		~TimeStretch();
+public:
+    TimeStretch(AudioParameterFloat *pitch, AudioParameterFloat *tempo, int sampleRate);
+    ~TimeStretch();
+    
+    void process(AudioBuffer<float> buffer) override;
+    void process(AudioBuffer<float> inputBuffer, AudioBuffer<float> outputBuffer, int &readIndex);
 
-		void process(AudioBuffer<float> buffer) override;
-        void process(AudioBuffer<float> inputBuffer, AudioBuffer<float> outputBuffer, int &readIndex);
-        // returns true if pitch or tempo values are updated from gesture mappings
-        bool pitchUpdated;
-        bool tempoUpdated;
-        int timeStretchIndex;
+    bool pitchUpdated;
+    bool tempoUpdated;
+    int timeStretchIndex;
 
-	private:
-	
-	    SoundTouch soundTouch;
-        int nSamples;
-        AudioParameterFloat* pitch;
-        AudioParameterFloat* tempo;
+private:
+    SoundTouch soundTouch;
+    int nSamples;
+    AudioParameterFloat* pitch;
+    AudioParameterFloat* tempo;
     int counter;
-
-		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretch);
+    
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TimeStretch);
 };

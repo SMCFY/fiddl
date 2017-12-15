@@ -16,7 +16,7 @@ class Envelope
         typedef enum env{AR, ADSR} env;
 
         Envelope();
-		Envelope(int sr, Envelope::env type);
+		Envelope(Envelope::env type);
 		~Envelope();
 
 		void trigger(bool trig);

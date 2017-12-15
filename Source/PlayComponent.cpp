@@ -59,8 +59,8 @@ PlayComponent::PlayComponent()
     toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.addListener (this);
 
-    ar = Envelope(44100, Envelope::AR);
-    adsr = Envelope(44100, Envelope::ADSR);
+    ar = Envelope(Envelope::AR);
+    adsr = Envelope(Envelope::ADSR);
 }
 
 PlayComponent::~PlayComponent()

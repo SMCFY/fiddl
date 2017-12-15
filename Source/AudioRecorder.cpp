@@ -40,7 +40,7 @@ void AudioRecorder::startRecording()
     {
         const ScopedLock sl (writerLock);
         activeWriter = true;
-        thumbnail.reset(1, 44100);
+        thumbnail.reset(1, sampleRate);
     }
 }
 
@@ -123,11 +123,16 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
         }
         
         // write to thumbnail
-        const AudioSampleBuffer buffer (const_cast<float**> (inputChannelData), 1, 44100);
+        const AudioSampleBuffer buffer (const_cast<float**> (inputChannelData), 1, sampleRate);
         thumbnail.addBlock(writeIndex, buffer, 0, numSamples);
         
         writeIndex += numSamples;
     }
+}
+
+int AudioRecorder::getSampleRate()
+{
+    return sampleRate;
 }
 
 int AudioRecorder::getNumChannels()
@@ -179,7 +184,7 @@ void AudioRecorder::truncate (float** recording, float threshold)
         j--;
     }
 
-    int rollOffLength = 5000;
+    int rollOffLength = sampleRate/10;
     if(rollOffLength > sampLength)
         rollOffLength = sampLength;
 
