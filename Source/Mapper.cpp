@@ -36,23 +36,27 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
     switch (toggleSpaceID) {
         case 1: // sustain
             
-            if (numFingers == 0)
+            if (isInPitchBar && numFingers == 1)   //NO need for preset for the pitchbar. Change the range if needed
             {
-
-            }
-            if (numFingers == 1)
-            {
-                selectPresetSustained(1, numFingers);   // SET PRESET HERE
-            }
-            else if (numFingers >= 2)
-            {
-                selectPresetSustained(8, numFingers);   // SET PRESET HERE
-            }
-            
-            if (isInPitchBar)   //NO need for preset for the pitchbar. Change the range if needed
-            {
+                std::cout << "nug";
                 mapFromTo(Y_POSITION, DISCRETE_PITCH);
+                mapFromTo(X_POSITION, BANDPASS_CUTOFF);
                 setPitchRange(-12.0f, 24.0f);
+            } else
+            {
+                if (numFingers == 0)
+                {
+
+                }
+                if (numFingers == 1)
+                {
+                    std::cout << "nig";
+                    selectPresetSustained(1, numFingers);   // SET PRESET HERE
+                }
+                else if (numFingers >= 2)
+                {
+                    selectPresetSustained(8, numFingers);   // SET PRESET HERE
+                }
             }
             break;
         case 2: // impulse
