@@ -115,7 +115,7 @@ private:
 
     //Background Discrete Pitch GUI
     bool discretePitchToggled = false;
-    bool loopToggled = true;
+    bool loopToggled = false;
     void drawPitchBackDrop(Graphics& g);
     RectangleList<float> rectListBackDrop;
     

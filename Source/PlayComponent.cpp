@@ -149,6 +149,11 @@ void PlayComponent::mouseDown (const MouseEvent& e)
     tapDetectCoords[0][1] = Gesture::getFingerPosition(0).y;
     
     Mapper::setToggleSpace(toggleSpaceID);
+    
+    if(toggleLoop.getToggleState()==1) //looping is disabled on mouseUp, so we enable it again here IF the button is toggled
+    {
+        loopToggled = true;
+    }
 }
 
 void PlayComponent::mouseDrag (const MouseEvent& e)
@@ -196,7 +201,8 @@ void PlayComponent::mouseUp (const MouseEvent& e)
 
     rectNum = rectListSize;
     swipeEnd = true; // swipeEnd is a condition for resetting the buffer index when a new swipe is initiated
-
+    
+    loopToggled = false; //disable looping on mouseUp to avoid echo effect on release
 
     if(Gesture::getNumFingers() == 1)
     {
@@ -488,7 +494,7 @@ void PlayComponent::stopPlaying()
 {
     initRead = true; // reset readIndex
     isPlaying = false;
-    std::cout << "STOPPALYIN " << std::endl;
+    //std::cout << "STOPPALYIN " << std::endl;
 }
 
 void PlayComponent::drawImpulseBackdrop(Graphics& g)
