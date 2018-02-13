@@ -59,6 +59,15 @@ PlayComponent::PlayComponent()
     toggleDiscrete.setClickingTogglesState(true);
     toggleDiscrete.addListener (this);
 
+    //Loop toggle button
+    addAndMakeVisible(toggleLoop);
+    toggleLoop.setImages(true, true, true,
+                        loopButtonIconImage, 0.2f, Colours::transparentBlack,
+                        loopButtonIconImage, 0.8f, Colours::transparentBlack,
+                        loopButtonIconImage, 1.0f, Colours::transparentBlack);    toggleLoop.setClickingTogglesState(true);
+    toggleLoop.setClickingTogglesState(true);
+    toggleLoop.addListener (this);
+
     ar = Envelope(Envelope::AR);
     adsr = Envelope(Envelope::ADSR);
 }
@@ -100,6 +109,7 @@ void PlayComponent::paint (Graphics& g)
         //g.drawImageWithin(impulseBackgroundImage, -200, -200, getWidth()+400, getHeight()+400, RectanglePlacement::centred); //set backdrop for impulse space
         drawImpulseBackdrop(g);
         toggleDiscrete.setToggleState(false, dontSendNotification);
+        toggleLoop.setToggleState(false, dontSendNotification);
         discretePitchToggled = false;
         
         g.setColour(Colour().fromRGB(120, 206, 214)); // render color
@@ -115,6 +125,7 @@ void PlayComponent::resized()
     toggleSustain.setBounds(getWidth()-(getWidth()/f + 5), 5, getWidth()/f, getWidth()/f);
     toggleImpulse.setBounds(getWidth()-(getWidth()/f + 5), getWidth()/f + 5, getWidth()/f, getWidth()/f);
     toggleDiscrete.setBounds(3,5,getWidth()/8,getWidth()/8);
+    toggleLoop.setBounds(getWidth()-getWidth()/8, getHeight()-getHeight()/8, getWidth()/8,getWidth()/8);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)
@@ -215,7 +226,10 @@ void PlayComponent::buttonClicked (Button* button)
             toggleSpaceID = 2;
         }
         toggleDiscrete.setVisible(false);
+        toggleLoop.setVisible(false);
+
         discretePitchToggled = false;
+        loopToggled = false;
     }
     
     if(button == &toggleSustain)
@@ -230,7 +244,10 @@ void PlayComponent::buttonClicked (Button* button)
             toggleSpaceID = 1;
         }
         toggleDiscrete.setVisible(true);
+        toggleLoop.setVisible(true);
+
         discretePitchToggled = false;
+        loopToggled = false;
     }
     
     if(button == &toggleDiscrete)
@@ -244,12 +261,35 @@ void PlayComponent::buttonClicked (Button* button)
             discretePitchToggled = true;
         }
     }
+
+    if(button == &toggleLoop)
+    {
+        if(toggleLoop.getToggleState()==0)
+        {
+            loopToggled = false;
+        }
+        else
+        {
+            loopToggled = true;
+        }
+    }
+
     repaint();
 }
 
 int PlayComponent::getToggleSpaceID()
 {
     return toggleSpaceID;
+}
+
+bool PlayComponent::getLoopState()
+{
+    return loopToggled;
+}
+
+bool PlayComponent::getDiscreteState()
+{
+    return discretePitchToggled;
 }
 
 void PlayComponent::timerCallback()
@@ -447,6 +487,7 @@ void PlayComponent::stopPlaying()
 {
     initRead = true; // reset readIndex
     isPlaying = false;
+    std::cout << "STOPPALYIN " << std::endl;
 }
 
 void PlayComponent::drawImpulseBackdrop(Graphics& g)

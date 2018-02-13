@@ -49,6 +49,9 @@ public:
     void buttonClicked (Button* button) override;
     int getToggleSpace();
     void setToggleSpace(int id);
+
+    bool getLoopState();
+    bool getDiscreteState();
     
     //velocity rolloff
     float velocityRolloff;
@@ -87,6 +90,7 @@ private:
     ImageButton toggleSustain;
     ImageButton toggleImpulse;
     ImageButton toggleDiscrete;
+    ImageButton toggleLoop;
     int toggleSpaceID = 1;
     
     //GUI
@@ -111,6 +115,7 @@ private:
 
     //Background Discrete Pitch GUI
     bool discretePitchToggled = false;
+    bool loopToggled = true;
     void drawPitchBackDrop(Graphics& g);
     RectangleList<float> rectListBackDrop;
     
@@ -120,6 +125,7 @@ private:
     Image impulseBackgroundImage;
     Image impulseButtonIconImage;
     Image discreteButtonIconImage;
+    Image loopButtonIconImage;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };
