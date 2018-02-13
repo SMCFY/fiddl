@@ -271,10 +271,16 @@ float Gesture::getDiscretePitch()
     //Set scale here: 1 = Diatonic  2 = Pentatonic  3 = Minor Pentatonic  4 = Phrygian  5 = Chromatic
     setScale(2);
     
+    if(floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).y * 8)) < 8){
     pitchIndex = floor ((Gesture::getFingerPosition(Gesture::getNumFingers()-1).y * 8));
+    }
+    else
+    {
+        pitchIndex = 7;
+    }
     
     discretePitchVal = discretePitchScale[pitchIndex];
-
+    
     return discretePitchVal;
 }
 

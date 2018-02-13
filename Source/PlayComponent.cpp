@@ -152,9 +152,10 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
         
     Gesture::setAbsDistFromOrigin(Gesture::getFingerPosition(Gesture::getNumFingers()-1).x, Gesture::getFingerPosition(Gesture::getNumFingers()-1).y);
     
-    if(discretePitchToggled && toggleSpaceID == 1)
+    if((discretePitchToggled && toggleSpaceID == 1))
     {
-        Mapper::routeParameters(Gesture::getNumFingers(),true);
+        //Mapper::routeParameters(Gesture::getNumFingers(),true); //before
+        Mapper::routeParameters(1,true); //now hardcoded to 1 finger
         Mapper::updateParameters();
     }
     else
@@ -168,7 +169,6 @@ void PlayComponent::mouseDrag (const MouseEvent& e)
     tapDetectCoords[1][1] = Gesture::getFingerPosition(0).y;
     
     rectNum = Gesture::getPitchIndex();
-    
     //repaint();
 }
 

@@ -36,7 +36,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
     switch (toggleSpaceID) {
         case 1: // sustain
             
-            if (isInPitchBar && numFingers == 1)   //NO need for preset for the pitchbar. Change the range if needed
+            if (isInPitchBar)   //NO need for preset for the pitchbar. Change the range if needed
             {
                 mapFromTo(Y_POSITION, DISCRETE_PITCH);
                 mapFromTo(X_POSITION, BANDPASS_CUTOFF);
@@ -51,7 +51,7 @@ void Mapper::routeParameters(int numFingers, bool isInPitchBar) // all the mappi
                 {
                     selectPresetSustained(1, numFingers);   // SET PRESET HERE
                 }
-                if (numFingers == 2 && !isInPitchBar)  
+                if (numFingers > 1 && !isInPitchBar)
                 {
                     selectPresetSustained(8, numFingers);   // SET PRESET HERE
                 }
