@@ -106,8 +106,10 @@ public:
             // Component call isn't being called in a message thread,
             // make sure it is thread-safe by temporarily suspending the message thread
             const MessageManagerLock mmLock;
-            playComp.isPlaying = false;
             readIndex = 0;
+
+            if(!playComp.getLoopState())
+            playComp.isPlaying = false;
         }
         else if (!playComp.isPlaying)
         {
