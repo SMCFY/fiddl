@@ -26,7 +26,8 @@ PlayComponent::PlayComponent()
   // load button icon images
   impulseButtonIconImage(ImageFileFormat::loadFrom(BinaryData::drum_icon_png, (size_t) BinaryData::drum_icon_pngSize)),
   sustainButtonIconImage(ImageFileFormat::loadFrom(BinaryData::trumpet_icon_png, (size_t) BinaryData::trumpet_icon_pngSize)),
-  discreteButtonIconImage(ImageFileFormat::loadFrom(BinaryData::discretetoggle_png, (size_t) BinaryData::discretetoggle_pngSize))
+  discreteButtonIconImage(ImageFileFormat::loadFrom(BinaryData::discretetoggle_png, (size_t) BinaryData::discretetoggle_pngSize)),
+  loopButtonIconImage(ImageFileFormat::loadFrom(BinaryData::loopButtonIconImage_png, (size_t) BinaryData::loopButtonIconImage_pngSize))
 {
 
     isPlaying = false;
