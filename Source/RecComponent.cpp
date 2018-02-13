@@ -50,7 +50,7 @@ void RecComponent::paint (Graphics& g)
         else
         {
             g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
-            thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, recorder->getSampLength()/recorder->getSampleRate(), 1.0f);
+            thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, recorder->getSampLength()/(float)recorder->getSampleRate(), 1.0f);
         }
     }
     else
