@@ -17,6 +17,7 @@
 #include "AudioRecorder.h"
 #include "PlayComponent.h"
 #include "RecComponent.h"
+#include "Envelope.h"
 #include "AudioProcessorBundler.h"
 
 // used for initialising the deviceManager
@@ -53,26 +54,33 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
+        this->sampleRate = sampleRate;
+
         //initialize DSP blocks and assign parameters
         AudioProcessorBundler::initDSPBlocks(sampleRate);
 
         playComp.ar.setSamplingRate(sampleRate);
         playComp.adsr.setSamplingRate(sampleRate);
         readIndex = 0;
+        rollOffIndex = 0;
+
     }
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
+        int lengthInSamples = recorder->getSampBuff().getNumSamples();
+
         if(playComp.initRead) // reset readIndex on new trigger
         {
             readIndex = 0;
+            rollOffIndex = 0;
             playComp.initRead = false;
         }
 
         bufferToFill.clearActiveBufferRegion(); // clearing the buffer frame BEFORE writing to it
 
         // play back the recorded audio segment
-        if (readIndex < recorder->getSampBuff().getNumSamples() && playComp.isPlaying)
+        if (readIndex < lengthInSamples && playComp.isPlaying)
         {
             const int numInputChannels = recorder->getNumChannels();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels();
@@ -81,9 +89,9 @@ public:
             writeIndex = bufferToFill.startSample; // write index, which is passed to the copyFrom() function
 
             // run this until the frame buffer is filled and the readindex does not exceeded the input
-            while(outputSamples > 0 && readIndex != recorder->getSampBuff().getNumSamples())
+            while(outputSamples > 0 && readIndex != lengthInSamples)
             {
-                int samplesToProcess = jmin(outputSamples, recorder->getSampBuff().getNumSamples() - readIndex);
+                int samplesToProcess = jmin(outputSamples, lengthInSamples - readIndex);
             
                 for (int ch = 0; ch < numOutputChannels; ch++) // iterate through output channels
                 {
@@ -116,7 +124,21 @@ public:
             readIndex = 0;
         }
         
-        
+        /*
+        // apply rolloff if looping disabled
+        if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder->rollOffLength)
+        {
+
+            float* rolloffBuff = bufferToFill.buffer->getWritePointer(0, readIndex); // remaining part of recording
+
+            for (int i = 0; i <= bufferToFill.buffer->getNumSamples(); i++)
+            {
+                rolloffBuff[i] *= recorder->rollOffRamp[rollOffIndex];
+                rollOffIndex++;
+            }
+        } 
+        */
+
         // DSP chain
         //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex); // time stretch
         if (AudioProcessorBundler::gainIsEnabled)
@@ -204,6 +226,7 @@ private:
     int readIndex;
     int writeIndex;
     int sampleRate;
+    int rollOffIndex;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
     

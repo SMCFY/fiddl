@@ -11,8 +11,8 @@
 */
 
 #include "AudioRecorder.h"
-#include "Envelope.h"
 #include "Gesture.h"
+#include "Envelope.h"
 #include <numeric>
 
 AudioRecorder::AudioRecorder (float bufferLengthInSeconds, AudioThumbnail& thumbnailToUpdate)
@@ -76,6 +76,15 @@ void AudioRecorder::stop()
 
         centroid = spectralCentroid(specBuff);
         Gesture::setCentroid(centroid);
+
+        // calculate roll off length
+        rollOffLength = sampleRate/10;
+        if(rollOffLength > sampLength)
+            rollOffLength = sampLength;
+
+        // generate ramp
+        Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
+        rollOffRamp = Envelope::ramp;
     }
 }
 
@@ -182,21 +191,6 @@ void AudioRecorder::truncate (float** recording, float threshold)
         }
         j--;
     }
-
-    // calculate roll off length
-    int rollOffLength = sampleRate/10;
-    if(rollOffLength > sampLength)
-        rollOffLength = sampLength;
-
-    Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
-    
-    //apply ramp to the end of recording as roll off
-    j = 0;
-    for (int i = sampStart+sampLength-rollOffLength+1; i <= sampStart+sampLength; i++)
-    {
-        recording[0][i] *= Envelope::ramp[j];
-        j++;
-    } 
     
 }
 

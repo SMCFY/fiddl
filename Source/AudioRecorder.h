@@ -43,6 +43,8 @@ class AudioRecorder : public AudioIODeviceCallback
         int getSampLength();
 
         float centroid;
+        int rollOffLength;
+        float *rollOffRamp;
     private:
         /* audio is truncated according to a threshold which sets the
            buffer read index to start reading above the threshold and
