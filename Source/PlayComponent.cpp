@@ -126,7 +126,7 @@ void PlayComponent::resized()
     toggleSustain.setBounds(getWidth()-(getWidth()/f + 5), 5, getWidth()/f, getWidth()/f);
     toggleImpulse.setBounds(getWidth()-(getWidth()/f + 5), getWidth()/f + 5, getWidth()/f, getWidth()/f);
     toggleDiscrete.setBounds(3,5,getWidth()/8,getWidth()/8);
-    toggleLoop.setBounds(getWidth()-getWidth()/8, getHeight()-getHeight()/8, getWidth()/8,getWidth()/8);
+    toggleLoop.setBounds(getWidth()-getWidth()/8-5, getHeight()-getHeight()/8, getWidth()/8,getWidth()/8);
 }
 
 void PlayComponent::mouseDown (const MouseEvent& e)

@@ -115,6 +115,7 @@ public:
             // make sure it is thread-safe by temporarily suspending the message thread
             const MessageManagerLock mmLock;
             readIndex = 0;
+            rollOffIndex = 0;
 
             if(!playComp.getLoopState())
             playComp.isPlaying = false;
@@ -122,14 +123,15 @@ public:
         else if (!playComp.isPlaying)
         {
             readIndex = 0;
+            rollOffIndex = 0;
         }
         
-        /*
+        
         // apply rolloff if looping disabled
         if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder->rollOffLength)
         {
 
-            float* rolloffBuff = bufferToFill.buffer->getWritePointer(0, readIndex); // remaining part of recording
+            float* rolloffBuff = bufferToFill.buffer->getWritePointer(0);
 
             for (int i = 0; i <= bufferToFill.buffer->getNumSamples(); i++)
             {
@@ -137,7 +139,7 @@ public:
                 rollOffIndex++;
             }
         } 
-        */
+        
 
         // DSP chain
         //AudioProcessorBundler::timeStretch->process(recorder->getSampBuff(), *bufferToFill.buffer, readIndex); // time stretch
