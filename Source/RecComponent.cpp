@@ -35,6 +35,11 @@ RecComponent::~RecComponent()
 
 void RecComponent::paint (Graphics& g)
 {
+    const int width = getWidth();
+    float sampLength = recorder->getSampLength();
+    if (sampLength == 0)
+        sampLength = 44100*3;
+    float index = *readIndex * width / sampLength;
     g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
     g.setColour(Colours::lightgrey);
     
@@ -50,7 +55,7 @@ void RecComponent::paint (Graphics& g)
         else
         {
             g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
-            thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, recorder->getSampLength()/(float)recorder->getSampleRate(), 1.0f);
+            thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, sampLength/(float)recorder->getSampleRate(), 1.0f);
         }
     }
     else
@@ -60,6 +65,8 @@ void RecComponent::paint (Graphics& g)
     }
     g.setColour (Colours::darkgrey); // border color
     g.drawLine(0, 0, getWidth(), 0, 1);
+    g.setColour(Colours::green);
+    g.drawLine(index, 0.0f, index, getHeight(), 1.0f);
 }
 
 void RecComponent::resized()
@@ -103,6 +110,11 @@ void RecComponent::mouseUp(const MouseEvent& event)
 void RecComponent::setRecorder (AudioRecorder *recorder)
 {
     this->recorder = recorder;
+}
+
+void RecComponent::setReadIndex(int *readIndex)
+{
+    this->readIndex = readIndex;
 }
 
 void RecComponent::startRecording()

@@ -38,6 +38,7 @@ public:
     /* setRecorder uses an instance of AudioRecorder in order to allow the GUI 
        component to record audio from the device's microphone to a buffer */
     void setRecorder (AudioRecorder *recorder);
+    void setReadIndex (int *index);
     void startRecording();
     void stopRecording();
     
@@ -56,6 +57,7 @@ private:
     
     TextButton recordButton;
     AudioRecorder *recorder;
+    int *readIndex;
     
     void changeListenerCallback (ChangeBroadcaster* source) override;
     

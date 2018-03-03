@@ -40,6 +40,10 @@ public:
         recorder = new AudioRecorder(3.f, recComp.getAudioThumbnail());
         // set recording functionality in the recording GUI component
         recComp.setRecorder(recorder);
+        // set playback read index in recording component
+        recComp.setReadIndex(&readIndex);
+        // set recComp pointer in playComp
+        playComp.setRecComp(&recComp);
         // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder);
     }

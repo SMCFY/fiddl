@@ -20,6 +20,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "Envelope.h"
+#include "RecComponent.h"
 
 //==============================================================================
 class PlayComponent    : public Component,
@@ -56,6 +57,9 @@ public:
     //velocity rolloff
     float velocityRolloff;
     void startRolloff();
+    
+    // get pointer to recComp
+    void setRecComp(RecComponent *recComp);
 
     typedef struct Ripple
     {
@@ -126,6 +130,9 @@ private:
     Image impulseButtonIconImage;
     Image discreteButtonIconImage;
     Image loopButtonIconImage;
+    
+    // pointer to recorder component
+    RecComponent *recComp;
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlayComponent)
 };

@@ -217,6 +217,7 @@ void PlayComponent::mouseUp (const MouseEvent& e)
     }
     
     repaint();
+    recComp->repaint();
 }
 
 void PlayComponent::buttonClicked (Button* button)
@@ -282,6 +283,7 @@ void PlayComponent::buttonClicked (Button* button)
     }
 
     repaint();
+    recComp->repaint();
 }
 
 int PlayComponent::getToggleSpaceID()
@@ -337,6 +339,7 @@ void PlayComponent::timerCallback()
     //Mapper::updateParameters();
 
     repaint();
+    recComp->repaint();
 }
 
 void PlayComponent::startRolloff()
@@ -509,4 +512,9 @@ void PlayComponent::drawImpulseBackdrop(Graphics& g)
         //g.setOpacity(0.02);
         //g.drawEllipse(getWidth()/2 - (i*getHeight()/4)/2, getHeight()/2-(i*getHeight()/4)/2, i*getHeight()/4,i*getHeight()/4,3);
     }
+}
+
+void PlayComponent::setRecComp(RecComponent *recComp)
+{
+    this->recComp = recComp;
 }
