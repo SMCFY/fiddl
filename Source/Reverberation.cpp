@@ -34,12 +34,9 @@ Reverberation::~Reverberation()
 
 void Reverberation::process(AudioBuffer<float> buffer)
 {
-    float* buff = buffer.getWritePointer(0);
-
     updateParameters();
     reverb->setParameters(params);
-    reverb->processMono(buffer.getWritePointer(0), buffer.getNumSamples());
-    //std::cout << "reverb is processing...";
+    reverb->processStereo(buffer.getWritePointer(0), buffer.getWritePointer(1), buffer.getNumSamples());
 }
 
 void Reverberation::updateParameters()
