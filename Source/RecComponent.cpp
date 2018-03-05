@@ -82,13 +82,13 @@ void RecComponent::buttonStateChanged (Button* button)
 {
     if (recordButton.isDown())
     {
-        startRecording();
-        recDone = true;
+        //startRecording();
+    //    recDone = true;
     }
     else if (!recordButton.isDown() && recDone) //ƒiddl
     {
-        stopRecording();
-        recDone = false;
+      //  stopRecording();
+       // recDone = false;
     }
 }
 
@@ -119,12 +119,16 @@ void RecComponent::setReadIndex(int *readIndex)
 
 void RecComponent::startRecording()
 {
+    
     recorder->startRecording();
+    
     //recordButton.setButtonText ("Recording");
 }
 
 void RecComponent::stopRecording()
 {
+    stopTimer();
+    time = 0.0;
     recorder->stop();
     repaint();
     //recordButton.setButtonText ("Hold to Record");
@@ -134,6 +138,25 @@ void RecComponent::changeListenerCallback(ChangeBroadcaster* source)
 {
     if (source == &thumbnail)
         repaint();
+}
+
+void RecComponent::timerCallback()
+{
+    time += 0.01;
+    
+    if(time >= tapLimit)
+    {
+        std::cout<<"it's NOT a tap";
+        tap = false;
+        stopTimer();
+    }
+    else
+    {
+        std::cout << "it's a tap";
+        tap = true;
+    }
+    
+    
 }
 
 AudioThumbnail& RecComponent::getAudioThumbnail()

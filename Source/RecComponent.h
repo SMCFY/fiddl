@@ -25,7 +25,8 @@
 */
 class RecComponent    : public Component,
                         public Button::Listener,
-                        public ChangeListener
+                        public ChangeListener,
+                        private Timer
 {
 public:
     RecComponent();
@@ -54,6 +55,12 @@ private:
     AudioThumbnailCache thumbnailCache;
     AudioThumbnail thumbnail;
     bool displayFullThumb;
+    
+    
+    float tapLimit = 0.1f;
+    float time = 0.0f;
+    bool tap = true;
+    void timerCallback() override;
     
     TextButton recordButton;
     AudioRecorder *recorder;
