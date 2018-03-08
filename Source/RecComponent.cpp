@@ -63,10 +63,20 @@ void RecComponent::paint (Graphics& g)
         g.setFont(14.0f);
         g.drawFittedText("Hold to Record", getLocalBounds(), Justification::centred, 2);
     }
-    g.setColour (Colours::darkgrey); // border color
-    g.drawLine(0, 0, getWidth(), 0, 1);
-    g.setColour(Colours::green);
+    
+    g.setColour(Colours::green); //playback indicator
     g.drawLine(index, 0.0f, index, getHeight(), 1.0f);
+    
+    if(!componentSelected)
+    {
+        g.setColour (Colours::darkgrey); // border color
+    }
+    else
+    {
+        g.setColour(Colours::lightgrey);
+    }
+    g.drawRect(0, 0, getWidth(), getHeight(), 1);
+   
 }
 
 void RecComponent::resized()
@@ -94,16 +104,21 @@ void RecComponent::buttonStateChanged (Button* button)
 
 void RecComponent::mouseDown(const MouseEvent& event)
 {
-    startRecording();
-    recDone = true;
+    //start timer and check for tap or hold
+    startTimerHz(60); //startrecording behaviour has been moved to timercallback
 }
 
 void RecComponent::mouseUp(const MouseEvent& event)
 {
+    //stop and reset timer
+    stopTimer();
+    time = 0.0f;
+    
     if (recDone)
     {
         stopRecording();
         recDone = false;
+        componentSelected = true;
     }
 }
 
@@ -127,8 +142,6 @@ void RecComponent::startRecording()
 
 void RecComponent::stopRecording()
 {
-    stopTimer();
-    time = 0.0;
     recorder->stop();
     repaint();
     //recordButton.setButtonText ("Hold to Record");
@@ -146,17 +159,31 @@ void RecComponent::timerCallback()
     
     if(time >= tapLimit)
     {
-        std::cout<<"it's NOT a tap";
+        //std::cout<<"it's NOT a tap";
         tap = false;
+        
+        //if it's not a tap - start recording
+        startRecording();
+        recDone = true;
         stopTimer();
     }
     else
     {
-        std::cout << "it's a tap";
+        //if it's a tap, do nothing
+        //std::cout << "it's a tap";
+        
         tap = true;
     }
-    
-    
+}
+
+void RecComponent::setComponentSelected(bool selected)
+{
+    componentSelected = selected;
+}
+
+bool RecComponent::getComponentSelected()
+{
+    return componentSelected;
 }
 
 AudioThumbnail& RecComponent::getAudioThumbnail()
