@@ -25,7 +25,6 @@ RecComponent::RecComponent() : thumbnailCache(10),
     recDone = false;
     formatManager.registerBasicFormats();
     thumbnail.addChangeListener(this);
-
 }
 
 RecComponent::~RecComponent()
@@ -106,6 +105,9 @@ void RecComponent::mouseDown(const MouseEvent& event)
 {
     //start timer and check for tap or hold
     startTimerHz(60); //startrecording behaviour has been moved to timercallback
+    componentSelected = !componentSelected;
+    repaint();
+    std::cout << recID << "    ";
 }
 
 void RecComponent::mouseUp(const MouseEvent& event)
@@ -118,7 +120,6 @@ void RecComponent::mouseUp(const MouseEvent& event)
     {
         stopRecording();
         recDone = false;
-        componentSelected = true;
     }
 }
 
@@ -184,6 +185,16 @@ void RecComponent::setComponentSelected(bool selected)
 bool RecComponent::getComponentSelected()
 {
     return componentSelected;
+}
+
+void RecComponent::setComponentID(int ID)
+{
+    recID = ID;
+}
+
+int RecComponent::getComponentID()
+{
+    return recID;
 }
 
 AudioThumbnail& RecComponent::getAudioThumbnail()

@@ -52,6 +52,9 @@ public:
     bool getComponentSelected();
     void setComponentSelected(bool selected);
     
+    int getComponentID();
+    void setComponentID(int ID);
+    
     AudioThumbnail& getAudioThumbnail();
 private:
     AudioFormatManager formatManager;
@@ -63,8 +66,12 @@ private:
     float tapLimit = 0.1f;
     float time = 0.0f;
     bool tap = true;
+    
     bool componentSelected = false;
+    
     void timerCallback() override;
+    
+    int recID = 0;
     
     TextButton recordButton;
     AudioRecorder *recorder;

@@ -29,21 +29,40 @@ public:
     //==============================================================================
     MainContentComponent() : deviceManager (getSharedAudioDeviceManager())
     {
+        for(int i = 0; i < 3; i++)
+        {
+            recComp.add(new RecComponent);
+        }
+        
+        for(int i = 0; i < 3; i++)
+        {
+            recComp[i]->setComponentID(i);
+            addAndMakeVisible (recComp[i]);
+            recComp[i]->setSize (100, 100);
+        }
+        
         addAndMakeVisible (playComp);
         playComp.setSize (100, 100);
-        addAndMakeVisible (recComp);
-        recComp.setSize (100, 100);
+       
 
         setSize(400, 400);
         setAudioChannels (1, 2);
-
-        recorder = new AudioRecorder(3.f, recComp.getAudioThumbnail());
+        
+        
+        //TODOOOOOOOOOOOOOOOOOOOOO
+        for(int i = 0; i < 3; i++)
+        {
+        recorder = new AudioRecorder(3.f, recComp[i]->getAudioThumbnail());
         // set recording functionality in the recording GUI component
-        recComp.setRecorder(recorder);
+        recComp[i]->setRecorder(recorder);
         // set playback read index in recording component
-        recComp.setReadIndex(&readIndex);
+        recComp[i]->setReadIndex(&readIndex);
+        }
+        
         // set recComp pointer in playComp
-        playComp.setRecComp(&recComp);
+        playComp.setRecComp(recComp[1]);
+        //TODOOOOOOOOOOOOOOOOOOO
+        
         // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder);
     }
@@ -197,7 +216,11 @@ public:
     void resized() override
     {
         playComp.setBounds (0, 0, getWidth(), getHeight() * 5 / 6);
-        recComp.setBounds (0, getHeight() * 5 / 6, getWidth()/3, getHeight() * 1 / 6 + 2);
+        
+        for(int i = 0; i < 3; i++)
+        {
+            recComp[i]->setBounds (getWidth()/3*i, getHeight() * 5 / 6, getWidth()/3, getHeight() * 1 / 6 + 2);
+        }
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
         // update their positions.
@@ -226,7 +249,7 @@ private:
      
     //==============================================================================
     PlayComponent playComp;
-    RecComponent recComp;
+    OwnedArray<RecComponent> recComp;
     AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     int readIndex;
