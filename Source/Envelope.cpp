@@ -13,7 +13,7 @@
 #include "PlayComponent.h"
 
 Envelope::Envelope()
-: aMin(0.001f)
+: aMin(0.001f), trig(0)
 {
     this->samplingRate = 44100;
     this->amplitude = 0;
@@ -22,7 +22,7 @@ Envelope::Envelope()
 }
 
 Envelope::Envelope(Envelope::env type)
-: aMin(0.001f)
+: aMin(0.001f), trig(0)
 {
 	this->samplingRate = 44100;
 	this->amplitude = 0;
@@ -122,7 +122,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		noteOn = 1; // sustain
     	release = 1;
 
-    	PlayComponent::startPlaying();
+    	PlayComponent::startPlaying(); std::cout<< "REALLLY";
 	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));

@@ -78,7 +78,6 @@ void AudioRecorder::stop()
         Gesture::setCentroid(centroid);
 
         // calculate roll off length
-        rollOffLength = sampleRate/10;
         if(rollOffLength > sampLength)
             rollOffLength = sampLength;
 
@@ -105,6 +104,10 @@ void AudioRecorder::audioDeviceAboutToStart (AudioIODevice* device)
     {
         recBuff[ch] = new float[bufferLengthInSamples];
     }
+
+    sampBuff.setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
+
+    rollOffLength = sampleRate/10;
 }
 
 void AudioRecorder::audioDeviceStopped() 
