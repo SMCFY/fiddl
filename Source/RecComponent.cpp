@@ -16,7 +16,7 @@
 //==============================================================================
 RecComponent::RecComponent() : thumbnailCache(10),
                                thumbnail (512, formatManager, thumbnailCache),
-                               displayFullThumb(false)
+                               displayFullThumb(false), recID(0)
 {
     //addAndMakeVisible (recordButton);
     //recordButton.setButtonText ("Hold to record");
@@ -107,7 +107,7 @@ void RecComponent::mouseDown(const MouseEvent& event)
     startTimerHz(60); //startrecording behaviour has been moved to timercallback
     componentSelected = !componentSelected;
     repaint();
-    std::cout << recID << "    ";
+    *selected = recID;
 }
 
 void RecComponent::mouseUp(const MouseEvent& event)
@@ -131,6 +131,11 @@ void RecComponent::setRecorder (AudioRecorder *recorder)
 void RecComponent::setReadIndex(int *readIndex)
 {
     this->readIndex = readIndex;
+}
+
+void RecComponent::setSelector(int *selected)
+{
+    this->selected = selected;
 }
 
 void RecComponent::startRecording()

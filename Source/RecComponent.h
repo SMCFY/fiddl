@@ -40,6 +40,7 @@ public:
        component to record audio from the device's microphone to a buffer */
     void setRecorder (AudioRecorder *recorder);
     void setReadIndex (int *index);
+    void setSelector (int *selected);
     void startRecording();
     void stopRecording();
     
@@ -71,11 +72,12 @@ private:
     
     void timerCallback() override;
     
-    int recID = 0;
+    int recID;
     
     TextButton recordButton;
     AudioRecorder *recorder;
     int *readIndex;
+    int *selected;
     
     void changeListenerCallback (ChangeBroadcaster* source) override;
     

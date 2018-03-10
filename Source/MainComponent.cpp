@@ -27,7 +27,7 @@ class MainContentComponent   : public AudioAppComponent
 {
 public:
     //==============================================================================
-    MainContentComponent() : deviceManager (getSharedAudioDeviceManager())
+    MainContentComponent() : deviceManager (getSharedAudioDeviceManager()), selected(0)
     {
         for(int i = 0; i < 3; i++)
         {
@@ -49,29 +49,32 @@ public:
         setAudioChannels (1, 2);
         
         
-        //TODOOOOOOOOOOOOOOOOOOOOO
         for(int i = 0; i < 3; i++)
         {
-        recorder = new AudioRecorder(3.f, recComp[i]->getAudioThumbnail());
+        recorder.add(new AudioRecorder(3.f, recComp[i]->getAudioThumbnail()));
         // set recording functionality in the recording GUI component
-        recComp[i]->setRecorder(recorder);
+        recComp[i]->setRecorder(recorder[i]);
         // set playback read index in recording component
         recComp[i]->setReadIndex(&readIndex);
-        }
+        // set the selector ID to show which recComp ID is selected
+        recComp[i]->setSelector(&selected);
         
         // set recComp pointer in playComp
-        playComp.setRecComp(recComp[1]);
-        //TODOOOOOOOOOOOOOOOOOOO
+        playComp.setRecComp(recComp[i]);
         
         // setup the recorder to receive input from the microphone
-        deviceManager.addAudioCallback(recorder);
+        deviceManager.addAudioCallback(recorder[i]);
+        }
     }
 
     ~MainContentComponent()
     {
-        deviceManager.removeAudioCallback (recorder);
-        delete recorder;
+        for (int i = 0; i < 3; i++)
+        {
+        deviceManager.removeAudioCallback (recorder[i]);
+        delete recorder[i];
         shutdownAudio();
+        }
     }
 
     //==============================================================================
@@ -91,7 +94,8 @@ public:
 
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
-        int lengthInSamples = recorder->getSampBuff().getNumSamples();
+        int lengthInSamples = recorder[selected]->getSampBuff().getNumSamples();
+        std::cout << selected << std::endl;
 
         if(playComp.initRead) // reset readIndex on new trigger
         {
@@ -105,7 +109,7 @@ public:
         // play back the recorded audio segment
         if (readIndex < lengthInSamples && playComp.isPlaying)
         {
-            const int numInputChannels = recorder->getNumChannels();
+            const int numInputChannels = recorder[selected]->getNumChannels();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels();
 
             int outputSamples = bufferToFill.buffer->getNumSamples(); // number of samples need to be output next frame
@@ -121,7 +125,7 @@ public:
                     bufferToFill.buffer->copyFrom(
                         ch, // destination channel
                         writeIndex, // destination sample
-                        recorder->getSampBuff(), // source buffer
+                        recorder[selected]->getSampBuff(), // source buffer
                         ch % numInputChannels, // source channel
                         readIndex, // source sample
                         samplesToProcess); // number of samples to copy
@@ -151,14 +155,14 @@ public:
         
         
         // apply rolloff if looping disabled
-        if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder->rollOffLength)
+        if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder[selected]->rollOffLength)
         {
 
             float* rolloffBuff = bufferToFill.buffer->getWritePointer(0);
 
             for (int i = 0; i <= bufferToFill.buffer->getNumSamples(); i++)
             {
-                rolloffBuff[i] *= recorder->rollOffRamp[rollOffIndex];
+                rolloffBuff[i] *= recorder[selected]->rollOffRamp[rollOffIndex];
                 rollOffIndex++;
             }
         } 
@@ -250,12 +254,13 @@ private:
     //==============================================================================
     PlayComponent playComp;
     OwnedArray<RecComponent> recComp;
-    AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
+    OwnedArray<AudioRecorder> recorder; // recording from the devices microphone to an AudioBuffer
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     int readIndex;
     int writeIndex;
     int sampleRate;
     int rollOffIndex;
+    int selected;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainContentComponent)
     
