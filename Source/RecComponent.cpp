@@ -71,7 +71,7 @@ void RecComponent::paint (Graphics& g)
     {
         if(displayPlaybackIndicator)
         {
-            g.setColour(Colours::green); //playback indicator
+            g.setColour(Colours::orangered); //playback indicator
             g.drawLine(index, 0.0f, index, getHeight(), 1.0f);
         }
 
