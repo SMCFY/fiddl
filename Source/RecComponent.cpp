@@ -117,6 +117,7 @@ void RecComponent::mouseDown(const MouseEvent& event)
 void RecComponent::mouseUp(const MouseEvent& event)
 {
     //stop and reset timer
+    componentSelected = true;
     stopTimer();
     time = 0.0f;
     

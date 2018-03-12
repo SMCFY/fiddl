@@ -84,6 +84,11 @@ void AudioRecorder::stop()
         // generate ramp
         Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
         rollOffRamp = Envelope::ramp;
+        
+        //if all audio is truncated, clear the thumbnail
+        if(sampLength == 0)
+            thumbnail.clear();
+        
     }
 }
 

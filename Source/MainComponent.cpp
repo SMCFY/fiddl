@@ -227,7 +227,7 @@ public:
         
         for(int i = 0; i < 3; i++)
         {
-            recComp[i]->setBounds (getWidth()/3*i, getHeight() * 5 / 6, getWidth()/3, getHeight() * 1 / 6 + 2);
+            recComp[i]->setBounds (getWidth()/3*i, getHeight() * 5 / 6, getWidth()/3, getHeight() * 1 / 6+1);
         }
         // This is called when the MainContentComponent is resized.
         // If you add any child components, this is where you should
