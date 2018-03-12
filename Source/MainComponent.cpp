@@ -111,7 +111,7 @@ public:
         bufferToFill.clearActiveBufferRegion(); // clearing the buffer frame BEFORE writing to it
 
         // play back the recorded audio segment
-        if (readIndex < lengthInSamples && playComp.isPlaying)
+        if (readIndex < lengthInSamples && playComp.isPlaying && !recComp[selected]->isBufferEmpty())
         {
             const int numInputChannels = recorder[selected]->getNumChannels();
             const int numOutputChannels = bufferToFill.buffer->getNumChannels();
@@ -159,7 +159,7 @@ public:
         
         
         // apply rolloff if looping disabled
-        if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder[selected]->rollOffLength)
+        if(!playComp.getLoopState() && readIndex > lengthInSamples - recorder[selected]->rollOffLength && !recComp[selected]->isBufferEmpty())
         {
 
             float* rolloffBuff = bufferToFill.buffer->getWritePointer(0);
@@ -241,9 +241,14 @@ public:
             recComp[i]->setComponentSelected(false);
             recComp[i]->repaint();
         }
+        
         playComp.setRecComp(recComp[selected]);
-        recComp[selected]->setComponentSelected(true);
-        recComp[selected]->setPlayIndicatorVisible(true);
+        
+        if(!recComp[selected]->isBufferEmpty())
+        {
+            recComp[selected]->setComponentSelected(true);
+            recComp[selected]->setPlayIndicatorVisible(true);
+        }
     }
     
     void mouseUp(const MouseEvent& event) override

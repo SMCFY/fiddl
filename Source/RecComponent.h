@@ -59,6 +59,7 @@ public:
     void setPlayIndicatorVisible(bool state);
     
     void setSampleRate(float sR);
+    bool isBufferEmpty();
     
     AudioThumbnail& getAudioThumbnail();
 private:
@@ -78,6 +79,7 @@ private:
     
     int recID;
     float sampleRate;
+    bool bufferEmpty = true;
     
     TextButton recordButton;
     AudioRecorder *recorder;

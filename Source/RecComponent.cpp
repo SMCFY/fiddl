@@ -153,6 +153,7 @@ void RecComponent::startRecording()
 void RecComponent::stopRecording()
 {
     recorder->stop();
+    bufferEmpty = false;
     repaint();
     //recordButton.setButtonText ("Hold to Record");
 }
@@ -214,6 +215,11 @@ void RecComponent::setPlayIndicatorVisible(bool state)
 void RecComponent::setSampleRate(float sR)
 {
     sampleRate = sR;
+}
+
+bool RecComponent::isBufferEmpty()
+{
+    return bufferEmpty;
 }
 
 AudioThumbnail& RecComponent::getAudioThumbnail()
