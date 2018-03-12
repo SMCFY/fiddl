@@ -37,7 +37,7 @@ void RecComponent::paint (Graphics& g)
     const int width = getWidth();
     float sampLength = recorder->getSampLength();
     if (sampLength == 0)
-        sampLength = 44100*3;
+        sampLength = sampleRate*3;
     float index = *readIndex * width / sampLength;
     g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
     g.setColour(Colours::lightgrey);
@@ -63,16 +63,19 @@ void RecComponent::paint (Graphics& g)
         g.drawFittedText("Hold to Record", getLocalBounds(), Justification::centred, 2);
     }
     
-    g.setColour(Colours::green); //playback indicator
-    g.drawLine(index, 0.0f, index, getHeight(), 1.0f);
-    
     if(!componentSelected)
     {
-        g.setColour (Colours::darkgrey); // border color
+        g.setColour (Colours::darkgrey); // unselected color
     }
     else
     {
-        g.setColour(Colours::lightgrey);
+        if(displayPlaybackIndicator)
+        {
+            g.setColour(Colours::green); //playback indicator
+            g.drawLine(index, 0.0f, index, getHeight(), 1.0f);
+        }
+
+        g.setColour(Colours::lightgrey); //selected color
     }
     g.drawRect(0, 0, getWidth(), getHeight(), 1);
    
@@ -105,8 +108,9 @@ void RecComponent::mouseDown(const MouseEvent& event)
 {
     //start timer and check for tap or hold
     startTimerHz(60); //startrecording behaviour has been moved to timercallback
-    componentSelected = !componentSelected;
+    
     repaint();
+    
     *selected = recID;
 }
 
@@ -200,6 +204,16 @@ void RecComponent::setComponentID(int ID)
 int RecComponent::getComponentID()
 {
     return recID;
+}
+
+void RecComponent::setPlayIndicatorVisible(bool state)
+{
+    displayPlaybackIndicator = state;
+}
+
+void RecComponent::setSampleRate(float sR)
+{
+    sampleRate = sR;
 }
 
 AudioThumbnail& RecComponent::getAudioThumbnail()

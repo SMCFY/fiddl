@@ -29,6 +29,10 @@ public:
     //==============================================================================
     MainContentComponent() : deviceManager (getSharedAudioDeviceManager()), selected(0)
     {
+        void mouseDown(const MouseEvent& event);
+        void mouseUp(const MouseEvent& event);
+        addMouseListener(this, true);
+        
         for(int i = 0; i < 3; i++)
         {
             recComp.add(new RecComponent);
@@ -43,11 +47,8 @@ public:
         
         addAndMakeVisible (playComp);
         playComp.setSize (100, 100);
-       
-
         setSize(400, 400);
         setAudioChannels (1, 2);
-        
         
         for(int i = 0; i < 3; i++)
         {
@@ -60,7 +61,7 @@ public:
         recComp[i]->setSelector(&selected);
         
         // set recComp pointer in playComp
-        playComp.setRecComp(recComp[i]);
+        //playComp.setRecComp(recComp[i]);
         
         // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder[i]);
@@ -81,7 +82,10 @@ public:
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
         this->sampleRate = sampleRate;
-
+        for(int i = 0; i < 3; i++)
+        {
+            recComp[i]->setSampleRate(sampleRate);
+        }
         //initialize DSP blocks and assign parameters
         AudioProcessorBundler::initDSPBlocks(sampleRate);
 
@@ -95,7 +99,7 @@ public:
     void getNextAudioBlock (const AudioSourceChannelInfo& bufferToFill) override
     {
         int lengthInSamples = recorder[selected]->getSampBuff().getNumSamples();
-        std::cout << selected << std::endl;
+        //std::cout << selected << std::endl;
 
         if(playComp.initRead) // reset readIndex on new trigger
         {
@@ -229,11 +233,30 @@ public:
         // If you add any child components, this is where you should
         // update their positions.
     }
+    
+    void mouseDown(const MouseEvent& event) override
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            recComp[i]->setComponentSelected(false);
+            recComp[i]->repaint();
+        }
+        playComp.setRecComp(recComp[selected]);
+        recComp[selected]->setComponentSelected(true);
+        recComp[selected]->setPlayIndicatorVisible(true);
+    }
+    
+    void mouseUp(const MouseEvent& event) override
+    {
+        recComp[selected]->setPlayIndicatorVisible(false);
+        recComp[selected]->repaint();
+    }
 
 private:
     /* This function sets up the I/O to stream audio to/from a device
      * RuntimePermissions::recordAudio requests the microphone be used as audio input
      */
+    
     AudioDeviceManager& getSharedAudioDeviceManager()  
     {  
         if (sharedAudioDeviceManager == nullptr)

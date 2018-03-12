@@ -122,7 +122,7 @@ float Envelope::envelope(int attackTime, float peak, int decayTime, float sustai
 		noteOn = 1; // sustain
     	release = 1;
 
-    	PlayComponent::startPlaying(); std::cout<< "REALLLY";
+    	PlayComponent::startPlaying(); 
 	    
     	attDelta = peak / std::round(samplingRate * (attackTime/1000));
     	decDelta = pow(aMin, peak / std::round(samplingRate * (decayTime/1000)));

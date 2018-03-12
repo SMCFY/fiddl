@@ -56,13 +56,17 @@ public:
     int getComponentID();
     void setComponentID(int ID);
     
+    void setPlayIndicatorVisible(bool state);
+    
+    void setSampleRate(float sR);
+    
     AudioThumbnail& getAudioThumbnail();
 private:
     AudioFormatManager formatManager;
     AudioThumbnailCache thumbnailCache;
     AudioThumbnail thumbnail;
     bool displayFullThumb;
-    
+    bool displayPlaybackIndicator;
     
     float tapLimit = 0.1f;
     float time = 0.0f;
@@ -73,6 +77,7 @@ private:
     void timerCallback() override;
     
     int recID;
+    float sampleRate;
     
     TextButton recordButton;
     AudioRecorder *recorder;
