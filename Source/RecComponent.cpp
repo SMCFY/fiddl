@@ -53,7 +53,14 @@ void RecComponent::paint (Graphics& g)
         }
         else
         {
-            g.fillAll(Colour().fromRGB(18, 21, 36)); // background color
+            if(!componentSelected)
+            {
+                g.fillAll(Colour().fromRGB(18, 21, 36)); // background color unselected
+            }
+            else
+            {
+                g.fillAll(Colour().fromRGB(18, 31, 56)); // background color selected     18, 21, 56
+            }
             thumbnail.drawChannels(g, thumbArea.reduced(2), 0.0f, sampLength/(float)recorder->getSampleRate(), 1.0f);
         }
     }
@@ -76,6 +83,7 @@ void RecComponent::paint (Graphics& g)
         }
 
         g.setColour(Colours::lightgrey); //selected color
+        g.drawRect(0, 0, getWidth(), getHeight(), 2);
     }
     g.drawRect(0, 0, getWidth(), getHeight(), 1);
    
