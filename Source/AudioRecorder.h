@@ -22,7 +22,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        AudioRecorder (float bufferLengthInSeconds, AudioThumbnail& thumbnailToUpdate);
+        AudioRecorder (float bufferLengthInSeconds, OwnedArray<AudioThumbnail> &thumbnailsToUpdate);
         ~AudioRecorder();
         
         void startRecording(); 
@@ -37,7 +37,7 @@ class AudioRecorder : public AudioIODeviceCallback
         int getSampleRate();
         int getNumChannels();
         float** getRecBuff();
-        AudioBuffer<float> getSampBuff();
+        AudioBuffer<float> getSampBuff(int sampBuffID);
         int getBufferLengthInSamples();
         int getWriteIndex();
         int getSampLength();
@@ -45,6 +45,8 @@ class AudioRecorder : public AudioIODeviceCallback
         float centroid;
         int rollOffLength;
         float *rollOffRamp;
+    
+        void setSelector(int *selected);
     private:
         /* audio is truncated according to a threshold which sets the
            buffer read index to start reading above the threshold and
@@ -53,7 +55,7 @@ class AudioRecorder : public AudioIODeviceCallback
         void truncate(float** recording, float threshold);
         float spectralCentroid(float* buff);
 
-        AudioBuffer<float> sampBuff;
+        OwnedArray<AudioBuffer<float>> sampBuff;
         int numChannels;
         float **recBuff; // sample buffer, where the recordings are stored
         float *specBuff; // copy of the truncated recording for FFT
@@ -65,8 +67,9 @@ class AudioRecorder : public AudioIODeviceCallback
         Boolean activeWriter; // true when the buffer is being written to
         int sampStart; // start index of truncated sample
         int sampLength; // length of truncated sample
+        int *selected; // this pertains to the recording component that is selected
     
-        AudioThumbnail& thumbnail;
+        OwnedArray<AudioThumbnail> *thumbnail;
     
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioRecorder);
 };

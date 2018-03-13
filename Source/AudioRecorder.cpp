@@ -15,11 +15,15 @@
 #include "Envelope.h"
 #include <numeric>
 
-AudioRecorder::AudioRecorder (float bufferLengthInSeconds, AudioThumbnail& thumbnailToUpdate)
-    : writeIndex (0), activeWriter (false), thumbnail(thumbnailToUpdate)
+AudioRecorder::AudioRecorder (float bufferLengthInSeconds, OwnedArray<AudioThumbnail> &thumbnailsToUpdate)
+    : writeIndex (0), activeWriter (false), thumbnail(&thumbnailsToUpdate)
 {
     this->bufferLengthInSeconds = bufferLengthInSeconds;
     numChannels = 1;
+    for (int i = 0; i < 3; i++)
+    {
+        sampBuff.add(new AudioBuffer<float>);
+    }
 }
 
 AudioRecorder::~AudioRecorder()
@@ -40,7 +44,7 @@ void AudioRecorder::startRecording()
     {
         const ScopedLock sl (writerLock);
         activeWriter = true;
-        thumbnail.reset(1, sampleRate);
+        (*thumbnail)[0]->reset(1, sampleRate);
     }
 }
 
@@ -61,11 +65,11 @@ void AudioRecorder::stop()
         writeIndex = 0;
 
         truncate(recBuff, 0.08f);
-        sampBuff.setDataToReferTo(recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
+        sampBuff[*selected]->setDataToReferTo(recBuff, numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
         specBuff = new float[sampLength];
         
         //set the recording waveform to the truncated segment
-        thumbnail.addBlock(0, sampBuff, 0, sampLength);
+        (*thumbnail)[0]->addBlock(0, *sampBuff[*selected], 0, sampLength);
 
         int j = 0;
         for (int i = sampStart; i < sampStart+sampLength; ++i)
@@ -87,7 +91,7 @@ void AudioRecorder::stop()
         
         //if all audio is truncated, clear the thumbnail
         if(sampLength == 0)
-            thumbnail.clear();
+            (*thumbnail)[0]->clear();
         
     }
 }
@@ -110,7 +114,7 @@ void AudioRecorder::audioDeviceAboutToStart (AudioIODevice* device)
         recBuff[ch] = new float[bufferLengthInSamples];
     }
 
-    sampBuff.setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
+    sampBuff[*selected]->setDataToReferTo(recBuff, numChannels, 0, bufferLengthInSamples);
 
     rollOffLength = sampleRate/10;
 }
@@ -140,7 +144,7 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
         
         // write to thumbnail
         const AudioSampleBuffer buffer (const_cast<float**> (inputChannelData), 1, sampleRate);
-        thumbnail.addBlock(writeIndex, buffer, 0, numSamples);
+        (*thumbnail)[0]->addBlock(writeIndex, buffer, 0, numSamples);
         
         writeIndex += numSamples;
     }
@@ -161,9 +165,9 @@ float** AudioRecorder::getRecBuff()
     return recBuff;
 }
 
-AudioBuffer<float> AudioRecorder::getSampBuff() 
+AudioBuffer<float> AudioRecorder::getSampBuff(int sampBuffID)
 {
-    return sampBuff;
+    return *sampBuff[sampBuffID];
 }
 
 int AudioRecorder::getBufferLengthInSamples()
@@ -243,4 +247,9 @@ float AudioRecorder::spectralCentroid(float* buff)
     {
         return 0;
     }
+}
+
+void AudioRecorder::setSelector(int *selected)
+{
+    this->selected = selected;
 }
