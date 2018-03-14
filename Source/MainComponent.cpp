@@ -29,12 +29,15 @@ public:
     //==============================================================================
     MainContentComponent() : deviceManager (getSharedAudioDeviceManager()), selected(0)
     {
-        ///setAudioChannels (1, 2);
-        addMouseListener(this, true);
+        setAudioChannels (1, 2);
 
-        for(int i = 0; i < 3; i++)
+        if (recComp == NULL)
         {
-            recComp.add(new RecComponent);
+            recComp = new RecComponent*[3];
+            for(int i = 0; i < 3; i++)
+            {
+                recComp[i] = new RecComponent;
+            }
         }
         
         thumbnails = new AudioThumbnail*[3];
@@ -66,6 +69,7 @@ public:
         playComp.setRecComp(recComp[i]);
         
         }
+        addMouseListener(this, true);
         // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder);
     }
@@ -83,6 +87,14 @@ public:
     //==============================================================================
     void prepareToPlay (int samplesPerBlockExpected, double sampleRate) override
     {
+        if (recComp == NULL)
+        {
+            recComp = new RecComponent*[3];
+            for(int i = 0; i < 3; i++)
+            {
+                recComp[i] = new RecComponent;
+            }
+        }
         this->sampleRate = sampleRate;
         for(int i = 0; i < 3; i++)
         {
@@ -283,7 +295,7 @@ private:
      
     //==============================================================================
     PlayComponent playComp;
-    OwnedArray<RecComponent> recComp;
+    RecComponent **recComp;
     AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
     AudioThumbnail **thumbnails;
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
