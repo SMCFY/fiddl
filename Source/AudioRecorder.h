@@ -22,7 +22,7 @@
 class AudioRecorder : public AudioIODeviceCallback
 {
     public:
-        AudioRecorder (float bufferLengthInSeconds, OwnedArray<AudioThumbnail> &thumbnailsToUpdate);
+        AudioRecorder (float bufferLengthInSeconds, AudioThumbnail **thumbnailsToUpdate);
         ~AudioRecorder();
         
         void startRecording(); 
@@ -69,7 +69,7 @@ class AudioRecorder : public AudioIODeviceCallback
         int sampLength; // length of truncated sample
         int *selected; // this pertains to the recording component that is selected
     
-        OwnedArray<AudioThumbnail> *thumbnail;
+        AudioThumbnail **thumbnail;
     
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioRecorder);
 };

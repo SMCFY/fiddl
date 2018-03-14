@@ -29,12 +29,7 @@ public:
     //==============================================================================
     MainContentComponent() : deviceManager (getSharedAudioDeviceManager()), selected(0)
     {
-        //setAudioChannels (1, 2);
-        recorder = new AudioRecorder(3.f, thumbnails);
-        if (recorder == NULL)
-            std::cout << "SHIT!" << std::endl;
-        void mouseDown(const MouseEvent& event);
-        void mouseUp(const MouseEvent& event);
+        ///setAudioChannels (1, 2);
         addMouseListener(this, true);
 
         for(int i = 0; i < 3; i++)
@@ -42,13 +37,15 @@ public:
             recComp.add(new RecComponent);
         }
         
+        thumbnails = new AudioThumbnail*[3];
         for(int i = 0; i < 3; i++)
         {
             recComp[i]->setComponentID(i);
             addAndMakeVisible (recComp[i]);
             recComp[i]->setSize (100, 100);
-            thumbnails.add(&recComp[i]->getAudioThumbnail());
+            thumbnails[i] = &recComp[i]->getAudioThumbnail();
         }
+        recorder = new AudioRecorder(3.f, thumbnails);
         
         addAndMakeVisible (playComp);
         playComp.setSize (100, 100);
@@ -57,7 +54,7 @@ public:
         for(int i = 0; i < 3; i++)
         {
         // set recording functionality in the recording GUI component
-        //recComp[i]->setRecorder(recorder[i]);
+        recComp[i]->setRecorder(recorder);
         // set playback read index in recording component
         recComp[i]->setReadIndex(&readIndex);
         // set the selector ID to show which recComp ID is selected
@@ -66,11 +63,11 @@ public:
         recorder->setSelector(&selected);
         
         // set recComp pointer in playComp
-        //playComp.setRecComp(recComp[i]);
+        playComp.setRecComp(recComp[i]);
         
+        }
         // setup the recorder to receive input from the microphone
         deviceManager.addAudioCallback(recorder);
-        }
     }
 
     ~MainContentComponent()
@@ -288,7 +285,7 @@ private:
     PlayComponent playComp;
     OwnedArray<RecComponent> recComp;
     AudioRecorder *recorder; // recording from the devices microphone to an AudioBuffer
-    OwnedArray<AudioThumbnail> thumbnails;
+    AudioThumbnail **thumbnails;
     AudioDeviceManager& deviceManager; // manages audio I/O devices 
     int readIndex;
     int writeIndex;

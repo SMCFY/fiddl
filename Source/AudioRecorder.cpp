@@ -15,8 +15,8 @@
 #include "Envelope.h"
 #include <numeric>
 
-AudioRecorder::AudioRecorder (float bufferLengthInSeconds, OwnedArray<AudioThumbnail> &thumbnailsToUpdate)
-    : writeIndex (0), activeWriter (false), thumbnail(&thumbnailsToUpdate)
+AudioRecorder::AudioRecorder (float bufferLengthInSeconds, AudioThumbnail **thumbnailsToUpdate)
+    : writeIndex (0), activeWriter (false), thumbnail(thumbnailsToUpdate)
 {
     this->bufferLengthInSeconds = bufferLengthInSeconds;
     numChannels = 1;
@@ -44,7 +44,7 @@ void AudioRecorder::startRecording()
     {
         const ScopedLock sl (writerLock);
         activeWriter = true;
-        (*thumbnail)[0]->reset(1, sampleRate);
+        thumbnail[0]->reset(1, sampleRate);
     }
 }
 
@@ -69,7 +69,7 @@ void AudioRecorder::stop()
         specBuff = new float[sampLength];
         
         //set the recording waveform to the truncated segment
-        (*thumbnail)[0]->addBlock(0, *sampBuff[*selected], 0, sampLength);
+        thumbnail[0]->addBlock(0, *sampBuff[*selected], 0, sampLength);
 
         int j = 0;
         for (int i = sampStart; i < sampStart+sampLength; ++i)
@@ -91,7 +91,7 @@ void AudioRecorder::stop()
         
         //if all audio is truncated, clear the thumbnail
         if(sampLength == 0)
-            (*thumbnail)[0]->clear();
+            thumbnail[0]->clear();
         
     }
 }
@@ -144,7 +144,7 @@ void AudioRecorder::audioDeviceIOCallback (const float** inputChannelData, int n
         
         // write to thumbnail
         const AudioSampleBuffer buffer (const_cast<float**> (inputChannelData), 1, sampleRate);
-        (*thumbnail)[0]->addBlock(writeIndex, buffer, 0, numSamples);
+        thumbnail[0]->addBlock(writeIndex, buffer, 0, numSamples);
         
         writeIndex += numSamples;
     }
