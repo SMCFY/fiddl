@@ -66,7 +66,7 @@ public:
         recorder->setSelector(&selected);
         
         // set recComp pointer in playComp
-        playComp.setRecComp(recComp[i]);
+        //playComp.setRecComp(recComp[i]);
         
         }
         addMouseListener(this, true);

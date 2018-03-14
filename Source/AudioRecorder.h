@@ -36,7 +36,7 @@ class AudioRecorder : public AudioIODeviceCallback
                                     int numSamples) override;
         int getSampleRate();
         int getNumChannels();
-        float** getRecBuff();
+        float** getRecBuff(int selector);
         AudioBuffer<float> getSampBuff(int sampBuffID);
         int getBufferLengthInSamples();
         int getWriteIndex();
@@ -57,8 +57,8 @@ class AudioRecorder : public AudioIODeviceCallback
 
         OwnedArray<AudioBuffer<float>> sampBuff;
         int numChannels;
-        float **recBuff; // sample buffer, where the recordings are stored
-        float *specBuff; // copy of the truncated recording for FFT
+        float ***recBuff; // sample buffer, where the recordings are stored
+        float **specBuff; // copy of the truncated recording for FFT
         float bufferLengthInSeconds;
         int bufferLengthInSamples;
         double sampleRate;
