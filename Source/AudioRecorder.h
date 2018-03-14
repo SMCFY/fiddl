@@ -40,7 +40,7 @@ class AudioRecorder : public AudioIODeviceCallback
         AudioBuffer<float> getSampBuff(int sampBuffID);
         int getBufferLengthInSamples();
         int getWriteIndex();
-        int getSampLength();
+        int getSampLength(int recID);
 
         float centroid;
         int rollOffLength;
@@ -66,7 +66,7 @@ class AudioRecorder : public AudioIODeviceCallback
         CriticalSection writerLock;
         Boolean activeWriter; // true when the buffer is being written to
         int sampStart; // start index of truncated sample
-        int sampLength; // length of truncated sample
+        int *sampLength; // length of truncated sample
         int *selected; // this pertains to the recording component that is selected
     
         AudioThumbnail **thumbnail;

@@ -25,6 +25,7 @@ AudioRecorder::AudioRecorder (float bufferLengthInSeconds, AudioThumbnail **thum
         sampBuff.add(new AudioBuffer<float>);
     }
     specBuff = new float*[3];
+    sampLength = new int[3];
 }
 
 AudioRecorder::~AudioRecorder()
@@ -66,14 +67,14 @@ void AudioRecorder::stop()
         writeIndex = 0;
 
         truncate(recBuff[*selected], 0.08f);
-        sampBuff[*selected]->setDataToReferTo(recBuff[*selected], numChannels, sampStart, sampLength); //set the AudioBuffer pointer to the truncated segment
-        specBuff[*selected] = new float[sampLength];
+        sampBuff[*selected]->setDataToReferTo(recBuff[*selected], numChannels, sampStart, sampLength[*selected]); //set the AudioBuffer pointer to the truncated segment
+        specBuff[*selected] = new float[sampLength[*selected]];
         
         //set the recording waveform to the truncated segment
-        thumbnail[*selected]->addBlock(0, *sampBuff[*selected], 0, sampLength);
+        thumbnail[*selected]->addBlock(0, *sampBuff[*selected], 0, sampLength[*selected]);
 
         int j = 0;
-        for (int i = sampStart; i < sampStart+sampLength; ++i)
+        for (int i = sampStart; i < sampStart+sampLength[*selected]; ++i)
         {
             specBuff[*selected][j] = recBuff[*selected][0][i]; // copy the truncated recording to the spectrum buffer
             j++; 
@@ -83,15 +84,15 @@ void AudioRecorder::stop()
         Gesture::setCentroid(centroid);
 
         // calculate roll off length
-        if(rollOffLength > sampLength)
-            rollOffLength = sampLength;
+        if(rollOffLength > sampLength[*selected])
+            rollOffLength = sampLength[*selected];
 
         // generate ramp
         Envelope::generateRamp(1.0f, 0.001f, rollOffLength, "exp");
         rollOffRamp = Envelope::ramp;
         
         //if all audio is truncated, clear the thumbnail
-        if(sampLength == 0)
+        if(sampLength[*selected] == 0)
             thumbnail[*selected]->clear();
         
     }
@@ -186,16 +187,16 @@ int AudioRecorder::getWriteIndex()
     return writeIndex;
 }
 
-int AudioRecorder::getSampLength()
+int AudioRecorder::getSampLength(int recID)
 {
-    return sampLength;
+    return sampLength[recID];
 }
 
 void AudioRecorder::truncate (float** recording, float threshold)
 {
     int j = this->bufferLengthInSamples; //reversed iterator
     this->sampStart = 0;
-    this->sampLength = 0;
+    this->sampLength[*selected] = 0;
 
     for (int i = 0; i < this->bufferLengthInSamples; i++)
     {
@@ -203,9 +204,9 @@ void AudioRecorder::truncate (float** recording, float threshold)
         {
             this->sampStart = i;
         }
-        if(fabs(recording[0][j]) > threshold && this->sampLength == 0)
+        if(fabs(recording[0][j]) > threshold && this->sampLength[*selected] == 0)
         {
-            this->sampLength = this->bufferLengthInSamples - (sampStart + this->bufferLengthInSamples - j);
+            this->sampLength[*selected] = this->bufferLengthInSamples - (sampStart + this->bufferLengthInSamples - j);
         }
         j--;
     }
@@ -214,9 +215,9 @@ void AudioRecorder::truncate (float** recording, float threshold)
 
 float AudioRecorder::spectralCentroid(float* buff)
 {
-    if(sampLength > 0) //if the truncated buffer is empty return 0, else return spectral centroid
+    if(sampLength[*selected] > 0) //if the truncated buffer is empty return 0, else return spectral centroid
     {
-        int order = log2(sampLength);
+        int order = log2(sampLength[*selected]);
         
         dsp::FFT f(order);
         int FFTsize = pow(2, order);
@@ -224,12 +225,12 @@ float AudioRecorder::spectralCentroid(float* buff)
         int windowSize = FFTsize*2;
         float* window = new float[windowSize]; // window must be twice as long as the fft size
 
-        for (int i = 0; i < sampLength; ++i) // windowing the truncated segment
+        for (int i = 0; i < sampLength[*selected]; ++i) // windowing the truncated segment
         {
             window[i] = buff[i];
         }
         
-        for (int i = sampLength; i < windowSize; ++i) // zero-padding the rest of the window
+        for (int i = sampLength[*selected]; i < windowSize; ++i) // zero-padding the rest of the window
         {
             window[i] = 0.0f;
         }

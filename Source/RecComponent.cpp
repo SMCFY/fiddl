@@ -35,7 +35,7 @@ RecComponent::~RecComponent()
 void RecComponent::paint (Graphics& g)
 {
     const int width = getWidth();
-    float sampLength = recorder->getSampLength();
+    float sampLength = recorder->getSampLength(recID);
     if (sampLength == 0)
         sampLength = sampleRate*3;
     float index = *readIndex * width / sampLength;
