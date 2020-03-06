@@ -70,5 +70,5 @@ void Filter::process(AudioBuffer<float> buffer)
     
     auto firstChan = block.getSingleChannelBlock (0);
 	for (size_t chan = 0; chan < block.getNumChannels(); ++chan)
-            block.getSingleChannelBlock (chan).copy (firstChan);
+            block.getSingleChannelBlock (chan).copyFrom (firstChan);
 }
