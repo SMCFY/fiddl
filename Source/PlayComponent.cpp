@@ -381,6 +381,9 @@ void PlayComponent::fillCoordinates()
 
 void PlayComponent::drawPitchBackDrop(Graphics& g)
 {
+    // refresh keyboard layout
+    rectListBackDrop.clear();
+    
     for (int i = 0; i < rectListSize; i++)
     {
         rectListBackDrop.add(Rectangle<float>(-5,(getHeight()/rectListSize+0.5)*i,getWidth()+5,getHeight()/rectListSize+0.5));
