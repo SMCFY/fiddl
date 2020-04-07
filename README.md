@@ -1,7 +1,7 @@
 # fiddl
 
-<a href="https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4">
-<img src="https://github.com/SMCFY/fiddl/blob/develop/Resources/Images/fiddl.png?raw=true" width="250" href="https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4">
+<a href="https://apps.apple.com/us/app/fiddl/id1506071679?mt=8&ign-mpt=uo%3D4">
+<img src="https://github.com/SMCFY/fiddl/blob/develop/Resources/Images/fiddl.png?raw=true" width="250" href="https://apps.apple.com/us/app/fiddl/id1506071679?mt=8&ign-mpt=uo%3D4">
 </a>
 
 ### Synopsis
@@ -11,7 +11,7 @@ This app revolves around the real-time manipulation of recordings with touch ges
 fiddl has been developed as part of a semester project in Sound and Music Computing at Aalborg University, Copenhagen. The design is based on a collaboration with [FIGURA](http://www.figura.dk/en/) as part of a local music workshop which is aimed at children with limited musical knowledge.
 
 ### Getting Started
-Try out fiddl on the [App Store](https://itunes.apple.com/dk/app/fiddl/id1320021639?mt=8&ign-itsct=1320021639-1320021639&ign-itscg=0176&ign-mpt=uo%3D4) if you would like to run the latest stable version on iPhone or iPad.
+Try out fiddl on the [App Store](https://apps.apple.com/us/app/fiddl/id1506071679?mt=8&ign-mpt=uo%3D4) if you would like to run the latest stable version on iPhone or iPad.
 
 The following installation guide will help you to get this project running on your local macOS computer for development and testing purposes. 
 
